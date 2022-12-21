@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DLL.Models
 {
-    internal class BookAuthor
+    public class BookAuthor
     {
         
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLL.Models
 {
-    internal class Publisher
+    public class Publisher
     {
         [Key]
         public int Id { get; set; }

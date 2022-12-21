@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLL.Models
 {
-    internal class UserRole
+    public class UserRole
     {
         
     }

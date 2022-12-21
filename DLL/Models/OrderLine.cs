@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLL.Models
 {
-    internal class OrderLine
+    public class OrderLine
     {
         [Key]
         public int Id { get; set; }

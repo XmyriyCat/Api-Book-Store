@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLL.Models
 {
-    internal class Warehouse
+    public class Warehouse
     {
         [Key]
         public int Id { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DLL.Models
 {
-    internal class Book
+    public class Book
     {
         [Key]
         public int Id { get; set; }
