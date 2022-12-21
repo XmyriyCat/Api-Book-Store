@@ -12,7 +12,7 @@ namespace DLL.Models
         [Key]
         public int Id { get; set; }
 
-        public virtual Order? Order { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
 
         public int? DeliveryId { get; set; }
         public virtual Delivery? Delivery { get; set; }

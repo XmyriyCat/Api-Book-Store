@@ -16,7 +16,7 @@ namespace DLL.Models
 
         public string? Login { get; set; }
 
-        public int Password { get; set; }
+        public string? Password { get; set; }
 
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string? Email { get; set; }

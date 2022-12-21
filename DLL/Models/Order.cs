@@ -23,5 +23,7 @@ namespace DLL.Models
         [ForeignKey("CustomerId")]
         public int? CustomerId { get; set; }
         public virtual User? User { get; set; }
+
+        public virtual ICollection<OrderLine>? OrderLine { get; set; }
     }
 }
