@@ -14,6 +14,6 @@ namespace DLL.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace DLL.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<BookGenre> BookGenres { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
     }
 }
