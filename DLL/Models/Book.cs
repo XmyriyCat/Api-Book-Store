@@ -12,16 +12,16 @@ namespace DLL.Models
     {
         [Key]
         public int Id { get; set; }
-        public decimal? Price { get; set; }
-        public string? Name { get; set; }
+        public decimal Price { get; set; }
+        public string Name { get; set; }
 
-        public int? PublisherId { get; set; }
-        public virtual Publisher? Publisher { get; set; }
+        public int PublisherId { get; set; }
+        public virtual Publisher Publisher { get; set; }
 
-        public virtual ICollection<BookGenre>? BookGenres { get; set; }
+        public virtual ICollection<BookGenre> BookGenres { get; set; }
 
-        public virtual ICollection<BookAuthor>? BookAuthors { get; set; }
+        public virtual ICollection<BookAuthor> BookAuthors { get; set; }
 
-        public virtual ICollection<WarehouseBook>? WarehouseBooks { get; set; }
+        public virtual ICollection<WarehouseBook> WarehouseBooks { get; set; }
     }
 }

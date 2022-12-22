@@ -12,10 +12,10 @@ namespace DLL.Models
         [Key]
         public int Id { get; set; }
 
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        public virtual ICollection<Shipment>? Shipment { get; set; }
+        public virtual ICollection<Shipment> Shipment { get; set; }
     }
 }

@@ -14,12 +14,12 @@ namespace DLL.Models
 
         public int Quantity { get; set; }
 
-        public int? WarehouseId { get; set; }
-        public virtual Warehouse? Warehouse { get; set; }
+        public int WarehouseId { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
 
-        public int? BookId { get; set; }
-        public virtual Book? Book { get; set; }
+        public int BookId { get; set; }
+        public virtual Book Book { get; set; }
 
-        public virtual ICollection<OrderLine>? OrderLines { get; set; }
+        public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }
