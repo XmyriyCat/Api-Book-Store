@@ -16,17 +16,17 @@ namespace DLL.Repository
 
         public IQueryable<T> GetAll()
         {
-            return _dbContext.Set<T>();
+            return _dbContext.Set<T>().AsNoTracking();
         }
         
-        public T FindById(int id)
+        public async Task<T> FindByIdAsync(int id)
         {
-            return _dbContext.Set<T>().Find(id);
+            return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public T Add(T item)
+        public async Task<T> AddAsync(T item)
         {
-            _dbContext.Set<T>().Add(item);
+            await _dbContext.Set<T>().AddAsync(item);
             return item;
         }
         public T Update(T item)
@@ -34,9 +34,9 @@ namespace DLL.Repository
             _dbContext.Entry(item).State = EntityState.Modified;
             return item;
         }
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var sourceItem = _dbContext.Set<T>().Find(id);
+            var sourceItem = await _dbContext.Set<T>().FindAsync(id);
             if (sourceItem is null)
             {
                 return;
@@ -50,9 +50,9 @@ namespace DLL.Repository
             return _dbContext.Set<T>().Count();
         }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

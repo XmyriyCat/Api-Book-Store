@@ -5,10 +5,10 @@ namespace DLL.Repository;
 public interface IRepository<T> : IDisposable where T : class
 {
     IQueryable<T> GetAll();
-    T FindById(int id);
-    T Add(T item);
+    Task<T> FindByIdAsync(int id);
+    Task<T> AddAsync(T item);
     T Update(T item);
-    void Delete(int id);
+    Task DeleteAsync(int id);
     int Count();
-    void SaveChanges();
+    Task SaveChangesAsync();
 }
