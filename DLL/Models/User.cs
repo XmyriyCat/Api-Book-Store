@@ -29,7 +29,7 @@ namespace DLL.Models
 
         public virtual ICollection<Order> Orders { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
 
     }
 }

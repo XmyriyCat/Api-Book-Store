@@ -16,6 +16,6 @@ namespace DLL.Models
 
         public string LastName { get; set;}
 
-        public virtual ICollection<BookAuthor> BookAuthors { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
     }
 }
