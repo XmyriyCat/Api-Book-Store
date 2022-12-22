@@ -19,7 +19,7 @@ namespace DLL.Repository
             return _dbContext.Set<T>().AsNoTracking();
         }
         
-        public async Task<T> FindByIdAsync(int id)
+        public async Task<T> FindAsync(int id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
