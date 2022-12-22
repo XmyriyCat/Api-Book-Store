@@ -1,12 +1,13 @@
 ﻿using DLL.Data;
 using DLL.Models;
 using DLL.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository.Classes
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
-        public OrderRepository(ShopDbContext context) : base(context)
+        public OrderRepository(DbContext context) : base(context)
         {
         }
     }

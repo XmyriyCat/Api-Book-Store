@@ -1,12 +1,13 @@
 ﻿using DLL.Data;
 using DLL.Models;
 using DLL.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository.Classes
 {
     public class PaymentWayRepository : GenericRepository<PaymentWay>, IPaymentWayRepository
     {
-        public PaymentWayRepository(ShopDbContext context) : base(context)
+        public PaymentWayRepository(DbContext context) : base(context)
         {
         }
     }

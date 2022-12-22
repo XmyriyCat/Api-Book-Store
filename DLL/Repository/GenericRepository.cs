@@ -7,9 +7,9 @@ namespace DLL.Repository
     public abstract class GenericRepository<T> : IRepository<T> where T : class
     {
         private bool _isDisposed;
-        private readonly ShopDbContext _dbContext;
+        private readonly DbContext _dbContext;
 
-        protected GenericRepository(ShopDbContext context)
+        protected GenericRepository(DbContext context)
         {
             _dbContext = context;
         }
@@ -18,11 +18,7 @@ namespace DLL.Repository
         {
             return _dbContext.Set<T>();
         }
-
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
-        {
-            return _dbContext.Set<T>().Where(expression);
-        }
+        
         public T FindById(int id)
         {
             return _dbContext.Set<T>().Find(id);
