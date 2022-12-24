@@ -7,8 +7,8 @@ namespace BLL.Infrastructure.Validators.Publisher
     {
         public UpdatePublisherDtoValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().GreaterThan(0);
-            RuleFor(x => x.Name).NotNull().NotEmpty().Length(1, 150);
+            RuleFor(x => x.Id).GreaterThan(0);
+            RuleFor(x => x.Name).NotNull().Length(1, 150);
         }
     }
 }

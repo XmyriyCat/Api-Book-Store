@@ -7,9 +7,9 @@ namespace BLL.Infrastructure.Validators.Book
     {
         public CreateBookDtoValidator()
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().Length(1, 200);
+            RuleFor(x => x.Name).NotNull().Length(1, 200);
             RuleFor(x => x.Price).GreaterThanOrEqualTo(0).WithMessage("Price is less than zero.");
-            RuleFor(x => x.IdPublisher).NotEmpty().GreaterThan(0);
+            RuleFor(x => x.IdPublisher).GreaterThan(0);
         }
     }
 }
