@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DLL.Models;
 
 namespace BLL.DTO.Users;
 
-public class CreateUsersDto
+public class UpdateUserDto
 {
+    public int Id { get; set; }
     public string Username { get; set; }
 
     public string Login { get; set; }
