@@ -1,6 +1,6 @@
 ﻿namespace BLL.DTO.Author;
 
-public class CreateAuhtorDto
+public class CreateAuthorDto
 {
     public string FirstName { get; set; }
 

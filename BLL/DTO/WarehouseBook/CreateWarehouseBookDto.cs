@@ -1,6 +1,6 @@
-﻿namespace BLL.DTO.Warehouse_books;
+﻿namespace BLL.DTO.WarehouseBook;
 
-public class CreateWarehouseBooksDto
+public class CreateWarehouseBookDto
 {
     public int Quantity { get; set; }
 
