@@ -1,8 +1,7 @@
-﻿namespace BLL.DTO.Publisher
+﻿namespace BLL.DTO.Publisher;
+
+public class UpdatePublisherDto
 {
-    public class UpdatePublisherDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
 }

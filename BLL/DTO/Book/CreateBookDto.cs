@@ -6,7 +6,7 @@ public class CreateBookDto
     public string Name { get; set; }
     public int IdPublisher { get; set; }
     
-    public virtual ICollection<int> IdGenres { get; set; }
+    public virtual ICollection<int> GenresId { get; set; }
 
-    public virtual ICollection<int> IdAuthors { get; set; }
+    public virtual ICollection<int> AuthorsId { get; set; }
 }
