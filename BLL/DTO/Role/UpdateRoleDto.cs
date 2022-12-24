@@ -1,7 +1,8 @@
-﻿namespace BLL.DTO.Publisher;
+﻿namespace BLL.DTO.Role;
 
-public class UpdatePublisherDto
+public class UpdateRoleDto
 {
     public int Id { get; set; }
+
     public string Name { get; set; }
 }

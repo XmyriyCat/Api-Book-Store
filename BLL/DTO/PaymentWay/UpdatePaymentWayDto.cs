@@ -1,7 +1,8 @@
-﻿namespace BLL.DTO.Publisher;
+﻿namespace BLL.DTO.PaymentWay;
 
-public class UpdatePublisherDto
+public class UpdatePaymentWayDto
 {
     public int Id { get; set; }
+
     public string Name { get; set; }
 }
