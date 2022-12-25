@@ -11,6 +11,5 @@ namespace BLL.Services.Interfaces
         Task<Author> Update(UpdateAuthorDto item);
         Task DeleteAsync(int id);
         int Count();
-        Task SaveChangesAsync();
     }
 }

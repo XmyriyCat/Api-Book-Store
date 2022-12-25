@@ -27,16 +27,19 @@ namespace DLL.Repository
         public async Task<T> AddAsync(T item)
         {
             await _dbContext.Set<T>().AddAsync(item);
+
             return item;
         }
         public T Update(T item)
         {
             _dbContext.Entry(item).State = EntityState.Modified;
+
             return item;
         }
         public async Task DeleteAsync(int id)
         {
             var sourceItem = await _dbContext.Set<T>().FindAsync(id);
+
             if (sourceItem is null)
             {
                 return;
@@ -71,6 +74,7 @@ namespace DLL.Repository
         void IDisposable.Dispose()
         {
             Dispose(true);
+
             GC.SuppressFinalize(this);
         }
     }
