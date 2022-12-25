@@ -46,6 +46,8 @@ namespace BLL.Services.Classes
 
             await _repositoryWrapper.Books.AddAsync(book);
 
+            SaveChangesAsync();
+
             return book;
         }
 
@@ -62,11 +64,14 @@ namespace BLL.Services.Classes
 
             _repositoryWrapper.Books.Update(book);
 
+            SaveChangesAsync();
+
             return book;
         }
         public async Task DeleteAsync(int id)
         {
             await _repositoryWrapper.Books.DeleteAsync(id);
+            SaveChangesAsync();
         }
 
         public int Count()

@@ -46,6 +46,8 @@ namespace BLL.Services.Classes
 
             await _repositoryWrapper.Authors.AddAsync(author);
 
+            SaveChangesAsync();
+
             return author;
         }
 
@@ -62,11 +64,14 @@ namespace BLL.Services.Classes
 
             _repositoryWrapper.Authors.Update(author);
 
+            SaveChangesAsync();
+
             return author;
         }
         public async Task DeleteAsync(int id)
         {
             await _repositoryWrapper.Authors.DeleteAsync(id);
+            SaveChangesAsync();
         }
 
         public int Count()
