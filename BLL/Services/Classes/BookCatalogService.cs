@@ -46,7 +46,7 @@ namespace BLL.Services.Classes
 
             await _repositoryWrapper.Books.AddAsync(book);
 
-            SaveChangesAsync();
+            await _repositoryWrapper.SaveChangesAsync();
 
             return book;
         }
@@ -64,24 +64,21 @@ namespace BLL.Services.Classes
 
             _repositoryWrapper.Books.Update(book);
 
-            SaveChangesAsync();
+            await _repositoryWrapper.SaveChangesAsync();
 
             return book;
         }
+
         public async Task DeleteAsync(int id)
         {
             await _repositoryWrapper.Books.DeleteAsync(id);
-            SaveChangesAsync();
+
+            await _repositoryWrapper.SaveChangesAsync();
         }
 
         public int Count()
         {
             return _repositoryWrapper.Books.Count();
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _repositoryWrapper.SaveChangesAsync();
         }
     }
 }
