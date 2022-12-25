@@ -18,6 +18,6 @@ namespace DLL.Repository.UnitOfWork
         IWarehouseRepository Warehouses { get; }
         IWarehouseBookRepository WarehouseBooks { get; }
 
-        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

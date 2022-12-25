@@ -197,9 +197,9 @@ namespace DLL.Repository.UnitOfWork
             }
         }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
