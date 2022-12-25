@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
-using Azure;
-using BLL.DTO.Users;
+﻿using BLL.DTO.Users;
 using FluentValidation;
 
 namespace BLL.Infrastructure.Validators.User

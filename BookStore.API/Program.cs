@@ -15,7 +15,11 @@ namespace ApiBookStore
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddRepositoryWrapper();
             builder.Services.ConfigureMsSqlServerContext(builder.Configuration);
+            builder.Services.ConfigureAutoMapper();
+            builder.Services.ConfigureFluentValidation();
+            builder.Services.ConfigureDtoServices();
 
             var app = builder.Build();
 
