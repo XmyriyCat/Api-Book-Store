@@ -23,7 +23,7 @@ namespace BLL.Services.Classes
             _updateAuthorDtoValidator = updateValidator;
         }
 
-        public IQueryable<Author> GetAll()
+        public IEnumerable<Author> GetAll()
         {
             return _repositoryWrapper.Authors.GetAll();
         }

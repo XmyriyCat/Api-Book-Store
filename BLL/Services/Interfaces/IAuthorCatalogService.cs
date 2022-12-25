@@ -5,7 +5,7 @@ namespace BLL.Services.Interfaces
 {
     public interface IAuthorCatalogService
     {
-        IQueryable<Author> GetAll();
+        IEnumerable<Author> GetAll();
         Task<Author> FindAsync(int id);
         Task<Author> AddAsync(CreateAuthorDto item);
         Task<Author> Update(UpdateAuthorDto item);
