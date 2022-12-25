@@ -5,117 +5,69 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiBookStore.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class BookController : ControllerBase
+    public class BookController : Controller
     {
+        private readonly BookService _bookService;
 
-        public BookController()
+        public BookController(BookService bookService)
         {
-
+            _bookService = bookService;
         }
 
-        // GET: api/Books
+        // GET: api/book
         [HttpGet]
-        public IEnumerable<Book> GetBooks()
+        public async Task<IActionResult> GetAll()
         {
-            return null;
+            var books = await _bookService.GetAll();
+            return Ok(books);
         }
 
-        // GET: api/Books/5
+        // GET: api/book/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBook([FromRoute] int id)
+        public async Task<IActionResult> GetById(string id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(null);
-        }
-
-        // PUT: api/Books/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook([FromRoute] int id, [FromBody] Book book)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != book.Id)
-            {
-                return BadRequest();
-            }
-
-            //_context.Entry(book).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-            //try
-            //{
-            //    //await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!BookExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            return NoContent();
-        }
-
-        // POST: api/Books
-        [HttpPost]
-        public async Task<IActionResult> PostBook([FromBody] Book book)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            //_context.Books.Add(book);
-            //await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBook", new { id = book.Id }, book);
-        }
-
-        // DELETE: api/Books/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            //var book = await _context.Books.FindAsync(id);
-            var book = new Book();
+            var book = await _bookService.GetById(id);
             if (book == null)
-            {
                 return NotFound();
-            }
-
-            //_context.Books.Remove(book);
-            //await _context.SaveChangesAsync();
 
             return Ok(book);
         }
 
-        private bool BookExists(int id)
+        // POST: api/book
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Book book)
         {
-            //return _context.Books.Any(e => e.Id == id);
-            return false;
+            if (book == null)
+                return BadRequest();
+
+            await _bookService.Create(book);
+
+            return CreatedAtAction(nameof(GetById), new { id = book.Id }, book);
         }
 
+        // PUT: api/book/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody] Book book)
+        {
+            if (book == null || book.Id != id)
+                return BadRequest();
+
+            var updatedBook = await _bookService.Update(book);
+            if (updatedBook == null)
+                return NotFound();
+
+            return Ok(updatedBook);
+        }
+
+        // DELETE: api/book/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var deletedBook = await _bookService.Delete(id);
+            if (deletedBook == null)
+                return NotFound();
+
+            return Ok();
+        }
     }
 }

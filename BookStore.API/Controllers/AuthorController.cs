@@ -7,68 +7,68 @@ namespace ApiBookStore.Controllers
     public class AuthorController : Controller
     {
         private readonly AuthorService _authorService;
-        public AuthorController(AuthorService userService)
+        public AuthorController(AuthorService AuthorService)
         {
-            _authorService = userService;
+            _authorService = AuthorService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetAuthors()
         {
-            var users = await _authorService.GetAllAsync();
-            return Ok(users);
+            var Authors = await _authorService.GetAllAsync();
+            return Ok(Authors);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetAuthorById(int id)
         {
-            var user = await _authorService.GetUserByIdAsync(id);
-            if (user == null)
+            var Author = await _authorService.GetAuthorByIdAsync(id);
+            if (Author == null)
             {
                 return NotFound();
             }
-            return Ok(user);
+            return Ok(Author);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateAuthor([FromBody] Author Author)
         {
-            if (user == null)
+            if (Author == null)
             {
                 return BadRequest();
             }
 
-            var createdUser = await _authorService.CreateUserAsync(user);
-            return CreatedAtAction("GetUserById", new { id = createdUser.Id }, createdUser);
+            var createdAuthor = await _authorService.CreateAuthorAsync(Author);
+            return CreatedAtAction("GetAuthorById", new { id = createdAuthor.Id }, createdAuthor);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
+        public async Task<IActionResult> UpdateAuthor(int id, [FromBody] Author Author)
         {
-            if (user == null || user.Id != id)
+            if (Author == null || Author.Id != id)
             {
                 return BadRequest();
             }
 
-            var updatedUser = await _authorService.UpdateUserAsync(user);
-            if (updatedUser == null)
+            var updatedAuthor = await _authorService.UpdateAuthorAsync(Author);
+            if (updatedAuthor == null)
             {
                 return NotFound();
             }
 
-            return Ok(updatedUser);
+            return Ok(updatedAuthor);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteAuthor(int id)
         {
-            var user = await _authorService.GetUserByIdAsync(id);
-            if (user == null)
+            var Author = await _authorService.GetAuthorByIdAsync(id);
+            if (Author == null)
             {
                 return NotFound();
             }
 
-            await _authorService.DeleteUserAsync(user);
+            await _authorService.DeleteAuthorAsync(Author);
             return Ok();
         }
     }
