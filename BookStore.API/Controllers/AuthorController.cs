@@ -1,28 +1,31 @@
-﻿using DLL.Models;
+﻿using BLL.DTO.Author;
+using BLL.Services.Interfaces;
+using DLL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
 {
+    [Route("api/[controller]")]
     public class AuthorController : Controller
-    {
-        private readonly AuthorService _authorService;
-        public AuthorController(AuthorService AuthorService)
+    {   
+        private readonly IAuthorCatalogService _authorService;
+        public AuthorController(IAuthorCatalogService authorService)
         {
-            _authorService = AuthorService;
+            _authorService = authorService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAuthors()
+        public IActionResult GetAuthors()
         {
-            var Authors = await _authorService.GetAllAsync();
-            return Ok(Authors);
+            var authors = _authorService.GetAll();
+            return Ok(authors);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAuthorById(int id)
         {
-            var Author = await _authorService.GetAuthorByIdAsync(id);
+            var Author = await _authorService.FindAsync(id);
             if (Author == null)
             {
                 return NotFound();
@@ -31,26 +34,26 @@ namespace ApiBookStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAuthor([FromBody] Author Author)
+        public async Task<IActionResult> CreateAuthor([FromBody] CreateAuthorDto author)
         {
-            if (Author == null)
+            if (author == null)
             {
                 return BadRequest();
             }
 
-            var createdAuthor = await _authorService.CreateAuthorAsync(Author);
+            var createdAuthor = await _authorService.AddAsync(author);
             return CreatedAtAction("GetAuthorById", new { id = createdAuthor.Id }, createdAuthor);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, [FromBody] Author Author)
+        public async Task<IActionResult> UpdateAuthor([FromBody] UpdateAuthorDto author)
         {
-            if (Author == null || Author.Id != id)
+            if (author == null)
             {
                 return BadRequest();
             }
 
-            var updatedAuthor = await _authorService.UpdateAuthorAsync(Author);
+            var updatedAuthor = await _authorService.Update(author);
             if (updatedAuthor == null)
             {
                 return NotFound();
@@ -62,13 +65,7 @@ namespace ApiBookStore.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
-            var Author = await _authorService.GetAuthorByIdAsync(id);
-            if (Author == null)
-            {
-                return NotFound();
-            }
-
-            await _authorService.DeleteAuthorAsync(Author);
+            await _authorService.DeleteAsync(id);
             return Ok();
         }
     }

@@ -7,9 +7,9 @@ namespace ApiBookStore.Controllers
     [Route("api/[controller]")]
     public class BookController : Controller
     {
-        private readonly BookService _bookService;
+        private readonly IBookService _bookService;
 
-        public BookController(BookService bookService)
+        public BookController(IBookService bookService)
         {
             _bookService = bookService;
         }
@@ -47,9 +47,9 @@ namespace ApiBookStore.Controllers
 
         // PUT: api/book/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Book book)
+        public async Task<IActionResult> Update([FromBody] Book book)
         {
-            if (book == null || book.Id != id)
+            if (book is null)
                 return BadRequest();
 
             var updatedBook = await _bookService.Update(book);
@@ -61,7 +61,7 @@ namespace ApiBookStore.Controllers
 
         // DELETE: api/book/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             var deletedBook = await _bookService.Delete(id);
             if (deletedBook == null)
