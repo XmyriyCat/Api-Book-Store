@@ -1,4 +1,4 @@
-﻿using DLL.Repository.Interfaces;
+﻿using DLL.Repository.Contract;
 
 namespace DLL.Repository.UnitOfWork
 {

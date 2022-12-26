@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-using DLL.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository
 {
@@ -48,16 +46,11 @@ namespace DLL.Repository
             _dbContext.Remove(sourceItem);
         }
 
-        public int Count()
+        public async Task<int> CountAsync()
         {
-            return _dbContext.Set<T>().Count();
+            return await _dbContext.Set<T>().CountAsync();
         }
-
-        public async Task SaveChangesAsync()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!_isDisposed)

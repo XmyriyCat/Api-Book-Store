@@ -1,5 +1,4 @@
-﻿using BLL.DTO.Users;
-using BLL.DTO.Warehouse;
+﻿using BLL.DTO.Warehouse;
 using FluentValidation;
 
 namespace BLL.Infrastructure.Validators.Warehouse

@@ -1,8 +1,6 @@
-﻿using DLL.Data;
-using DLL.Repository.Classes;
-using DLL.Repository.Interfaces;
+﻿using DLL.Repository.Contract;
+using DLL.Repository.Implementation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace DLL.Repository.UnitOfWork
 {
@@ -151,7 +149,7 @@ namespace DLL.Repository.UnitOfWork
             {
                 if (_shipment is null)
                 {
-                    return _shipment;
+                    _shipment = new ShipmentRepository(_dbContext);
                 }
 
                 return _shipment;

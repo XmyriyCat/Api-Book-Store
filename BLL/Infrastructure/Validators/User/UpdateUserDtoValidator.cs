@@ -1,4 +1,4 @@
-﻿using BLL.DTO.Users;
+﻿using BLL.DTO.User;
 using FluentValidation;
 
 namespace BLL.Infrastructure.Validators.User
