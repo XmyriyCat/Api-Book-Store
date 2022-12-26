@@ -2,7 +2,7 @@
 
 namespace DLL.Repository.UnitOfWork
 {
-    public interface IRepositoryWrapper
+    public interface IRepositoryWrapper : IDisposable
     {
         IAuthorRepository Authors { get; }
         IBookRepository Books { get; }

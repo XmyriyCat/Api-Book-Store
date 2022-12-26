@@ -61,7 +61,7 @@ namespace BLL.Services.Implementation
 
             var book = _mapper.Map<Book>(item);
 
-            _repositoryWrapper.Books.Update(book);
+            await _repositoryWrapper.Books.UpdateAsync(book);
 
             await _repositoryWrapper.SaveChangesAsync();
 
