@@ -25,12 +25,12 @@ namespace ApiBookStore.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAuthorById(int id)
         {
-            var Author = await _authorService.FindAsync(id);
-            if (Author == null)
+            var author = await _authorService.FindAsync(id);
+            if (author == null)
             {
                 return NotFound();
             }
-            return Ok(Author);
+            return Ok(author);
         }
 
         [HttpPost]

@@ -24,7 +24,7 @@ namespace ApiBookStore.Controllers
 
         // GET: api/book/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(int id)
         {
             var book = await _bookService.GetById(id);
             if (book == null)
