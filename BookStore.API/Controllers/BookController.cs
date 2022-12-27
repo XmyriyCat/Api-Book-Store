@@ -1,4 +1,4 @@
-﻿using DLL.Models;
+﻿using BLL.DTO.Book;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
@@ -38,21 +38,21 @@ namespace ApiBookStore.Controllers
 
         // POST: api/book
         [HttpPost]
-        public async Task<IActionResult> CreateAsyncTask([FromBody] Book book)
+        public async Task<IActionResult> CreateAsyncTask([FromBody] CreateBookDto book)
         {
             if (book is null)
             {
                 return BadRequest();
             }
 
-            await _bookService.CreateAsync(book);
+            var createdBook = await _bookService.CreateAsync(book);
 
-            return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = book.Id }, book);
+            return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = createdBook.Id }, createdBook);
         }
 
         // PUT: api/book/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Book book)
+        public async Task<IActionResult> Update([FromBody] UpdateBookDto book)
         {
             if (book is null)
             {
@@ -68,18 +68,12 @@ namespace ApiBookStore.Controllers
 
             return Ok(updatedBook);
         }
-
+        
         // DELETE: api/book/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deletedBook = await _bookService.DeleteAsync(id);
-
-            if (deletedBook is null)
-            {
-                return NotFound();
-            }
-
+            await _bookService.DeleteAsync(id);
             return Ok();
         }
     }
