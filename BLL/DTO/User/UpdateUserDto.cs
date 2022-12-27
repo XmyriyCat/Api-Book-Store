@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BLL.DTO.Users;
+namespace BLL.DTO.User;
 
 public class UpdateUserDto
 {

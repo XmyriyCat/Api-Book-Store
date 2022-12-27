@@ -1,8 +1,8 @@
-﻿using DLL.Repository.Interfaces;
+﻿using DLL.Repository.Contract;
 
 namespace DLL.Repository.UnitOfWork
 {
-    public interface IRepositoryWrapper
+    public interface IRepositoryWrapper : IDisposable
     {
         IAuthorRepository Authors { get; }
         IBookRepository Books { get; }

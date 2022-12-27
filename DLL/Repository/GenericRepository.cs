@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using DLL.Data;
+﻿using DLL.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository
@@ -30,12 +29,21 @@ namespace DLL.Repository
 
             return item;
         }
-        public T Update(T item)
+        
+        public async Task<T> UpdateAsync(T item)
         {
-            _dbContext.Entry(item).State = EntityState.Modified;
+            var sourceItem = await _dbContext.Set<T>().FindAsync(item);
 
-            return item;
+            if (sourceItem is null)
+            {
+                throw new DbEntityNotFoundException($"{nameof(item)} is not found in database");
+            }
+
+            _dbContext.Entry(sourceItem).CurrentValues.SetValues(item);
+
+            return sourceItem;
         }
+
         public async Task DeleteAsync(int id)
         {
             var sourceItem = await _dbContext.Set<T>().FindAsync(id);
@@ -48,16 +56,11 @@ namespace DLL.Repository
             _dbContext.Remove(sourceItem);
         }
 
-        public int Count()
+        public async Task<int> CountAsync()
         {
-            return _dbContext.Set<T>().Count();
+            return await _dbContext.Set<T>().CountAsync();
         }
-
-        public async Task SaveChangesAsync()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!_isDisposed)

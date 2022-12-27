@@ -1,7 +1,7 @@
 ﻿using BLL.Infrastructure.Mapper;
 using BLL.Infrastructure.Validators.Author;
-using BLL.Services.Classes;
-using BLL.Services.Interfaces;
+using BLL.Services.Contract;
+using BLL.Services.Implementation;
 using DLL.Data;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;

@@ -1,4 +1,4 @@
-﻿using BLL.DTO.Orders;
+﻿using BLL.DTO.Order;
 using FluentValidation;
 
 namespace BLL.Infrastructure.Validators.Order

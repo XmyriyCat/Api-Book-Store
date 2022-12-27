@@ -1,8 +1,6 @@
-﻿using DLL.Data;
-using DLL.Repository.Classes;
-using DLL.Repository.Interfaces;
+﻿using DLL.Repository.Contract;
+using DLL.Repository.Implementation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace DLL.Repository.UnitOfWork
 {
@@ -22,6 +20,7 @@ namespace DLL.Repository.UnitOfWork
         private IUserRepository _user;
         private IWarehouseRepository _warehouse;
         private IWarehouseBookRepository _warehouseBook;
+        private bool _isDisposed;
 
         public RepositoryWrapper(DbContext dbContext)
         {
@@ -151,7 +150,7 @@ namespace DLL.Repository.UnitOfWork
             {
                 if (_shipment is null)
                 {
-                    return _shipment;
+                    _shipment = new ShipmentRepository(_dbContext);
                 }
 
                 return _shipment;
@@ -200,6 +199,25 @@ namespace DLL.Repository.UnitOfWork
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+
+                _isDisposed = true;
+            }
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
