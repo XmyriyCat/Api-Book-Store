@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Xml.XPath;
+using AutoMapper;
 using BLL.DTO.Book;
 using BLL.Services.Contract;
 using DLL.Models;
@@ -41,6 +42,16 @@ namespace BLL.Services.Implementation
                 throw new ValidationException("DTO is not valid");
             }
 
+            if (!await IsExistingAuthorsId(item.AuthorsId))
+            {
+                throw new ValidationException($"DTO contains a non-existent author id.");
+            }
+
+            if (!await IsExistingGenresId(item.GenresId))
+            {
+                throw new ValidationException($"DTO contains a non-existent genre id.");
+            }
+
             var book = _mapper.Map<Book>(item);
 
             await _repositoryWrapper.Books.AddAsync(book);
@@ -78,6 +89,46 @@ namespace BLL.Services.Implementation
         public async Task<int> CountAsync()
         {
             return await _repositoryWrapper.Books.CountAsync();
+        }
+
+        private async Task<bool> IsExistingAuthorsId(IEnumerable<int> authorsId)
+        {
+            foreach (var id in authorsId)
+            {
+                if (!await IsExistingAuthorId(id))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> IsExistingAuthorId(int authorId)
+        {
+            var result = await _repositoryWrapper.Authors.FindAsync(authorId);
+
+            return result is not null;
+        }
+
+        private async Task<bool> IsExistingGenresId(IEnumerable<int> genresId)
+        {
+            foreach (var id in genresId)
+            {
+                if (!await IsExistingGenreId(id))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> IsExistingGenreId(int genreId)
+        {
+            var result = await _repositoryWrapper.Genres.FindAsync(genreId);
+
+            return result is not null;
         }
     }
 }
