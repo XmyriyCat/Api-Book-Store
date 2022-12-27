@@ -1,15 +1,15 @@
 ﻿using DLL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class BookController : Controller
     {
-        private readonly IBookService _bookService;
+        private readonly IBookCatalogService _bookService;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookCatalogService bookService)
         {
             _bookService = bookService;
         }
@@ -24,25 +24,30 @@ namespace ApiBookStore.Controllers
 
         // GET: api/book/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsyncTask(int id)
         {
-            var book = await _bookService.GetById(id);
-            if (book == null)
+            var book = await _bookService.FindAsync(id);
+
+            if (book is null)
+            {
                 return NotFound();
+            }
 
             return Ok(book);
         }
 
         // POST: api/book
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Book book)
+        public async Task<IActionResult> CreateAsyncTask([FromBody] Book book)
         {
-            if (book == null)
+            if (book is null)
+            {
                 return BadRequest();
+            }
 
-            await _bookService.Create(book);
+            await _bookService.CreateAsync(book);
 
-            return CreatedAtAction(nameof(GetById), new { id = book.Id }, book);
+            return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = book.Id }, book);
         }
 
         // PUT: api/book/5
@@ -50,11 +55,16 @@ namespace ApiBookStore.Controllers
         public async Task<IActionResult> Update([FromBody] Book book)
         {
             if (book is null)
+            {
                 return BadRequest();
+            }
 
-            var updatedBook = await _bookService.Update(book);
-            if (updatedBook == null)
+            var updatedBook = await _bookService.UpdateAsync(book);
+
+            if (updatedBook is null)
+            {
                 return NotFound();
+            }
 
             return Ok(updatedBook);
         }
@@ -63,9 +73,12 @@ namespace ApiBookStore.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deletedBook = await _bookService.Delete(id);
-            if (deletedBook == null)
+            var deletedBook = await _bookService.DeleteAsync(id);
+
+            if (deletedBook is null)
+            {
                 return NotFound();
+            }
 
             return Ok();
         }
