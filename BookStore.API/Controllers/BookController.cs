@@ -17,7 +17,7 @@ namespace ApiBookStore.Controllers
 
         // GET: api/book
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsyncTask()
         {
             var books = await _bookService.GetAllAsync();
             return Ok(books);
@@ -52,7 +52,7 @@ namespace ApiBookStore.Controllers
         }
 
         // PUT: api/book/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateBookDto book)
         {
             if (book is null)

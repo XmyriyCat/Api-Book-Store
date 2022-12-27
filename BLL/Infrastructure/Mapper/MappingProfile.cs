@@ -31,13 +31,13 @@ namespace BLL.Infrastructure.Mapper
                 .ForMember(dest => dest.Genres,
                     opt => opt.MapFrom(src => src.GenresId.Select(genreId => new Genre { Id = genreId })))
                 .ForMember(dest => dest.Authors,
-                    opt => opt.MapFrom(src => src.AuthorsId.Select(authorId => new Genre { Id = authorId })));
+                    opt => opt.MapFrom(src => src.AuthorsId.Select(authorId => new Author() { Id = authorId })));
             CreateMap<UpdateBookDto, Book>()
                 .ForMember(dest => dest.PublisherId, opt => opt.MapFrom(src => src.IdPublisher))
                 .ForMember(dest => dest.Genres,
                     opt => opt.MapFrom(src => src.GenresId.Select(genreId => new Genre { Id = genreId })))
                 .ForMember(dest => dest.Authors,
-                    opt => opt.MapFrom(src => src.AuthorsId.Select(authorId => new Genre { Id = authorId })));
+                    opt => opt.MapFrom(src => src.AuthorsId.Select(authorId => new Author() { Id = authorId })));
 
             // Delivery
             CreateMap<CreateDeliveryDto, Delivery>();

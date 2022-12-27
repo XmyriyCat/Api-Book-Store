@@ -62,7 +62,7 @@ namespace BLL.Services.Implementation
 
             var author = _mapper.Map<Author>(item);
 
-            await _repositoryWrapper.Authors.UpdateAsync(author);
+            await _repositoryWrapper.Authors.UpdateAsync(author.Id, author);
 
             await _repositoryWrapper.SaveChangesAsync();
 

@@ -20,7 +20,9 @@ namespace DLL.Repository
         
         public async Task<T> FindAsync(int id)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            var item = await _dbContext.Set<T>().FindAsync(id);
+            _dbContext.Entry(item).State = EntityState.Detached;
+            return item;
         }
 
         public async Task<T> AddAsync(T item)
@@ -30,13 +32,13 @@ namespace DLL.Repository
             return item;
         }
         
-        public async Task<T> UpdateAsync(T item)
+        public async Task<T> UpdateAsync(int id, T item)
         {
-            var sourceItem = await _dbContext.Set<T>().FindAsync(item);
+            var sourceItem = await _dbContext.Set<T>().FindAsync(id);
 
             if (sourceItem is null)
             {
-                throw new DbEntityNotFoundException($"{nameof(item)} is not found in database");
+                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
             }
 
             _dbContext.Entry(sourceItem).CurrentValues.SetValues(item);

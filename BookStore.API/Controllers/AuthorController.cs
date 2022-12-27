@@ -49,7 +49,7 @@ namespace ApiBookStore.Controllers
             return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = createdAuthor.Id }, createdAuthor);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdateAuthorDto author)
         {
             if (author is null)
