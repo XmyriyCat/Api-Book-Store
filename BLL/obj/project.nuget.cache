@@ -1,13 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "LXvFi6rodNL/Nf+x0cmkDrFYheszONERrUqcF8N5yhwKvtn9od7aUw5rgqcE2x5jtytzl6SSSh4x7aW+gDEEEA==",
+  "dgSpecHash": "P0upJ7cePfXy2eRG6bU1bhxVy79DRpYZLPpiSBILhxk6t3BPo6VEdEt35RFzee2Pu3Z3glqrDwxl2f651VIUAQ==",
   "success": true,
-  "projectFilePath": "D:\\шарага\\4 курс\\тп\\BLL\\BLL.csproj",
+  "projectFilePath": "D:\\Projects\\Modsen-project\\BLL\\BLL.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\fluentvalidation\\11.4.0\\fluentvalidation.11.4.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
-    "C:\\Users\\User\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\5.0.1\\microsoft.data.sqlclient.sni.runtime.5.0.1.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.1\\microsoft.entityframeworkcore.7.0.1.nupkg.sha512",

@@ -4,6 +4,7 @@ using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
 {
@@ -22,9 +23,9 @@ namespace BLL.Services.Implementation
             _updateBookDtoValidator = updateValidator;
         }
 
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return _repositoryWrapper.Books.GetAll();
+            return await _repositoryWrapper.Books.GetAll().ToListAsync();
         }
 
         public async Task<Book> FindAsync(int id)

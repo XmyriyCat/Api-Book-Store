@@ -1,5 +1,5 @@
 ﻿using BLL.DTO.Author;
-using BLL.Services.Interfaces;
+using BLL.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
@@ -16,9 +16,9 @@ namespace ApiBookStore.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var authors = _authorService.GetAll();
+            var authors = await _authorService.GetAllAsync();
             return Ok(authors);
         }
 

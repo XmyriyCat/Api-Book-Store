@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AquNWpwz/74/slJYznFPKcl/xzniqfLhYbFgajGv63L9j5Z+bopU87JqH17dNDUQ/tr5OuvQRQRlLVJn9WEIrQ==",
+  "dgSpecHash": "X0Q0UXPRBBMX7SLO9/SSp4IBalF2Ph78GhMfv46dskQYvZ/dYugxZPPoRK9GnX8eVX3y/YneBI7y5GDPwxA7mg==",
   "success": true,
-  "projectFilePath": "D:\\шарага\\4 курс\\тп\\DLL\\DLL.csproj",
+  "projectFilePath": "D:\\Projects\\Modsen-project\\DLL\\DLL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

@@ -5,7 +5,7 @@ namespace BLL.Services.Contract
 {
     public interface IBookCatalogService
     {
-        IEnumerable<Book> GetAll();
+        Task<IEnumerable<Book>> GetAllAsync();
         Task<Book> FindAsync(int id);
         Task<Book> AddAsync(CreateBookDto item);
         Task<Book> UpdateAsync(UpdateBookDto item);

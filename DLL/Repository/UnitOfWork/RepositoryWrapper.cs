@@ -1,4 +1,5 @@
-﻿using DLL.Repository.Contract;
+﻿using DLL.Data;
+using DLL.Repository.Contract;
 using DLL.Repository.Implementation;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ namespace DLL.Repository.UnitOfWork
         private IWarehouseBookRepository _warehouseBook;
         private bool _isDisposed;
 
-        public RepositoryWrapper(DbContext dbContext)
+        public RepositoryWrapper(ShopDbContext dbContext)
         {
             _dbContext = dbContext;
         }

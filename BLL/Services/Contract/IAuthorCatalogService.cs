@@ -5,7 +5,7 @@ namespace BLL.Services.Contract
 {
     public interface IAuthorCatalogService
     {
-        IEnumerable<Author> GetAll();
+        Task<IEnumerable<Author>> GetAllAsync();
         Task<Author> FindAsync(int id);
         Task<Author> AddAsync(CreateAuthorDto item);
         Task<Author> UpdateAsync(UpdateAuthorDto item);

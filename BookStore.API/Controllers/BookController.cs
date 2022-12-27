@@ -1,4 +1,5 @@
 ﻿using BLL.DTO.Book;
+using BLL.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
@@ -18,7 +19,7 @@ namespace ApiBookStore.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var books = await _bookService.GetAll();
+            var books = await _bookService.GetAllAsync();
             return Ok(books);
         }
 
@@ -45,7 +46,7 @@ namespace ApiBookStore.Controllers
                 return BadRequest();
             }
 
-            var createdBook = await _bookService.CreateAsync(book);
+            var createdBook = await _bookService.AddAsync(book);
 
             return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = createdBook.Id }, createdBook);
         }
