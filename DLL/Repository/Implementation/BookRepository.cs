@@ -13,10 +13,11 @@ namespace DLL.Repository.Implementation
         public async Task<IEnumerable<Book>> GetAllIncludeAsync()
         {
             return await dbContext.Set<Book>()
-                .Include(book => book.Authors)
-                .Include(book => book.Genres)
-                .Include(book => book.Publisher)
-                .ToListAsync();
+            .Include(book => book.Authors)
+            .Include(book => book.Genres)
+            .Include(book => book.Publisher)
+            .AsNoTracking()
+            .ToListAsync();
         }
 
         public async Task<Book> FindIncludeAsync(int id)
@@ -25,6 +26,7 @@ namespace DLL.Repository.Implementation
                 .Include(book => book.Authors)
                 .Include(book => book.Genres)
                 .Include(book => book.Publisher)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(book => book.Id == id);
         }
     }
