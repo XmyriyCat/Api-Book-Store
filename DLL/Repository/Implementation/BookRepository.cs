@@ -1,4 +1,5 @@
-﻿using DLL.Models;
+﻿using DLL.Errors;
+using DLL.Models;
 using DLL.Repository.Contract;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +27,25 @@ namespace DLL.Repository.Implementation
                 .Include(book => book.Authors)
                 .Include(book => book.Genres)
                 .Include(book => book.Publisher)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(book => book.Id == id);
+        }
+
+        public override async Task<Book> UpdateAsync(int id, Book item)
+        {
+            var sourceItem = await FindIncludeAsync(id);
+
+            if (sourceItem is null)
+            {
+                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
+            }
+
+            dbContext.Entry(sourceItem).CurrentValues.SetValues(item);
+
+            // updating collections in item properties
+            sourceItem.Authors = item.Authors;
+            sourceItem.Genres = item.Genres;
+
+            return sourceItem;
         }
     }
 }

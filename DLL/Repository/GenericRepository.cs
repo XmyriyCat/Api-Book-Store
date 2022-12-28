@@ -31,7 +31,7 @@ namespace DLL.Repository
             return item;
         }
         
-        public async Task<T> UpdateAsync(int id, T item)
+        public virtual async Task<T> UpdateAsync(int id, T item)
         {
             var sourceItem = await dbContext.Set<T>().FindAsync(id);
 

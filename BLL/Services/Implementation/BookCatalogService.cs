@@ -108,6 +108,23 @@ namespace BLL.Services.Implementation
 
             var book = _mapper.Map<Book>(item);
 
+            book.Authors = new List<Author>();
+            book.Genres = new List<Genre>();
+
+            foreach (var idAuthor in item.AuthorsId)
+            {
+                Author author = await _repositoryWrapper.Authors.FindAsync(idAuthor);
+                book.Authors.Add(author);
+            }
+
+            foreach (var idGenre in item.GenresId)
+            {
+                Genre genre = await _repositoryWrapper.Genres.FindAsync(idGenre);
+                book.Genres.Add(genre);
+            }
+
+            book.Publisher = await _repositoryWrapper.Publishers.FindAsync(item.IdPublisher);
+
             await _repositoryWrapper.Books.UpdateAsync(book.Id, book);
 
             await _repositoryWrapper.SaveChangesAsync();
