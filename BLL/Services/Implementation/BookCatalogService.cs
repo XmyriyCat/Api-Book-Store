@@ -149,53 +149,6 @@ namespace BLL.Services.Implementation
         {
             return await _repositoryWrapper.Books.CountAsync();
         }
-
-        private async Task<bool> IsExistingAuthorsId(IEnumerable<int> authorsId)
-        {
-            foreach (var id in authorsId)
-            {
-                if (!await IsExistingAuthorId(id))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private async Task<bool> IsExistingAuthorId(int authorId)
-        {
-            var result = await _repositoryWrapper.Authors.FindAsync(authorId);
-
-            return result is not null;
-        }
-
-        private async Task<bool> IsExistingGenresId(IEnumerable<int> genresId)
-        {
-            foreach (var id in genresId)
-            {
-                if (!await IsExistingGenreId(id))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private async Task<bool> IsExistingGenreId(int genreId)
-        {
-            var result = await _repositoryWrapper.Genres.FindAsync(genreId);
-
-            return result is not null;
-        }
-
-        private async Task<bool> IsExistingPublisherId(int publisherId)
-        {
-            var result = await _repositoryWrapper.Publishers.FindAsync(publisherId);
-
-            return result is not null;
-        }
     }
 }
 
