@@ -6,59 +6,60 @@ namespace DLL.Repository
     public abstract class GenericRepository<T> : IRepository<T> where T : class
     {
         private bool _isDisposed;
-        private readonly DbContext _dbContext;
+        protected readonly DbContext dbContext;
 
         protected GenericRepository(DbContext context)
         {
-            _dbContext = context;
+            dbContext = context;
         }
 
         public IQueryable<T> GetAll()
         {
-            return _dbContext.Set<T>().AsNoTracking();
+            return dbContext.Set<T>().AsNoTracking();
         }
         
         public async Task<T> FindAsync(int id)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            var item = await dbContext.Set<T>().FindAsync(id);
+            return item;
         }
 
         public async Task<T> AddAsync(T item)
         {
-            await _dbContext.Set<T>().AddAsync(item);
+            await dbContext.Set<T>().AddAsync(item);
 
             return item;
         }
         
-        public async Task<T> UpdateAsync(T item)
+        public virtual async Task<T> UpdateAsync(int id, T item)
         {
-            var sourceItem = await _dbContext.Set<T>().FindAsync(item);
+            var sourceItem = await dbContext.Set<T>().FindAsync(id);
 
             if (sourceItem is null)
             {
-                throw new DbEntityNotFoundException($"{nameof(item)} is not found in database");
+                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
             }
 
-            _dbContext.Entry(sourceItem).CurrentValues.SetValues(item);
+            dbContext.Entry(sourceItem).CurrentValues.SetValues(item);
 
             return sourceItem;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var sourceItem = await _dbContext.Set<T>().FindAsync(id);
+            var sourceItem = await dbContext.Set<T>().FindAsync(id);
 
             if (sourceItem is null)
             {
                 return;
             }
 
-            _dbContext.Remove(sourceItem);
+            dbContext.Remove(sourceItem);
         }
 
         public async Task<int> CountAsync()
         {
-            return await _dbContext.Set<T>().CountAsync();
+            return await dbContext.Set<T>().CountAsync();
         }
         
         protected virtual void Dispose(bool disposing)
@@ -67,7 +68,7 @@ namespace DLL.Repository
             {
                 if (disposing)
                 {
-                    _dbContext.Dispose();
+                    dbContext.Dispose();
                 }
 
                 _isDisposed = true;

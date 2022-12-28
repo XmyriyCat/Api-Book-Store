@@ -22,14 +22,14 @@ namespace BLL.Services.Implementation
             _updateBookDtoValidator = updateValidator;
         }
 
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return _repositoryWrapper.Books.GetAll();
+            return await _repositoryWrapper.Books.GetAllIncludeAsync();
         }
 
         public async Task<Book> FindAsync(int id)
         {
-            return await _repositoryWrapper.Books.FindAsync(id);
+            return await _repositoryWrapper.Books.FindIncludeAsync(id);
         }
 
         public async Task<Book> AddAsync(CreateBookDto item)
@@ -41,18 +41,42 @@ namespace BLL.Services.Implementation
                 throw new ValidationException("DTO is not valid");
             }
 
-            if (!await IsExistingAuthorsId(item.AuthorsId))
-            {
-                throw new ValidationException($"DTO contains a non-existent author id.");
-            }
-
-            if (!await IsExistingGenresId(item.GenresId))
-            {
-                throw new ValidationException($"DTO contains a non-existent genre id.");
-            }
-
             var book = _mapper.Map<Book>(item);
 
+            book.Authors = new List<Author>();
+            book.Genres = new List<Genre>();
+
+            foreach (var idAuthor in item.AuthorsId)
+            {
+                var author = await _repositoryWrapper.Authors.FindAsync(idAuthor);
+
+                if (author is null)
+                {
+                    throw new ValidationException($"DTO contains a non-existent author id.");
+                }
+
+                book.Authors.Add(author);
+            }
+
+            foreach (var idGenre in item.GenresId)
+            {
+                var genre = await _repositoryWrapper.Genres.FindAsync(idGenre);
+
+                if (genre is null)
+                {
+                    throw new ValidationException($"DTO contains a non-existent genre id.");
+                }
+
+                book.Genres.Add(genre);
+            }
+
+            var publisher = await _repositoryWrapper.Publishers.FindAsync(item.IdPublisher);
+
+            if (publisher is null)
+            {
+                throw new ValidationException($"DTO contains a non-existent publisher id.");
+            }
+            
             await _repositoryWrapper.Books.AddAsync(book);
 
             await _repositoryWrapper.SaveChangesAsync();
@@ -68,14 +92,50 @@ namespace BLL.Services.Implementation
             {
                 throw new ValidationException("DTO is not valid");
             }
-
+            
             var book = _mapper.Map<Book>(item);
 
-            await _repositoryWrapper.Books.UpdateAsync(book);
+            book.Authors = new List<Author>();
+            book.Genres = new List<Genre>();
+
+            foreach (var idAuthor in item.AuthorsId)
+            {
+                var author = await _repositoryWrapper.Authors.FindAsync(idAuthor);
+                
+                if (author is null)
+                {
+                    throw new ValidationException($"DTO contains a non-existent author id.");
+                }
+                
+                book.Authors.Add(author);
+            }
+
+            foreach (var idGenre in item.GenresId)
+            {
+                var genre = await _repositoryWrapper.Genres.FindAsync(idGenre);
+
+                if (genre is null)
+                {
+                    throw new ValidationException($"DTO contains a non-existent genre id.");
+                }
+
+                book.Genres.Add(genre);
+            }
+
+            var publisher = await _repositoryWrapper.Publishers.FindAsync(item.IdPublisher);
+
+            if (publisher is null)
+            {
+                throw new ValidationException($"DTO contains a non-existent publisher id.");
+            }
+
+            book.Publisher = publisher;
+
+            await _repositoryWrapper.Books.UpdateAsync(book.Id, book);
 
             await _repositoryWrapper.SaveChangesAsync();
 
-            return book;
+            return await _repositoryWrapper.Books.FindIncludeAsync(book.Id);
         }
 
         public async Task DeleteAsync(int id)
@@ -126,6 +186,13 @@ namespace BLL.Services.Implementation
         private async Task<bool> IsExistingGenreId(int genreId)
         {
             var result = await _repositoryWrapper.Genres.FindAsync(genreId);
+
+            return result is not null;
+        }
+
+        private async Task<bool> IsExistingPublisherId(int publisherId)
+        {
+            var result = await _repositoryWrapper.Publishers.FindAsync(publisherId);
 
             return result is not null;
         }

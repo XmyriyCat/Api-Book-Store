@@ -1,4 +1,5 @@
 ﻿using BLL.DTO.Book;
+using BLL.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
@@ -16,9 +17,9 @@ namespace ApiBookStore.Controllers
 
         // GET: api/book
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsyncTask()
         {
-            var books = await _bookService.GetAll();
+            var books = await _bookService.GetAllAsync();
             return Ok(books);
         }
 
@@ -27,7 +28,7 @@ namespace ApiBookStore.Controllers
         public async Task<IActionResult> GetByIdAsyncTask(int id)
         {
             var book = await _bookService.FindAsync(id);
-
+            
             if (book is null)
             {
                 return NotFound();
@@ -45,13 +46,13 @@ namespace ApiBookStore.Controllers
                 return BadRequest();
             }
 
-            var createdBook = await _bookService.CreateAsync(book);
+            var createdBook = await _bookService.AddAsync(book);
 
-            return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = createdBook.Id }, createdBook);
+            return new ObjectResult(createdBook) { StatusCode = StatusCodes.Status201Created };
         }
 
         // PUT: api/book/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateBookDto book)
         {
             if (book is null)

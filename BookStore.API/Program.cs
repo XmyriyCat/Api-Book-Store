@@ -20,6 +20,7 @@ namespace ApiBookStore
             builder.Services.ConfigureAutoMapper();
             builder.Services.ConfigureFluentValidation();
             builder.Services.ConfigureDtoServices();
+            builder.Services.ConfigureNewtonJson();
 
             var app = builder.Build();
 

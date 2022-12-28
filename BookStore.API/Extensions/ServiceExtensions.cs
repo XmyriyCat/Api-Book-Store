@@ -32,9 +32,18 @@ namespace ApiBookStore.Extensions
             services.AddValidatorsFromAssemblyContaining<CreateAuthorDtoValidator>();
         }
 
+        public static void ConfigureNewtonJson(this IServiceCollection services) // to ignore recursion in json objects
+        {
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+        }
+
         public static void ConfigureDtoServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthorCatalogService, AuthorCatalogService>();
+            services.AddScoped<IBookCatalogService, BookCatalogService>();
             // TODO: Add other services later
         }
     }
