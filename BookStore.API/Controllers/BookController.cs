@@ -28,7 +28,7 @@ namespace ApiBookStore.Controllers
         public async Task<IActionResult> GetByIdAsyncTask(int id)
         {
             var book = await _bookService.FindAsync(id);
-
+            
             if (book is null)
             {
                 return NotFound();
@@ -48,7 +48,7 @@ namespace ApiBookStore.Controllers
 
             var createdBook = await _bookService.AddAsync(book);
 
-            return CreatedAtAction(nameof(GetByIdAsyncTask), new { id = createdBook.Id }, createdBook);
+            return new ObjectResult(createdBook) { StatusCode = StatusCodes.Status201Created };
         }
 
         // PUT: api/book/5

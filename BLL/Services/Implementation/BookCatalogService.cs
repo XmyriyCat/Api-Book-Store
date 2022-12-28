@@ -4,7 +4,6 @@ using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
 {
@@ -25,12 +24,12 @@ namespace BLL.Services.Implementation
 
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return await _repositoryWrapper.Books.GetAll().ToListAsync();
+            return await _repositoryWrapper.Books.GetAllIncludeAsync();
         }
 
         public async Task<Book> FindAsync(int id)
         {
-            return await _repositoryWrapper.Books.FindAsync(id);
+            return await _repositoryWrapper.Books.FindIncludeAsync(id);
         }
 
         public async Task<Book> AddAsync(CreateBookDto item)
@@ -53,6 +52,23 @@ namespace BLL.Services.Implementation
             }
 
             var book = _mapper.Map<Book>(item);
+
+            book.Authors = new List<Author>();
+            book.Genres = new List<Genre>();
+
+            foreach (var idAuthor in item.AuthorsId)
+            {
+                Author author = await _repositoryWrapper.Authors.FindAsync(idAuthor);
+                book.Authors.Add(author);
+            }
+
+            foreach (var idGenre in item.GenresId)
+            {
+                Genre genre = await _repositoryWrapper.Genres.FindAsync(idGenre);
+                book.Genres.Add(genre);
+            }
+
+            book.Publisher = await _repositoryWrapper.Publishers.FindAsync(item.IdPublisher);
 
             await _repositoryWrapper.Books.AddAsync(book);
 
