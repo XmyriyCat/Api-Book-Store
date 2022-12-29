@@ -5,7 +5,6 @@ namespace DLL.Repository
 {
     public abstract class GenericRepository<T> : IRepository<T> where T : class
     {
-        private bool _isDisposed;
         protected readonly DbContext dbContext;
 
         protected GenericRepository(DbContext context)
@@ -60,26 +59,6 @@ namespace DLL.Repository
         public async Task<int> CountAsync()
         {
             return await dbContext.Set<T>().CountAsync();
-        }
-        
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_isDisposed)
-            {
-                if (disposing)
-                {
-                    dbContext.Dispose();
-                }
-
-                _isDisposed = true;
-            }
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
         }
     }
 }

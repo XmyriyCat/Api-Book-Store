@@ -131,11 +131,11 @@ namespace BLL.Services.Implementation
 
             book.Publisher = publisher;
 
-            await _repositoryWrapper.Books.UpdateAsync(book.Id, book);
+            book = await _repositoryWrapper.Books.UpdateAsync(book.Id, book);
 
             await _repositoryWrapper.SaveChangesAsync();
 
-            return await _repositoryWrapper.Books.FindIncludeAsync(book.Id);
+            return book;
         }
 
         public async Task DeleteAsync(int id)
