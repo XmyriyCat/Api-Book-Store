@@ -35,16 +35,11 @@ namespace BLL.Services.Implementation
 
         public async Task<Genre> AddAsync(CreateGenreDto item)
         {
-            var validationResult = await _createGenreDtoValidator.ValidateAsync(item);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException("DTO is not valid");
-            }
+            await _createGenreDtoValidator.ValidateAndThrowAsync(item);
 
             var genre = _mapper.Map<Genre>(item);
 
-            await _repositoryWrapper.Genres.AddAsync(genre);
+            genre = await _repositoryWrapper.Genres.AddAsync(genre);
 
             await _repositoryWrapper.SaveChangesAsync();
 
@@ -53,16 +48,11 @@ namespace BLL.Services.Implementation
 
         public async Task<Genre> UpdateAsync(UpdateGenreDto item)
         {
-            var validationResult = await _updateGenreDtoValidator.ValidateAsync(item);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException("DTO is not valid");
-            }
+            await _updateGenreDtoValidator.ValidateAndThrowAsync(item);
 
             var genre = _mapper.Map<Genre>(item);
 
-            await _repositoryWrapper.Genres.UpdateAsync(genre.Id, genre);
+            genre = await _repositoryWrapper.Genres.UpdateAsync(genre.Id, genre);
 
             await _repositoryWrapper.SaveChangesAsync();
 
