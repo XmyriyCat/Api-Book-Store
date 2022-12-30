@@ -4,6 +4,7 @@ using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
 {
@@ -24,12 +25,12 @@ namespace BLL.Services.Implementation
 
         public async Task<IEnumerable<Publisher>> GetAllAsync()
         {
-            return await _repositoryWrapper.Publishers.GetAllIncludeAsync();
+            return await _repositoryWrapper.Publishers.GetAll().ToListAsync();
         }
 
         public async Task<Publisher> FindAsync(int id)
         {
-            return await _repositoryWrapper.Publishers.FindIncludeAsync(id);
+            return await _repositoryWrapper.Publishers.FindAsync(id);
         }
 
         public async Task<Publisher> AddAsync(CreatePublisherDto item)
@@ -65,7 +66,7 @@ namespace BLL.Services.Implementation
 
             await _repositoryWrapper.SaveChangesAsync();
 
-            return await _repositoryWrapper.Publishers.FindIncludeAsync(publisher.Id);
+            return publisher;
         }
 
         public async Task DeleteAsync(int id)

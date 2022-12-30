@@ -4,6 +4,7 @@ using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
 {
@@ -24,12 +25,12 @@ namespace BLL.Services.Implementation
 
         public async Task<IEnumerable<Genre>> GetAllAsync()
         {
-            return await _repositoryWrapper.Genres.GetAllIncludeAsync();
+            return await _repositoryWrapper.Genres.GetAll().ToListAsync();
         }
 
         public async Task<Genre> FindAsync(int id)
         {
-            return await _repositoryWrapper.Genres.FindIncludeAsync(id);
+            return await _repositoryWrapper.Genres.FindAsync(id);
         }
 
         public async Task<Genre> AddAsync(CreateGenreDto item)
@@ -65,7 +66,7 @@ namespace BLL.Services.Implementation
 
             await _repositoryWrapper.SaveChangesAsync();
 
-            return await _repositoryWrapper.Genres.FindIncludeAsync(genre.Id);
+            return genre;
         }
 
         public async Task DeleteAsync(int id)
