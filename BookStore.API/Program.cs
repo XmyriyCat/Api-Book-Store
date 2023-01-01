@@ -21,8 +21,10 @@ namespace ApiBookStore
             builder.Services.ConfigureFluentValidation();
             builder.Services.ConfigureDtoServices();
             builder.Services.ConfigureNewtonJson();
-
+            
             var app = builder.Build();
+
+            app.AppendGlobalErrorHandler();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
