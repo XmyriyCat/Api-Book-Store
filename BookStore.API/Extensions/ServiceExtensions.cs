@@ -1,4 +1,5 @@
-﻿using BLL.Infrastructure.Mapper;
+﻿using ApiBookStore.MiddlewareHandlers;
+using BLL.Infrastructure.Mapper;
 using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
@@ -45,6 +46,11 @@ namespace ApiBookStore.Extensions
             services.AddScoped<IAuthorCatalogService, AuthorCatalogService>();
             services.AddScoped<IBookCatalogService, BookCatalogService>();
             // TODO: Add other services later
+        }
+
+        public static void AppendGlobalErrorHandler(this IApplicationBuilder builder)
+        {
+            builder.UseMiddleware<GlobalErrorHandler>();
         }
     }
 }
