@@ -3,13 +3,13 @@ using BLL.DTO.Author;
 using BLL.DTO.Book;
 using BLL.DTO.Delivery;
 using BLL.DTO.Genre;
+using BLL.DTO.Order;
 using BLL.DTO.OrderLine;
-using BLL.DTO.Orders;
 using BLL.DTO.PaymentWay;
 using BLL.DTO.Publisher;
 using BLL.DTO.Role;
 using BLL.DTO.Shipment;
-using BLL.DTO.Users;
+using BLL.DTO.User;
 using BLL.DTO.Warehouse;
 using BLL.DTO.WarehouseBook;
 using DLL.Models;
@@ -27,17 +27,10 @@ namespace BLL.Infrastructure.Mapper
             // Book
             CreateMap<CreateBookDto, Book>()
                 .ForMember(dest => dest.PublisherId,
-                    opt => opt.MapFrom(src => src.IdPublisher))
-                .ForMember(dest => dest.Genres,
-                    opt => opt.MapFrom(src => src.GenresId.Select(genreId => new Genre { Id = genreId })))
-                .ForMember(dest => dest.Authors,
-                    opt => opt.MapFrom(src => src.AuthorsId.Select(authorId => new Genre { Id = authorId })));
+                    opt => opt.MapFrom(src => src.IdPublisher));
+
             CreateMap<UpdateBookDto, Book>()
-                .ForMember(dest => dest.PublisherId, opt => opt.MapFrom(src => src.IdPublisher))
-                .ForMember(dest => dest.Genres,
-                    opt => opt.MapFrom(src => src.GenresId.Select(genreId => new Genre { Id = genreId })))
-                .ForMember(dest => dest.Authors,
-                    opt => opt.MapFrom(src => src.AuthorsId.Select(authorId => new Genre { Id = authorId })));
+                    .ForMember(dest => dest.PublisherId, opt => opt.MapFrom(src => src.IdPublisher));
 
             // Delivery
             CreateMap<CreateDeliveryDto, Delivery>();

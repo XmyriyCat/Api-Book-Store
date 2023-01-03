@@ -1,5 +1,4 @@
-﻿using System.Data;
-using BLL.DTO.Genre;
+﻿using BLL.DTO.Genre;
 using FluentValidation;
 
 namespace BLL.Infrastructure.Validators.Genre

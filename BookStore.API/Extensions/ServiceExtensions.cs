@@ -1,7 +1,8 @@
-﻿using BLL.Infrastructure.Mapper;
+﻿using ApiBookStore.MiddlewareHandlers;
+using BLL.Infrastructure.Mapper;
 using BLL.Infrastructure.Validators.Author;
-using BLL.Services.Classes;
-using BLL.Services.Interfaces;
+using BLL.Services.Contract;
+using BLL.Services.Implementation;
 using DLL.Data;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
@@ -32,10 +33,24 @@ namespace ApiBookStore.Extensions
             services.AddValidatorsFromAssemblyContaining<CreateAuthorDtoValidator>();
         }
 
+        public static void ConfigureNewtonJson(this IServiceCollection services) // to ignore recursion in json objects
+        {
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+        }
+
         public static void ConfigureDtoServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthorCatalogService, AuthorCatalogService>();
+            services.AddScoped<IBookCatalogService, BookCatalogService>();
             // TODO: Add other services later
+        }
+
+        public static void AppendGlobalErrorHandler(this IApplicationBuilder builder)
+        {
+            builder.UseMiddleware<GlobalErrorHandler>();
         }
     }
 }

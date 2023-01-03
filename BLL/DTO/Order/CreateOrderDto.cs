@@ -1,4 +1,4 @@
-﻿namespace BLL.DTO.Orders;
+﻿namespace BLL.DTO.Order;
 
 public class CreateOrderDto
 {
