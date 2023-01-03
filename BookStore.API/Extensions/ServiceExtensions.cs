@@ -4,6 +4,7 @@ using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using DLL.Data;
+using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,8 @@ namespace ApiBookStore.Extensions
         {
             services.AddScoped<IAuthorCatalogService, AuthorCatalogService>();
             services.AddScoped<IBookCatalogService, BookCatalogService>();
+            services.AddScoped<IGenreCatalogService, GenreCatalogService>();
+            services.AddScoped<IPublisherCatalogService, PublisherCatalogService>();
             // TODO: Add other services later
         }
 
