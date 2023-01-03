@@ -1,5 +1,6 @@
 ﻿using BLL.DTO.Author;
-using BLL.Services.Interfaces;
+using BLL.DTO.Book;
+using BLL.Services.Contract;
 using DLL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +13,19 @@ namespace ManagerController
     [Route("api/[controller]")]
     public class ManagerController : Controller
     {
-        private readonly IBookService _bookService;
+        private readonly IBookCatalogService _bookService;
 
         private readonly IAuthorCatalogService _authorService;
-        public ManagerController(IAuthorCatalogService authorService)
+        public ManagerController(IAuthorCatalogService authorService, IBookCatalogService bookService)
         {
             _authorService = authorService;
+            _bookService = bookService;
         }
 
         [HttpGet]
         public IActionResult GetAuthors()
         {
-            var authors = _authorService.GetAll();
+            var authors = _authorService.GetAllAsync();
             return Ok(authors);
         }
 
@@ -58,7 +60,7 @@ namespace ManagerController
                 return BadRequest();
             }
 
-            var updatedAuthor = await _authorService.Update(author);
+            var updatedAuthor = await _authorService.UpdateAsync(author);
             if (updatedAuthor == null)
             {
                 return NotFound();
@@ -78,7 +80,7 @@ namespace ManagerController
         [HttpGet("book")]
         public async Task<IActionResult> GetAll()
         {
-            var books = await _bookService.GetAll();
+            var books = await _bookService.GetAllAsync();
             return Ok(books);
         }
 
@@ -86,7 +88,7 @@ namespace ManagerController
         [HttpGet("book/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var book = await _bookService.GetById(id);
+            var book = await _bookService.FindAsync(id);
             if (book == null)
                 return NotFound();
 
@@ -95,24 +97,24 @@ namespace ManagerController
 
         // POST: api/Manager/book
         [HttpPost("book")]
-        public async Task<IActionResult> Create([FromBody] Book book)
+        public async Task<IActionResult> Create([FromBody] CreateBookDto newBook)
         {
-            if (book == null)
+            if (newBook == null)
                 return BadRequest();
 
-            await _bookService.Create(book);
+            var book = await _bookService.AddAsync(newBook);
 
             return CreatedAtAction(nameof(GetById), new { id = book.Id }, book);
         }
 
         // PUT: api/Manager/book/5
         [HttpPut("book/{id}")]
-        public async Task<IActionResult> Update([FromBody] Book book)
+        public async Task<IActionResult> Update([FromBody] UpdateBookDto book)
         {
             if (book is null)
                 return BadRequest();
 
-            var updatedBook = await _bookService.Update(book);
+            var updatedBook = await _bookService.UpdateAsync(book);
             if (updatedBook == null)
                 return NotFound();
 
@@ -123,9 +125,8 @@ namespace ManagerController
         [HttpDelete("book/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deletedBook = await _bookService.Delete(id);
-            if (deletedBook == null)
-                return NotFound();
+            await _bookService.DeleteAsync(id);
+            
 
             return Ok();
         }
