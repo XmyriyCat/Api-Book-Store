@@ -1,4 +1,5 @@
-﻿using DLL.Errors;
+﻿using System.Linq.Expressions;
+using DLL.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository
@@ -20,6 +21,12 @@ namespace DLL.Repository
         public async Task<T> FindAsync(int id)
         {
             var item = await dbContext.Set<T>().FindAsync(id);
+
+            if (item is null)
+            {
+                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
+            }
+
             return item;
         }
 
@@ -59,6 +66,11 @@ namespace DLL.Repository
         public async Task<int> CountAsync()
         {
             return await dbContext.Set<T>().CountAsync();
+        }
+
+        public async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> expression)
+        {
+            return await dbContext.Set<T>().FirstOrDefaultAsync(expression);
         }
     }
 }

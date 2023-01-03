@@ -21,25 +21,23 @@ namespace DLL.Data.ModelConfigurations
                 .HasMaxLength(150)
                 .IsRequired();
 
-            entityBuilder.Property(x => x.Password)
-                .HasMaxLength(150)
+            entityBuilder.Property(x => x.PasswordHash)
+                .IsRequired();
+
+            entityBuilder.Property(x => x.PasswordSalt)
                 .IsRequired();
 
             entityBuilder.Property(x => x.Email)
-                .HasMaxLength(150)
-                .IsRequired();
+                .HasMaxLength(150);
 
             entityBuilder.Property(x => x.Country)
-                .HasMaxLength(150)
-                .IsRequired();
+                .HasMaxLength(150);
 
             entityBuilder.Property(x => x.City)
-                .HasMaxLength(150)
-                .IsRequired();
+                .HasMaxLength(150);
 
             entityBuilder.Property(x => x.Address)
-                .HasMaxLength(150)
-                .IsRequired();
+                .HasMaxLength(150);
 
             // many to many
             entityBuilder.HasMany(x => x.Roles)

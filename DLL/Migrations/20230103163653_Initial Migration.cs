@@ -99,11 +99,12 @@ namespace DLL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Login = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    City = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true)
                 },
                 constraints: table =>
                 {

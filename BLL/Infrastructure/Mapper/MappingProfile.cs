@@ -45,13 +45,9 @@ namespace BLL.Infrastructure.Mapper
             CreateMap<UpdateOrderLineDto, OrderLine>();
 
             // Orders
-            CreateMap<CreateOrderDto, Order>()
-                .ForMember(dest => dest.OrderLine,
-                    opt => opt.MapFrom(src => src.OrderLineId.Select(orderLineId => new OrderLine { Id = orderLineId })));
-            CreateMap<UpdateOrderDto, Order>()
-                .ForMember(dest => dest.OrderLine,
-                    opt => opt.MapFrom(src => src.OrderLineId.Select(orderLineId => new OrderLine { Id = orderLineId })));
-
+            CreateMap<CreateOrderDto, Order>();
+            CreateMap<UpdateOrderDto, Order>();
+                
             // PaymentWay
             CreateMap<CreatePaymentWayDto, PaymentWay>();
             CreateMap<UpdatePaymentWayDto, PaymentWay>();
@@ -69,12 +65,8 @@ namespace BLL.Infrastructure.Mapper
             CreateMap<UpdateShipmentDto, Shipment>();
 
             // User
-            CreateMap<CreateUserDto, User>()
-                .ForMember(dest => dest.Roles,
-                    opt => opt.MapFrom(src => src.RolesIds.Select(roleId => new Role { Id = roleId })));
-            CreateMap<UpdateUserDto, User>()
-                .ForMember(desc => desc.Roles,
-                    opt => opt.MapFrom(src => src.RolesIds.Select(roleId => new Role { Id = roleId })));
+            CreateMap<CreateUserDto, User>();
+            CreateMap<UpdateUserDto, User>();
 
             // Warehouse
             CreateMap<CreateWarehouseDto, Warehouse>();

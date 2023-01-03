@@ -45,6 +45,7 @@ namespace ApiBookStore.Extensions
         {
             services.AddScoped<IAuthorCatalogService, AuthorCatalogService>();
             services.AddScoped<IBookCatalogService, BookCatalogService>();
+            services.AddScoped<IUserCatalogService, UserCatalogService>();
             // TODO: Add other services later
         }
 
