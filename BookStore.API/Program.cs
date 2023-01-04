@@ -23,6 +23,7 @@ namespace ApiBookStore
             builder.Services.ConfigureNewtonJson();
             builder.Services.ConfigureJwtTokenService();
             builder.Services.ConfigureJwtAuthentication(builder.Configuration);
+            builder.Services.ConfigureSwaggerJwtAuthentication(); // For Jwt working in Swagger
 
             var app = builder.Build();
 
