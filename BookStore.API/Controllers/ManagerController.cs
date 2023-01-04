@@ -1,5 +1,6 @@
 using BLL.DTO.Author;
 using BLL.DTO.Book;
+using BLL.DTO.Genre;
 using BLL.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,13 @@ public class ManagerController : ControllerBase
 {
     private readonly IBookCatalogService _bookService;
     private readonly IAuthorCatalogService _authorService;
+    private readonly IGenreCatalogService _genreService;
     
-    public ManagerController(IBookCatalogService bookService, IAuthorCatalogService authorService) 
+    public ManagerController(IBookCatalogService bookService, IAuthorCatalogService authorService, IGenreCatalogService genreService) 
     { 
         _bookService = bookService;
         _authorService = authorService;
+        _genreService = genreService;
     }
     
     [HttpGet]
@@ -24,6 +27,20 @@ public class ManagerController : ControllerBase
         return Ok(books);
     }
     
+    [HttpGet]
+    public async Task<IActionResult> AuthorGetAllAsyncTask()
+    {
+        var authors = await _authorService.GetAllAsync();
+        return Ok(authors);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GenreGetAllAsyncTask()
+    {
+        var genres = await _genreService.GetAllAsync();
+        return Ok(genres);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> BookGetByIdAsyncTask(int id)
     {
@@ -35,6 +52,32 @@ public class ManagerController : ControllerBase
         }
     
         return Ok(book);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> AuthorGetByIdAsyncTask(int id)
+    {
+        var author = await _authorService.FindAsync(id);
+
+        if (author is null)
+        { 
+            return NotFound();
+        }
+
+        return Ok(author);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GenreGetByIdAsyncTask(int id)
+    {
+        var genre = await _genreService.FindAsync(id);
+
+        if (genre is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(genre);
     }
 
     [HttpPost]
@@ -50,6 +93,32 @@ public class ManagerController : ControllerBase
         return new ObjectResult(createdBook) { StatusCode = StatusCodes.Status201Created };
     }
     
+    [HttpPost]
+    public async Task<IActionResult> AuthorCreateAsyncTask([FromBody] CreateAuthorDto author)
+    {
+        if (author is null)
+        {
+            return BadRequest();
+        }
+
+        var createdAuthor = await _authorService.AddAsync(author);
+
+        return CreatedAtAction(nameof(AuthorGetByIdAsyncTask), new { id = createdAuthor.Id }, createdAuthor);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> GenreCreateAsyncTask([FromBody] CreateGenreDto genre)
+    {
+        if (genre is null)
+        {
+            return BadRequest();
+        }
+
+        var createGenre = await _genreService.AddAsync(genre);
+
+        return CreatedAtAction(nameof(GenreGetByIdAsyncTask), new {id = createGenre.Id}, createGenre);
+    }
+
     [HttpPut]
     public async Task<IActionResult> BookUpdateAsyncTask([FromBody] UpdateBookDto book)
     {
@@ -67,48 +136,7 @@ public class ManagerController : ControllerBase
     
         return Ok(updatedBook);
     }
-            
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> BookDeleteAsyncTask(int id)
-    {
-        await _bookService.DeleteAsync(id);
-        return Ok();
-    }
     
-    [HttpGet]
-    public async Task<IActionResult> AuthorGetAll()
-    {
-        var authors = await _authorService.GetAllAsync();
-        return Ok(authors);
-    }
-
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> AuthorGetByIdAsyncTask(int id)
-    {
-        var author = await _authorService.FindAsync(id);
-
-        if (author is null)
-        { 
-            return NotFound();
-        }
-
-        return Ok(author);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AuthorCreateAsyncTask([FromBody] CreateAuthorDto author)
-    {
-        if (author is null)
-        {
-            return BadRequest();
-        }
-
-        var createdAuthor = await _authorService.AddAsync(author);
-
-        return CreatedAtAction(nameof(AuthorGetByIdAsyncTask), new { id = createdAuthor.Id }, createdAuthor);
-    }
-
     [HttpPut]
     public async Task<IActionResult> AuthorUpdateAsyncTask([FromBody] UpdateAuthorDto author)
     {
@@ -127,10 +155,42 @@ public class ManagerController : ControllerBase
         return Ok(updatedAuthor);
     }
 
+    [HttpPut]
+    public async Task<IActionResult> GenreUpdateAsyncTask([FromBody] UpdateGenreDto genre)
+    {
+        if (genre is null)
+        {
+            return BadRequest();
+        }
+
+        var updateGenre = await _genreService.UpdateAsync(genre);
+
+        if (updateGenre is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(updateGenre);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> BookDeleteAsyncTask(int id)
+    {
+        await _bookService.DeleteAsync(id);
+        return Ok();
+    }
+    
     [HttpDelete("{id}")] 
     public async Task<IActionResult> AuthorDeleteAsyncTask(int id)
     {
         await _authorService.DeleteAsync(id);
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> GenreDeleteAsyncTask(int id)
+    {
+        await _genreService.DeleteAsync(id);
         return Ok();
     }
 }
