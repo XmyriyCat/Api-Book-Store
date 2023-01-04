@@ -17,6 +17,9 @@ namespace DLL.Data.ModelConfigurations
                 .HasMaxLength(150)
                 .IsRequired();
 
+            entityBuilder.HasIndex(x => x.Login)
+                .IsUnique();
+
             entityBuilder.Property(x => x.Login)
                 .HasMaxLength(150)
                 .IsRequired();

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DLL.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20230103163653_Initial Migration")]
+    [Migration("20230104095551_Initial Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -318,6 +318,9 @@ namespace DLL.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Login")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

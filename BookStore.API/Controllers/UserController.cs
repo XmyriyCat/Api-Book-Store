@@ -1,5 +1,6 @@
 ﻿using BLL.DTO.User;
 using BLL.Services.Contract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers
@@ -16,17 +17,24 @@ namespace ApiBookStore.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUserAsync(CreateUserDto user)
+        public async Task<IActionResult> RegisterUserAsync(RegistrationUserDto user)
         {
             var registeredUser = await _userService.RegisterAsync(user);
             return Ok(registeredUser);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUserAsync(CreateUserDto user)
+        public async Task<IActionResult> LoginUserAsync(LoginUserDto user)
         {
             var registeredUser = await _userService.LoginAsync(user);
             return Ok(registeredUser);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AuthenticationTestGet()
+        {
+            return Ok(new[] { "Hello", "authenticated", "user" });
         }
     }
 }

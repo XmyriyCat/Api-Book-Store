@@ -380,6 +380,12 @@ namespace DLL.Migrations
                 column: "UsersId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_Login",
+                table: "Users",
+                column: "Login",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WarehouseBooks_BookId",
                 table: "WarehouseBooks",
                 column: "BookId");

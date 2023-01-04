@@ -1,4 +1,5 @@
-﻿using ApiBookStore.MiddlewareHandlers;
+﻿using System.Text;
+using ApiBookStore.MiddlewareHandlers;
 using BLL.Infrastructure.Mapper;
 using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
@@ -6,7 +7,9 @@ using BLL.Services.Implementation;
 using DLL.Data;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ApiBookStore.Extensions
 {
@@ -52,6 +55,26 @@ namespace ApiBookStore.Extensions
         public static void AppendGlobalErrorHandler(this IApplicationBuilder builder)
         {
             builder.UseMiddleware<GlobalErrorHandler>();
+        }
+
+        public static void ConfigureJwtTokenService(this IServiceCollection services)
+        {
+            services.AddScoped<ITokenService, TokenService>();
+        }
+
+        public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
         }
     }
 }
