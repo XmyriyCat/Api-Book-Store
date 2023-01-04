@@ -1,6 +1,6 @@
 using BLL.DTO.Author;
-using BLL.DTO.Book;
 using BLL.DTO.Genre;
+using BLL.DTO.Publisher;
 using BLL.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,24 +9,17 @@ namespace ApiBookStore.Controllers;
 [Route("api/[controller]")]
 public class ManagerController : ControllerBase
 {
-    private readonly IBookCatalogService _bookService;
     private readonly IAuthorCatalogService _authorService;
     private readonly IGenreCatalogService _genreService;
+    private readonly IPublisherCatalogService _publisherService;
     
-    public ManagerController(IBookCatalogService bookService, IAuthorCatalogService authorService, IGenreCatalogService genreService) 
+    public ManagerController(IAuthorCatalogService authorService, IGenreCatalogService genreService, IPublisherCatalogService publisherService) 
     { 
-        _bookService = bookService;
         _authorService = authorService;
         _genreService = genreService;
+        _publisherService = publisherService;
     }
-    
-    [HttpGet]
-    public async Task<IActionResult> BookGetAllAsyncTask()
-    {
-        var books = await _bookService.GetAllAsync();
-        return Ok(books);
-    }
-    
+
     [HttpGet]
     public async Task<IActionResult> AuthorGetAllAsyncTask()
     {
@@ -41,19 +34,13 @@ public class ManagerController : ControllerBase
         return Ok(genres);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> BookGetByIdAsyncTask(int id)
+    [HttpGet]
+    public async Task<IActionResult> PublisherGetAllAsyncTask()
     {
-        var book = await _bookService.FindAsync(id);
-                
-        if (book is null)
-        {
-            return NotFound();
-        }
-    
-        return Ok(book);
+        var publishers = await _publisherService.GetAllAsync();
+        return Ok(publishers);
     }
-    
+
     [HttpGet("{id}")]
     public async Task<IActionResult> AuthorGetByIdAsyncTask(int id)
     {
@@ -80,19 +67,19 @@ public class ManagerController : ControllerBase
         return Ok(genre);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> BookCreateAsyncTask([FromBody] CreateBookDto book)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> PublisherGetByIdAsyncTask(int id)
     {
-        if (book is null) 
+        var publisher = await _publisherService.FindAsync(id);
+
+        if (publisher is null)
         {
-            return BadRequest();
+            return NotFound();
         }
-    
-        var createdBook = await _bookService.AddAsync(book);
-    
-        return new ObjectResult(createdBook) { StatusCode = StatusCodes.Status201Created };
+
+        return Ok(publisher);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AuthorCreateAsyncTask([FromBody] CreateAuthorDto author)
     {
@@ -119,24 +106,19 @@ public class ManagerController : ControllerBase
         return CreatedAtAction(nameof(GenreGetByIdAsyncTask), new {id = createGenre.Id}, createGenre);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> BookUpdateAsyncTask([FromBody] UpdateBookDto book)
+    [HttpPost]
+    public async Task<IActionResult> PublisherCreateAsyncTask([FromBody] CreatePublisherDto publisher)
     {
-        if (book is null)
+        if (publisher is null)
         {
             return BadRequest();
         }
-    
-        var updatedBook = await _bookService.UpdateAsync(book);
-    
-        if (updatedBook is null)
-        {
-            return NotFound();
-        }
-    
-        return Ok(updatedBook);
+
+        var createPublisher = await _publisherService.AddAsync(publisher);
+
+        return CreatedAtAction(nameof(PublisherCreateAsyncTask), new {id = createPublisher.Id}, createPublisher);
     }
-    
+
     [HttpPut]
     public async Task<IActionResult> AuthorUpdateAsyncTask([FromBody] UpdateAuthorDto author)
     {
@@ -173,13 +155,19 @@ public class ManagerController : ControllerBase
         return Ok(updateGenre);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> BookDeleteAsyncTask(int id)
+    [HttpPut]
+    public async Task<IActionResult> PublisherUpdateAsyncTask([FromBody] UpdatePublisherDto publisher)
     {
-        await _bookService.DeleteAsync(id);
-        return Ok();
+        if (publisher is null)
+        {
+            return BadRequest();
+        }
+
+        var updatePublisher = await _publisherService.UpdateAsync(publisher);
+
+        return Ok(updatePublisher);
     }
-    
+
     [HttpDelete("{id}")] 
     public async Task<IActionResult> AuthorDeleteAsyncTask(int id)
     {
@@ -191,6 +179,13 @@ public class ManagerController : ControllerBase
     public async Task<IActionResult> GenreDeleteAsyncTask(int id)
     {
         await _genreService.DeleteAsync(id);
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> PublisherDeleteAsyncTask(int id)
+    {
+        await _publisherService.DeleteAsync(id);
         return Ok();
     }
 }
