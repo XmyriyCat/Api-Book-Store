@@ -10,5 +10,5 @@ public interface IRepository<T> where T : class
     Task<T> UpdateAsync(int id, T item);
     Task DeleteAsync(int id);
     Task<int> CountAsync();
-    Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> expression);
+    Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
 }

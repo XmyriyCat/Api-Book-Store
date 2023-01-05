@@ -68,7 +68,7 @@ namespace DLL.Repository
             return await dbContext.Set<T>().CountAsync();
         }
 
-        public async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> expression)
+        public virtual async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
         {
             return await dbContext.Set<T>().FirstOrDefaultAsync(expression);
         }

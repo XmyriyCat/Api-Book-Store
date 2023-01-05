@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using ApiBookStore.MiddlewareHandlers;
+using BLL.Errors;
 using BLL.Infrastructure.Mapper;
 using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
@@ -71,7 +72,7 @@ namespace ApiBookStore.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtToken:Key"] ?? throw new JwtKeyIsNotFound("JWT key is null!"))),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

@@ -69,6 +69,7 @@ namespace BLL.Infrastructure.Mapper
             CreateMap<UpdateUserDto, User>();
             CreateMap<RegistrationUserDto, User>();
             CreateMap<LoginUserDto, User>();
+            CreateMap<User, AuthorizedUserDto>();
 
             // Warehouse
             CreateMap<CreateWarehouseDto, Warehouse>();

@@ -19,6 +19,6 @@ namespace DLL.Models
         public int CustomerId { get; set; }
         public virtual User User { get; set; }
 
-        public virtual ICollection<OrderLine> OrderLine { get; set; }
+        public virtual ICollection<OrderLine> OrderLine { get; set; } = new List<OrderLine>();
     }
 }

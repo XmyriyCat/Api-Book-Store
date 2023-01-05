@@ -1,7 +1,9 @@
-﻿namespace BLL.Services.Contract
+﻿using DLL.Models;
+
+namespace BLL.Services.Contract
 {
     public interface ITokenService
     {   
-        string CreateToken(string login);
+        string CreateToken(User user);
     }
 }

@@ -365,6 +365,12 @@ namespace DLL.Migrations
                 column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Roles_Name",
+                table: "Roles",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Shipments_DeliveryId",
                 table: "Shipments",
                 column: "DeliveryId");

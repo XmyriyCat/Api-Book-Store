@@ -16,6 +16,7 @@ namespace ApiBookStore.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUserAsync(RegistrationUserDto user)
         {
@@ -23,6 +24,7 @@ namespace ApiBookStore.Controllers
             return Ok(registeredUser);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync(LoginUserDto user)
         {
@@ -30,11 +32,15 @@ namespace ApiBookStore.Controllers
             return Ok(registeredUser);
         }
 
-        [Authorize]
+        /// <summary>
+        /// TODO: Remove this method. This method was used as authorization testing.
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult AuthenticationTestGet()
         {
-            return Ok(new[] { "Hello", "authenticated", "user" });
+            return Ok(new[] { "Hello", "authenticated", "manager", "!" });
         }
     }
 }

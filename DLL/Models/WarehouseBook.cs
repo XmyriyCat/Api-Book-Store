@@ -15,6 +15,6 @@ namespace DLL.Models
         public int BookId { get; set; }
         public virtual Book Book { get; set; }
 
-        public virtual ICollection<OrderLine> OrderLines { get; set; }
+        public virtual ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
     }
 }

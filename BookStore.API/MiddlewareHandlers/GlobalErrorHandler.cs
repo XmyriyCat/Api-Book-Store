@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using BLL.Errors;
 using FluentValidation;
 using DLL.Errors;
 
@@ -32,6 +33,15 @@ namespace ApiBookStore.MiddlewareHandlers
                         break;
                     case DbEntityNotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
+                        break;
+                    case InvalidUserLoginError:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        break;
+                    case UserLoginIsNotFound:
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+                    case WrongUserPasswordError:
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
