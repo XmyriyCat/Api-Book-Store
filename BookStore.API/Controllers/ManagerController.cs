@@ -20,28 +20,28 @@ public class ManagerController : ControllerBase
         _publisherService = publisherService;
     }
 
-    [HttpGet]
+    [HttpGet("author")]
     public async Task<IActionResult> AuthorGetAllAsyncTask()
     {
         var authors = await _authorService.GetAllAsync();
         return Ok(authors);
     }
 
-    [HttpGet]
+    [HttpGet("genre")]
     public async Task<IActionResult> GenreGetAllAsyncTask()
     {
         var genres = await _genreService.GetAllAsync();
         return Ok(genres);
     }
 
-    [HttpGet]
+    [HttpGet("publisher")]
     public async Task<IActionResult> PublisherGetAllAsyncTask()
     {
         var publishers = await _publisherService.GetAllAsync();
         return Ok(publishers);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("author/{id}")]
     public async Task<IActionResult> AuthorGetByIdAsyncTask(int id)
     {
         var author = await _authorService.FindAsync(id);
@@ -54,7 +54,7 @@ public class ManagerController : ControllerBase
         return Ok(author);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("genre/{id}")]
     public async Task<IActionResult> GenreGetByIdAsyncTask(int id)
     {
         var genre = await _genreService.FindAsync(id);
@@ -67,7 +67,7 @@ public class ManagerController : ControllerBase
         return Ok(genre);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("publisher/{id}")]
     public async Task<IActionResult> PublisherGetByIdAsyncTask(int id)
     {
         var publisher = await _publisherService.FindAsync(id);
@@ -80,7 +80,7 @@ public class ManagerController : ControllerBase
         return Ok(publisher);
     }
 
-    [HttpPost]
+    [HttpPost("author")]
     public async Task<IActionResult> AuthorCreateAsyncTask([FromBody] CreateAuthorDto author)
     {
         if (author is null)
@@ -93,7 +93,7 @@ public class ManagerController : ControllerBase
         return CreatedAtAction(nameof(AuthorGetByIdAsyncTask), new { id = createdAuthor.Id }, createdAuthor);
     }
 
-    [HttpPost]
+    [HttpPost("genre")]
     public async Task<IActionResult> GenreCreateAsyncTask([FromBody] CreateGenreDto genre)
     {
         if (genre is null)
@@ -106,7 +106,7 @@ public class ManagerController : ControllerBase
         return CreatedAtAction(nameof(GenreGetByIdAsyncTask), new {id = createGenre.Id}, createGenre);
     }
 
-    [HttpPost]
+    [HttpPost("publisher")]
     public async Task<IActionResult> PublisherCreateAsyncTask([FromBody] CreatePublisherDto publisher)
     {
         if (publisher is null)
@@ -119,7 +119,7 @@ public class ManagerController : ControllerBase
         return CreatedAtAction(nameof(PublisherCreateAsyncTask), new {id = createPublisher.Id}, createPublisher);
     }
 
-    [HttpPut]
+    [HttpPut("author")]
     public async Task<IActionResult> AuthorUpdateAsyncTask([FromBody] UpdateAuthorDto author)
     {
         if (author is null)
@@ -137,7 +137,7 @@ public class ManagerController : ControllerBase
         return Ok(updatedAuthor);
     }
 
-    [HttpPut]
+    [HttpPut("genre")]
     public async Task<IActionResult> GenreUpdateAsyncTask([FromBody] UpdateGenreDto genre)
     {
         if (genre is null)
@@ -155,7 +155,7 @@ public class ManagerController : ControllerBase
         return Ok(updateGenre);
     }
 
-    [HttpPut]
+    [HttpPut("publisher")]
     public async Task<IActionResult> PublisherUpdateAsyncTask([FromBody] UpdatePublisherDto publisher)
     {
         if (publisher is null)
@@ -168,21 +168,21 @@ public class ManagerController : ControllerBase
         return Ok(updatePublisher);
     }
 
-    [HttpDelete("{id}")] 
+    [HttpDelete("author/{id}")] 
     public async Task<IActionResult> AuthorDeleteAsyncTask(int id)
     {
         await _authorService.DeleteAsync(id);
         return Ok();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("genre/{id}")]
     public async Task<IActionResult> GenreDeleteAsyncTask(int id)
     {
         await _genreService.DeleteAsync(id);
         return Ok();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("publisher/{id}")]
     public async Task<IActionResult> PublisherDeleteAsyncTask(int id)
     {
         await _publisherService.DeleteAsync(id);
