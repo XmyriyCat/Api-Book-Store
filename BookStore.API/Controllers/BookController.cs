@@ -1,81 +1,75 @@
-﻿using BLL.DTO.Book;
+using BLL.DTO.Book;
 using BLL.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiBookStore.Controllers
+namespace ApiBookStore.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class BookController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class BookController : Controller
+    private readonly IBookCatalogService _bookService;
+
+    public BookController(IBookCatalogService bookService)
     {
-        private readonly IBookCatalogService _bookService;
+        _bookService = bookService;
+    }
 
-        public BookController(IBookCatalogService bookService)
+    [HttpGet]
+    public async Task<IActionResult> BookGetAllAsyncTask()
+    {
+        var books = await _bookService.GetAllAsync();
+        return Ok(books);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> BookGetByIdAsyncTask(int id)
+    {
+        var book = await _bookService.FindAsync(id);
+                
+        if (book is null)
         {
-            _bookService = bookService;
+            return NotFound();
         }
-
-        // GET: api/book
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsyncTask()
+    
+        return Ok(book);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> BookCreateAsyncTask([FromBody] CreateBookDto book)
+    {
+        if (book is null) 
         {
-            var books = await _bookService.GetAllAsync();
-            return Ok(books);
+            return BadRequest();
         }
-
-        // GET: api/book/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsyncTask(int id)
+    
+        var createdBook = await _bookService.AddAsync(book);
+    
+        return new ObjectResult(createdBook) { StatusCode = StatusCodes.Status201Created };
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> BookUpdateAsyncTask([FromBody] UpdateBookDto book)
+    {
+        if (book is null)
         {
-            var book = await _bookService.FindAsync(id);
-            
-            if (book is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(book);
+            return BadRequest();
         }
-
-        // POST: api/book
-        [HttpPost]
-        public async Task<IActionResult> CreateAsyncTask([FromBody] CreateBookDto book)
+    
+        var updatedBook = await _bookService.UpdateAsync(book);
+    
+        if (updatedBook is null)
         {
-            if (book is null)
-            {
-                return BadRequest();
-            }
-
-            var createdBook = await _bookService.AddAsync(book);
-
-            return new ObjectResult(createdBook) { StatusCode = StatusCodes.Status201Created };
+            return NotFound();
         }
-
-        // PUT: api/book/5
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateBookDto book)
-        {
-            if (book is null)
-            {
-                return BadRequest();
-            }
-
-            var updatedBook = await _bookService.UpdateAsync(book);
-
-            if (updatedBook is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(updatedBook);
-        }
-        
-        // DELETE: api/book/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            await _bookService.DeleteAsync(id);
-            return Ok();
-        }
+    
+        return Ok(updatedBook);
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> BookDeleteAsyncTask(int id)
+    {
+        await _bookService.DeleteAsync(id);
+        return Ok();
     }
 }
