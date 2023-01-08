@@ -1,11 +1,11 @@
-﻿using DLL.Errors;
+﻿using System.Linq.Expressions;
+using DLL.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository
 {
     public abstract class GenericRepository<T> : IRepository<T> where T : class
     {
-        private bool _isDisposed;
         protected readonly DbContext dbContext;
 
         protected GenericRepository(DbContext context)
@@ -21,6 +21,12 @@ namespace DLL.Repository
         public async Task<T> FindAsync(int id)
         {
             var item = await dbContext.Set<T>().FindAsync(id);
+
+            if (item is null)
+            {
+                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
+            }
+
             return item;
         }
 
@@ -61,25 +67,10 @@ namespace DLL.Repository
         {
             return await dbContext.Set<T>().CountAsync();
         }
-        
-        protected virtual void Dispose(bool disposing)
+
+        public virtual async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
         {
-            if (!_isDisposed)
-            {
-                if (disposing)
-                {
-                    dbContext.Dispose();
-                }
-
-                _isDisposed = true;
-            }
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
+            return await dbContext.Set<T>().FirstOrDefaultAsync(expression);
         }
     }
 }

@@ -35,16 +35,11 @@ namespace BLL.Services.Implementation
 
         public async Task<Author> AddAsync(CreateAuthorDto item)
         {
-            var validationResult = await _createAuthorDtoValidator.ValidateAsync(item);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException("DTO is not valid");
-            }
+            await _createAuthorDtoValidator.ValidateAndThrowAsync(item);
             
             var author = _mapper.Map<Author>(item);
 
-            await _repositoryWrapper.Authors.AddAsync(author);
+            author = await _repositoryWrapper.Authors.AddAsync(author);
 
             await _repositoryWrapper.SaveChangesAsync();
 
@@ -53,16 +48,11 @@ namespace BLL.Services.Implementation
 
         public async Task<Author> UpdateAsync(UpdateAuthorDto item)
         {
-            var validationResult = await _updateAuthorDtoValidator.ValidateAsync(item);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException("DTO is not valid");
-            }
+            await _updateAuthorDtoValidator.ValidateAndThrowAsync(item);
 
             var author = _mapper.Map<Author>(item);
 
-            await _repositoryWrapper.Authors.UpdateAsync(author.Id, author);
+            author = await _repositoryWrapper.Authors.UpdateAsync(author.Id, author);
 
             await _repositoryWrapper.SaveChangesAsync();
 

@@ -1,4 +1,5 @@
-﻿using DLL.Models;
+﻿using System.Linq.Expressions;
+using DLL.Models;
 using DLL.Repository.Contract;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,20 @@ namespace DLL.Repository.Implementation
     {
         public UserRepository(DbContext context) : base(context)
         {
+        }
+
+        public async Task<bool> IsUniqueLoginAsync(string login)
+        {
+            bool result = await dbContext.Set<User>().AnyAsync(x => x.Login == login);
+            return !result;
+        }
+
+        public override async Task<User> FirstOrDefaultAsync(Expression<Func<User, bool>> expression)
+        {
+            return await dbContext.Set<User>()
+                .Include(user => user.Roles)
+                .Include(user => user.Orders)
+                .FirstOrDefaultAsync(expression);
         }
     }
 }

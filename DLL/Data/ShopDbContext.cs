@@ -1,4 +1,5 @@
-﻿using DLL.Models;
+﻿using System.Reflection;
+using DLL.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Data
@@ -22,5 +23,13 @@ namespace DLL.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseBook> WarehouseBooks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure all model configurations that implements interface IEntityTypeConfiguration<T> from Assembly
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

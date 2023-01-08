@@ -34,12 +34,7 @@ namespace BLL.Services.Implementation
 
         public async Task<Book> AddAsync(CreateBookDto item)
         {
-            var validationResult = await _createBookDtoValidator.ValidateAsync(item);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException("DTO is not valid");
-            }
+            await _createBookDtoValidator.ValidateAndThrowAsync(item);
 
             var book = _mapper.Map<Book>(item);
 
@@ -77,7 +72,7 @@ namespace BLL.Services.Implementation
                 throw new ValidationException($"DTO contains a non-existent publisher id.");
             }
             
-            await _repositoryWrapper.Books.AddAsync(book);
+            book = await _repositoryWrapper.Books.AddAsync(book);
 
             await _repositoryWrapper.SaveChangesAsync();
 
@@ -86,12 +81,7 @@ namespace BLL.Services.Implementation
 
         public async Task<Book> UpdateAsync(UpdateBookDto item)
         {
-            var validationResult = await _updateBookDtoValidator.ValidateAsync(item);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException("DTO is not valid");
-            }
+            await _updateBookDtoValidator.ValidateAndThrowAsync(item);
             
             var book = _mapper.Map<Book>(item);
 
@@ -131,11 +121,11 @@ namespace BLL.Services.Implementation
 
             book.Publisher = publisher;
 
-            await _repositoryWrapper.Books.UpdateAsync(book.Id, book);
+            book = await _repositoryWrapper.Books.UpdateAsync(book.Id, book);
 
             await _repositoryWrapper.SaveChangesAsync();
 
-            return await _repositoryWrapper.Books.FindIncludeAsync(book.Id);
+            return book;
         }
 
         public async Task DeleteAsync(int id)
