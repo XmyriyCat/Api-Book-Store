@@ -18,6 +18,6 @@ namespace DLL.Models
         [RegularExpression(@"^\+375 \((17 | 29 | 33 | 44)\) [0-9]{3}-[0-9]{2}-[0 - 9]{ 2}$")]
         public string PhoneNumber { get; set; }
 
-        public virtual ICollection<WarehouseBook> WarehouseBooks { get; set; }
+        public virtual ICollection<WarehouseBook> WarehouseBooks { get; set; } = new List<WarehouseBook>();
     }
 }

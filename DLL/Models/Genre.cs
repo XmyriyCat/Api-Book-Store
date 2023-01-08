@@ -9,6 +9,6 @@ namespace DLL.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

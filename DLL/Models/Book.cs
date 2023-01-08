@@ -12,10 +12,10 @@ namespace DLL.Models
         public int PublisherId { get; set; }
         public virtual Publisher Publisher { get; set; }
 
-        public virtual ICollection<Genre> Genres { get; set; }
+        public virtual ICollection<Genre> Genres { get; set; } = new List<Genre>();
 
-        public virtual ICollection<Author> Authors { get; set; }
+        public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
 
-        public virtual ICollection<WarehouseBook> WarehouseBooks { get; set; }
+        public virtual ICollection<WarehouseBook> WarehouseBooks { get; set; } = new List<WarehouseBook>();
     }
 }

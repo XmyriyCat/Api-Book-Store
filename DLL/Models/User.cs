@@ -11,7 +11,9 @@ namespace DLL.Models
 
         public string Login { get; set; }
 
-        public string Password { get; set; }
+        public byte[] PasswordHash { get; set; }
+
+        public byte[] PasswordSalt { get; set; }
 
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string Email { get; set; }
@@ -22,9 +24,9 @@ namespace DLL.Models
 
         public string Address { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
     }
 }

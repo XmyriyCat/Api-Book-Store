@@ -16,6 +16,9 @@ namespace DLL.Data.ModelConfigurations
             entityBuilder.Property(x => x.Name)
                 .HasMaxLength(150)
                 .IsRequired();
+
+            entityBuilder.HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

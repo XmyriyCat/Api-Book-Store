@@ -21,7 +21,10 @@ namespace ApiBookStore
             builder.Services.ConfigureFluentValidation();
             builder.Services.ConfigureDtoServices();
             builder.Services.ConfigureNewtonJson();
-            
+            builder.Services.ConfigureJwtTokenService();
+            builder.Services.ConfigureJwtAuthentication(builder.Configuration);
+            builder.Services.ConfigureSwaggerJwtAuthentication(); // For Jwt working in Swagger
+
             var app = builder.Build();
 
             app.AppendGlobalErrorHandler();
@@ -34,6 +37,8 @@ namespace ApiBookStore
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
