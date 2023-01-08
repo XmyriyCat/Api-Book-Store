@@ -2,6 +2,7 @@ using BLL.DTO.Author;
 using BLL.DTO.Genre;
 using BLL.DTO.Publisher;
 using BLL.Services.Contract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiBookStore.Controllers;
@@ -12,14 +13,15 @@ public class ManagerController : ControllerBase
     private readonly IAuthorCatalogService _authorService;
     private readonly IGenreCatalogService _genreService;
     private readonly IPublisherCatalogService _publisherService;
-    
-    public ManagerController(IAuthorCatalogService authorService, IGenreCatalogService genreService, IPublisherCatalogService publisherService) 
-    { 
+
+    public ManagerController(IAuthorCatalogService authorService, IGenreCatalogService genreService, IPublisherCatalogService publisherService)
+    {
         _authorService = authorService;
         _genreService = genreService;
         _publisherService = publisherService;
     }
 
+    [AllowAnonymous]
     [HttpGet("author")]
     public async Task<IActionResult> AuthorGetAllAsyncTask()
     {
@@ -27,6 +29,7 @@ public class ManagerController : ControllerBase
         return Ok(authors);
     }
 
+    [AllowAnonymous]
     [HttpGet("genre")]
     public async Task<IActionResult> GenreGetAllAsyncTask()
     {
@@ -34,6 +37,7 @@ public class ManagerController : ControllerBase
         return Ok(genres);
     }
 
+    [AllowAnonymous]
     [HttpGet("publisher")]
     public async Task<IActionResult> PublisherGetAllAsyncTask()
     {
@@ -41,19 +45,21 @@ public class ManagerController : ControllerBase
         return Ok(publishers);
     }
 
+    [AllowAnonymous]
     [HttpGet("author/{id}")]
     public async Task<IActionResult> AuthorGetByIdAsyncTask(int id)
     {
         var author = await _authorService.FindAsync(id);
 
         if (author is null)
-        { 
+        {
             return NotFound();
         }
 
         return Ok(author);
     }
 
+    [AllowAnonymous]
     [HttpGet("genre/{id}")]
     public async Task<IActionResult> GenreGetByIdAsyncTask(int id)
     {
@@ -67,6 +73,7 @@ public class ManagerController : ControllerBase
         return Ok(genre);
     }
 
+    [AllowAnonymous]
     [HttpGet("publisher/{id}")]
     public async Task<IActionResult> PublisherGetByIdAsyncTask(int id)
     {
@@ -80,6 +87,7 @@ public class ManagerController : ControllerBase
         return Ok(publisher);
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpPost("author")]
     public async Task<IActionResult> AuthorCreateAsyncTask([FromBody] CreateAuthorDto author)
     {
@@ -93,6 +101,7 @@ public class ManagerController : ControllerBase
         return CreatedAtAction(nameof(AuthorGetByIdAsyncTask), new { id = createdAuthor.Id }, createdAuthor);
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpPost("genre")]
     public async Task<IActionResult> GenreCreateAsyncTask([FromBody] CreateGenreDto genre)
     {
@@ -103,9 +112,10 @@ public class ManagerController : ControllerBase
 
         var createGenre = await _genreService.AddAsync(genre);
 
-        return CreatedAtAction(nameof(GenreGetByIdAsyncTask), new {id = createGenre.Id}, createGenre);
+        return CreatedAtAction(nameof(GenreGetByIdAsyncTask), new { id = createGenre.Id }, createGenre);
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpPost("publisher")]
     public async Task<IActionResult> PublisherCreateAsyncTask([FromBody] CreatePublisherDto publisher)
     {
@@ -116,14 +126,15 @@ public class ManagerController : ControllerBase
 
         var createPublisher = await _publisherService.AddAsync(publisher);
 
-        return CreatedAtAction(nameof(PublisherCreateAsyncTask), new {id = createPublisher.Id}, createPublisher);
+        return CreatedAtAction(nameof(PublisherCreateAsyncTask), new { id = createPublisher.Id }, createPublisher);
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpPut("author")]
     public async Task<IActionResult> AuthorUpdateAsyncTask([FromBody] UpdateAuthorDto author)
     {
         if (author is null)
-        { 
+        {
             return BadRequest();
         }
 
@@ -137,6 +148,7 @@ public class ManagerController : ControllerBase
         return Ok(updatedAuthor);
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpPut("genre")]
     public async Task<IActionResult> GenreUpdateAsyncTask([FromBody] UpdateGenreDto genre)
     {
@@ -155,6 +167,7 @@ public class ManagerController : ControllerBase
         return Ok(updateGenre);
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpPut("publisher")]
     public async Task<IActionResult> PublisherUpdateAsyncTask([FromBody] UpdatePublisherDto publisher)
     {
@@ -168,13 +181,15 @@ public class ManagerController : ControllerBase
         return Ok(updatePublisher);
     }
 
-    [HttpDelete("author/{id}")] 
+    [Authorize(Roles = "Manager")]
+    [HttpDelete("author/{id}")]
     public async Task<IActionResult> AuthorDeleteAsyncTask(int id)
     {
         await _authorService.DeleteAsync(id);
         return Ok();
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpDelete("genre/{id}")]
     public async Task<IActionResult> GenreDeleteAsyncTask(int id)
     {
@@ -182,6 +197,7 @@ public class ManagerController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpDelete("publisher/{id}")]
     public async Task<IActionResult> PublisherDeleteAsyncTask(int id)
     {

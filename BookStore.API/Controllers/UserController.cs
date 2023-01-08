@@ -31,16 +31,5 @@ namespace ApiBookStore.Controllers
             var registeredUser = await _userService.LoginAsync(user);
             return Ok(registeredUser);
         }
-
-        /// <summary>
-        /// TODO: Remove this method. This method was used as authorization testing.
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Manager")]
-        [HttpGet]
-        public IActionResult AuthenticationTestGet()
-        {
-            return Ok(new[] { "Hello", "authenticated", "manager", "!" });
-        }
     }
 }
