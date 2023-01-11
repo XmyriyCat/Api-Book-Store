@@ -1,19 +1,26 @@
+using System.Net;
+using ApiBookStore;
 using ApiBookStore.Controllers;
 using BLL.Services.Contract;
 using DLL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
 using Moq;
+using Web_Api.Tests.Startup;
 using Xunit;
 
 namespace Web_Api.Tests.Controllers
 {
-    public class BookControllerTest
+    public class BookControllerTest : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly Mock<IBookCatalogService> _bookCatalogServiceMock;
+        private readonly WebApplicationFactory<Program> _factory;
 
-        public BookControllerTest()
+        public BookControllerTest(WebApplicationFactory<Program> factory)
         {
             _bookCatalogServiceMock = new Mock<IBookCatalogService>();
+            _factory = factory;
         }
 
         [Fact]
@@ -62,19 +69,40 @@ namespace Web_Api.Tests.Controllers
             Assert.IsType<OkObjectResult>(result); // Status code 200
         }
 
-        public async Task BookCreateAsyncTask_ReturnOk()
+        [Theory]
+        [InlineData("/api/Book")]
+        public async Task BookGetAllAsyncTask_ReturnOk_TestByMicrosoft(string url)
         {
-            // Arrange
-
+            // Arranges
+            var factory = new WebApplicationFactoryTest<Program>();
+            var client = factory.CreateClient();
+            client.BaseAddress = new Uri("http://localhost:8000/");
 
             // Act
-
-
+            var response = await client.GetAsync(url);
+            
             // Assert
-
-            throw new NotImplementedException();
+            response.EnsureSuccessStatusCode(); // Status code 200-299
+            Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
         }
 
+        [Theory]
+        [InlineData("/api/Book")]
+        public async Task BookGetAllAsyncTask_ReturnOk_Test3(string url)
+        {
+            // Arranges
+            var webAppFactory = new WebApplicationFactory<Program>();
+
+            var httpClient = webAppFactory.CreateClient();
+
+            // Act
+            var response = await httpClient.GetAsync(url);
+
+            // Assert
+            Assert.IsType<OkObjectResult>(response); // Status code 200
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+        }
+        
 
         // TODO: Realize tests for Create, Update, Delete methods!!! 
     }
