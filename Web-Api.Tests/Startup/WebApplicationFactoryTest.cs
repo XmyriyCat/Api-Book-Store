@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Web_Api.Tests.Errors;
+using Web_Api.Tests.Startup.DbSettings;
 
 namespace Web_Api.Tests.Startup
 {
@@ -15,30 +14,36 @@ namespace Web_Api.Tests.Startup
         {
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ShopDbContext>));
+                var descriptorDb = services.FirstOrDefault(d => d.ServiceType == typeof(DbContextOptions<ShopDbContext>));
 
-                if (descriptor is null)
-                {
-                    throw new DbContextIsNotFoundException("DB context is not found in source web application");
-                }
-
-                services.Remove(descriptor); // removing source DB connection
+                services.Remove(descriptorDb); // Removing source DB connection
 
                 services.AddDbContext<ShopDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryDbForTesting"); // adding db in memory for testing
+                    options.UseInMemoryDatabase("InMemoryDbForTesting"); // adding DB in memory for testing
                 });
-
+                
                 var serviceProvider = services.BuildServiceProvider();
 
                 using (var scope = serviceProvider.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;
                     var db = scopedServices.GetRequiredService<ShopDbContext>();
-                    //db.Database.EnsureCreated();
+                    var logger = scopedServices
+                        .GetRequiredService<ILogger<WebApplicationFactoryTest<TProgram>>>();
+
+                    db.Database.EnsureCreated();
+
+                    try
+                    {
+                        DbUtilities.InitializeDbForTests(db);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "An error occurred seeding the database with test messages. Error: {Message}", ex.Message);
+                    }
                 }
             });
-
         }
     }
 }

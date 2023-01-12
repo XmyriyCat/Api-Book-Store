@@ -1,109 +1,414 @@
 using System.Net;
+using System.Net.Http.Json;
 using ApiBookStore;
-using ApiBookStore.Controllers;
-using BLL.Services.Contract;
+using BLL.DTO.Book;
 using DLL.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Web_Api.Tests.Extensions;
 using Web_Api.Tests.Startup;
+using Web_Api.Tests.Startup.JwtHandler;
 using Xunit;
 
 namespace Web_Api.Tests.Controllers
 {
-    public class BookControllerTest : IClassFixture<WebApplicationFactory<Program>>
+    public class BookControllerTest : IClassFixture<WebApplicationFactoryTest<Program>>
     {
-        private readonly Mock<IBookCatalogService> _bookCatalogServiceMock;
-        private readonly WebApplicationFactory<Program> _factory;
+        private readonly WebApplicationFactoryTest<Program> _appFactory;
 
-        public BookControllerTest(WebApplicationFactory<Program> factory)
+        public BookControllerTest(WebApplicationFactoryTest<Program> appFactory)
         {
-            _bookCatalogServiceMock = new Mock<IBookCatalogService>();
-            _factory = factory;
-        }
-
-        [Fact]
-        public async Task BookGetAllAsyncTask_ReturnOk()
-        {
-            // Arrange
-            var testBooks = new List<Book>
-            {
-                new Book(),
-                new Book(),
-                new Book(),
-                new Book()
-            };
-
-            _bookCatalogServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(testBooks);
-
-            var bookController = new BookController(_bookCatalogServiceMock.Object);
-
-            // Act
-            var result = await bookController.BookGetAllAsyncTask();
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.IsType<OkObjectResult>(result); // Status code 200
-        }
-
-        [Fact]
-        public async Task BookGetByIdAsyncTask_ReturnOk()
-        {
-            // Arrange
-            var testBook = new Book();
-
-            const int bookId = 5;
-
-            _bookCatalogServiceMock.Setup(x => x.FindAsync(bookId))
-                .ReturnsAsync(testBook);
-
-            var bookController = new BookController(_bookCatalogServiceMock.Object);
-
-            // Act
-            var result = await bookController.BookGetByIdAsyncTask(bookId);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.IsType<OkObjectResult>(result); // Status code 200
+            _appFactory = appFactory;
         }
 
         [Theory]
-        [InlineData("/api/Book")]
-        public async Task BookGetAllAsyncTask_ReturnOk_TestByMicrosoft(string url)
+        [InlineData("/api/book")]
+        public async Task BookGetAllAsyncTask_Return_Ok(string url)
         {
             // Arranges
-            var factory = new WebApplicationFactoryTest<Program>();
-            var client = factory.CreateClient();
-            client.BaseAddress = new Uri("http://localhost:8000/");
+            var client = _appFactory.CreateClient();
 
             // Act
             var response = await client.GetAsync(url);
-            
+
             // Assert
-            response.EnsureSuccessStatusCode(); // Status code 200-299
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
         }
 
         [Theory]
-        [InlineData("/api/Book")]
-        public async Task BookGetAllAsyncTask_ReturnOk_Test3(string url)
+        [InlineData("/api/book/1")]
+        [InlineData("/api/book/2")]
+        public async Task BookGetByIdAsyncTask_Return_Ok(string url)
         {
-            // Arranges
-            var webAppFactory = new WebApplicationFactory<Program>();
-
-            var httpClient = webAppFactory.CreateClient();
+            // Arrange
+            var client = _appFactory.CreateClient();
 
             // Act
-            var response = await httpClient.GetAsync(url);
+            var response = await client.GetAsync(url);
 
             // Assert
-            Assert.IsType<OkObjectResult>(response); // Status code 200
-            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
         }
-        
 
-        // TODO: Realize tests for Create, Update, Delete methods!!! 
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookCreateAsyncTask_Return_Created_201(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-1");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            var createBookDto = new CreateBookDto
+            {
+                Name = "Test-book",
+                Price = 99.99m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            };
+
+            // Act
+            var response = await client.PostAsJsonAsync(url, createBookDto);
+
+            var bookString = await response.Content.ReadAsStringAsync();
+            var bookCreated = JsonConvert.DeserializeObject<Book>(bookString)!;
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(createBookDto.Name, bookCreated.Name);
+            Assert.Equal(createBookDto.Price, bookCreated.Price);
+            Assert.Equal(createBookDto.IdPublisher, bookCreated.Publisher.Id);
+            Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookCreateAsyncTask_Return_BadRequest_400(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-2");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            // Act
+            CreateBookDto bookDtoNull = null;
+            // ReSharper disable once ExpressionIsAlwaysNull
+            var response = await client.PostAsJsonAsync(url, bookDtoNull);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookCreateAsyncTask_Return_Forbidden_403(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-3");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            // Act
+            var response = await client.PostAsJsonAsync(url, new CreateBookDto
+            {
+                Name = "Test-book",
+                Price = 99.99m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            });
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookCreateAsyncTask_Return_ValidationError_400(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-4");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            // Act
+            var response = await client.PostAsJsonAsync(url, new CreateBookDto
+            {
+                Name = string.Empty,
+                Price = -99.99m,
+                IdPublisher = 0,
+                GenresId = new List<int> { 0 },
+                AuthorsId = new List<int> { 0 }
+            });
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookCreateAsyncTask_Return_Unauthorized_401(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            // Act
+            var response = await client.PostAsJsonAsync(url, new CreateBookDto
+            {
+                Price = 99.99m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            });
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookUpdateAsyncTask_Return_Ok(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-5");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            var updateBookDto = new UpdateBookDto()
+            {
+                Id = 1,
+                Name = "Test-book-EDITED",
+                Price = 11.11m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            };
+
+            // Act
+            var response = await client.PutAsJsonAsync(url, updateBookDto);
+
+            var bookString = await response.Content.ReadAsStringAsync();
+            var bookUpdated = JsonConvert.DeserializeObject<Book>(bookString);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(updateBookDto.Id, bookUpdated!.Id);
+            Assert.Equal(updateBookDto.Name, bookUpdated.Name);
+            Assert.Equal(updateBookDto.Price, bookUpdated.Price);
+            Assert.Equal(updateBookDto.IdPublisher, bookUpdated.Publisher.Id);
+            Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookUpdateAsyncTask_Return_Forbidden_403(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-6");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            var updateBookDto = new UpdateBookDto()
+            {
+                Id = 1,
+                Name = "Test-book-EDITED",
+                Price = 11.11m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            };
+
+            // Act
+            var response = await client.PutAsJsonAsync(url, updateBookDto);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookUpdateAsyncTask_Return_Unauthorized_401(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            var updateBookDto = new UpdateBookDto()
+            {
+                Id = 1,
+                Name = "Test-book-EDITED",
+                Price = 11.11m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            };
+
+            // Act
+            var response = await client.PutAsJsonAsync(url, updateBookDto);
+            
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookUpdateAsyncTask_Return_ValidationError_400(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-7");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            var updateBookDto = new UpdateBookDto()
+            {
+                Id = 1,
+                Name = string.Empty,
+                Price = -99.99m,
+                IdPublisher = 0,
+                GenresId = new List<int> { 0 },
+                AuthorsId = new List<int> { 0 }
+            };
+
+            // Act
+            var response = await client.PutAsJsonAsync(url, updateBookDto);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book")]
+        public async Task BookUpdateAsyncTask_Return_NotFound_404(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-8");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            var updateBookDto = new UpdateBookDto()
+            {
+                Id = 99999,
+                Name = "Test-book-EDITED",
+                Price = 11.11m,
+                IdPublisher = 1,
+                GenresId = new List<int> { 1 },
+                AuthorsId = new List<int> { 1 }
+            };
+
+            // Act
+            var response = await client.PutAsJsonAsync(url, updateBookDto);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book/2")]
+        public async Task BookDeleteAsyncTask_ReturnOk(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-9");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            // Act
+            var response = await client.DeleteAsync(url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book/2")]
+        public async Task BookDeleteAsyncTask_Return_Unauthorized_401(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            // Act
+            var response = await client.DeleteAsync(url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("api/book/2")]
+        public async Task BookDeleteAsyncTask_Return_Forbidden_403(string url)
+        {
+            // Arrange
+            var client = _appFactory.CreateClient();
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var tokenJwtService = new TokenServiceTest(config);
+            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-10");
+
+            client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
+
+            // Act
+            var response = await client.DeleteAsync(url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
     }
 }
