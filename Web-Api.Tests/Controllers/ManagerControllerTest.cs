@@ -25,7 +25,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/author")]
+        [InlineData("/api/manager/author")]
         public async Task AuthorGetAllAsyncTask_Return_Ok(string url)
         {
             // Arranges
@@ -40,7 +40,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/genre")]
+        [InlineData("/api/manager/genre")]
         public async Task GenreGetAllAsyncTask_Return_Ok(string url)
         {
             // Arranges
@@ -55,8 +55,8 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/publisher")]
-        public async Task PusblisherGetAllAsyncTask_Return_Ok(string url)
+        [InlineData("/api/manager/publisher")]
+        public async Task PublisherGetAllAsyncTask_Return_Ok(string url)
         {
             // Arranges
             var client = _appFactory.CreateClient();
@@ -70,8 +70,8 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/author/1")]
-        [InlineData("/api/author/2")]
+        [InlineData("/api/manager/author/1")]
+        [InlineData("/api/manager/author/2")]
         public async Task AuthorGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -86,8 +86,8 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/genre/1")]
-        [InlineData("/api/genre/2")]
+        [InlineData("/api/manager/genre/1")]
+        [InlineData("/api/manager/genre/2")]
         public async Task GenreGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -102,8 +102,8 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/publisher/1")]
-        [InlineData("/api/publisher/2")]
+        [InlineData("/api/manager/publisher/1")]
+        [InlineData("/api/manager/publisher/2")]
         public async Task PublisherGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -118,7 +118,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorCreateAsyncTask_Return_Created_201(string url)
         {
             // Arrange
@@ -152,7 +152,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreCreateAsyncTask_Return_Created_201(string url)
         {
             // Arrange
@@ -184,7 +184,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherCreateAsyncTask_Return_Created_201(string url)
         {
             // Arrange
@@ -216,7 +216,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorCreateAsyncTask_Return_BadRequest_400(string url)
         {
             // Arrange
@@ -240,7 +240,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreCreateAsyncTask_Return_BadRequest_400(string url)
         {
             // Arrange
@@ -264,7 +264,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherCreateAsyncTask_Return_BadRequest_400(string url)
         {
             // Arrange
@@ -288,7 +288,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorCreateAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -314,7 +314,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreCreateAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -339,7 +339,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherCreateAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -364,7 +364,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorCreateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -390,7 +390,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreCreateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -415,7 +415,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherCreateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -440,7 +440,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorCreateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -458,7 +458,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreCreateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -475,7 +475,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherCreateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -492,7 +492,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorUpdateAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -528,7 +528,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreUpdateAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -562,7 +562,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherUpdateAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -596,7 +596,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorUpdateAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -625,7 +625,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreUpdateAsyncTask_Forbidden_403(string url)
         {
             // Arrange
@@ -653,7 +653,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherUpdateAsyncTask_Forbidden_403(string url)
         {
             // Arrange
@@ -682,7 +682,7 @@ namespace Web_Api.Tests.Controllers
 
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorUpdateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -703,7 +703,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreUpdateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -723,7 +723,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherUpdateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -743,7 +743,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorUpdateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -772,7 +772,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreUpdateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -800,7 +800,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherUpdateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -828,7 +828,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author")]
+        [InlineData("api/manager/author")]
         public async Task AuthorUpdateAsyncTask_Return_NotFound_404(string url)
         {
             // Arrange
@@ -857,7 +857,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre")]
+        [InlineData("api/manager/genre")]
         public async Task GenreUpdateAsyncTask_Return_NotFound_404(string url)
         {
             // Arrange
@@ -885,7 +885,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher")]
+        [InlineData("api/manager/publisher")]
         public async Task PublisherUpdateAsyncTask_Return_NotFound_404(string url)
         {
             // Arrange
@@ -913,7 +913,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author/2")]
+        [InlineData("api/manager/author/3")]
         public async Task AuthorDeleteAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -935,7 +935,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre/2")]
+        [InlineData("api/manager/genre/2")]
         public async Task GenreDeleteAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -957,7 +957,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher/2")]
+        [InlineData("api/manager/publisher/3")]
         public async Task PublisherDeleteAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -979,7 +979,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author/2")]
+        [InlineData("api/manager/author/3")]
         public async Task AuthorDeleteAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -993,7 +993,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre/2")]
+        [InlineData("api/manager/genre/2")]
         public async Task GenreDeleteAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -1007,7 +1007,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher/2")]
+        [InlineData("api/manager/publisher/2")]
         public async Task PublisherDeleteAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -1021,7 +1021,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/author/2")]
+        [InlineData("api/manager/author/2")]
         public async Task AuthorDeleteAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -1043,7 +1043,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/genre/2")]
+        [InlineData("api/manager/genre/2")]
         public async Task GenreDeleteAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -1065,7 +1065,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/publisher/2")]
+        [InlineData("api/manager/publisher/2")]
         public async Task PublisherDeleteAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
