@@ -350,4 +350,6 @@ MigrationBackup/
 .ionide/
 
 # Ignore Debug files
-Debug
+bin
+obj
+config
