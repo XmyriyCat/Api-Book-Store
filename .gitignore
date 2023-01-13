@@ -348,3 +348,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Ignore build files
+[Dd]ebug/net6.0/*.assets.cache
+[Dd]ebug/net6.0/*.csproj.AssemblyReference.cache
+[Dd]ebug/net6.0/*.GeneratedMSBuildEditorConfig.editorconfig
+
