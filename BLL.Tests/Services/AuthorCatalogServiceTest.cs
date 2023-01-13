@@ -6,74 +6,72 @@ using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
+using DLL.Repository.UnitOfWork;
+using FluentAssertions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
 namespace BLL.Tests.Services
 {
     public class AuthorCatalogServiceTest
     {
+        private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IAuthorCatalogService _authorCatalogService;
 
         public AuthorCatalogServiceTest()
         {
-            var dbContextInMemory = DbInMemory.CreateDbContextInMemory(); // for testing DB commands inMemoryDB
+            var dbContextInMemory = DbInMemory.CreateDbContextInMemory(); // For testing DB commands inMemory DB
             var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
+            
+            DbUtilities.InitializeDbForTests(dbContextInMemory);
 
-            var repositoryWrapperInMemory = new RepositoryWrapperInMemory(dbContextInMemory);
             var mapper = mapperConfiguration.CreateMapper();
             var createAuthorDtoValidator = new CreateAuthorDtoValidator();
             var updateAuthorDtoValidator = new UpdateAuthorDtoValidator();
 
-            _authorCatalogService = new AuthorCatalogService(repositoryWrapperInMemory, mapper,
-                createAuthorDtoValidator, updateAuthorDtoValidator);
+            _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
+            _authorCatalogService = new AuthorCatalogService(_repositoryWrapper, mapper, createAuthorDtoValidator, updateAuthorDtoValidator);
         }
 
         [Fact]
-        public async Task GetAllAsync_ReturnOk()
+        public async Task GetAllAsync_Return_Ok()
         {
             // Arrange
-            var actualCount = await _authorCatalogService.CountAsync();
-            const int authorsCount = 8;
-            var authorsTotal = authorsCount + actualCount;
-
-            for (var i = 0; i < authorsCount; i++)
-            {
-                var authorDto = new CreateAuthorDto()
-                {
-                    FirstName = "test firstname",
-                    LastName = "test lastname",
-                };
-                await _authorCatalogService.AddAsync(authorDto);
-            }
+            var authorsSource = await _repositoryWrapper.Authors.GetAll().ToListAsync();
 
             // Act
-            var authorsDb = _authorCatalogService.GetAllAsync().Result.ToList();
+            var authorsAll = _authorCatalogService.GetAllAsync().Result.ToList();
 
             // Assert
-            Assert.NotNull(authorsDb);
-            Assert.NotEmpty(authorsDb);
-            Assert.Equal(authorsTotal, authorsDb.Count);
+            Assert.NotNull(authorsAll);
+            authorsSource.Should().BeEquivalentTo(authorsAll);
         }
 
-        [Fact]
-        public async Task FindAsync_ReturnOk()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task FindAsync_Return_Ok(int authorId)
         {
             // Arrange
-            var authorDto = new CreateAuthorDto
-            {
-                FirstName = "test firstname",
-                LastName = "test lastname",
-            };
-            var authorDb = await _authorCatalogService.AddAsync(authorDto);
-            var authorId = authorDb.Id;
-
+            var authorActual = await _repositoryWrapper.Authors.FindAsync(authorId);
+            
             // Act
-            var foundAuthor = await _authorCatalogService.FindAsync(authorId);
+            var foundedAuthor = await _authorCatalogService.FindAsync(authorId);
 
             // Assert
-            Assert.NotNull(foundAuthor);
-            Assert.Equal(authorDb, foundAuthor);
+            Assert.NotNull(foundedAuthor);
+            authorActual.Should().BeEquivalentTo(foundedAuthor);
+            Assert.Equal(authorId, foundedAuthor.Id);
+        }
+
+        [Theory]
+        [InlineData(999999)]
+        public async Task FindAsync_Return_DbEntityNotFoundException(int authorId)
+        {
+            // Arrange & Act & Assert
+            await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _authorCatalogService.FindAsync(authorId));
         }
 
         [Theory]
@@ -81,10 +79,10 @@ namespace BLL.Tests.Services
         [InlineData("1234567890-=<>?", "1234567890-=<>?")]
         [InlineData("a", "a")]
         [InlineData("/*-+!@#$%^&*()", "/*-+!@#$%^&*()")]
-        public async Task AddAsync_ReturnOk(string firstname, string lastname)
+        public async Task AddAsync_Return_Ok(string firstname, string lastname)
         {
             // Arrange
-            var actualCount = await _authorCatalogService.CountAsync();
+            var actualCount = await _repositoryWrapper.Authors.CountAsync();
             var authorsTotal = actualCount + 1;
 
             var authorDto = new CreateAuthorDto
@@ -95,7 +93,7 @@ namespace BLL.Tests.Services
 
             // Act
             var authorDb = await _authorCatalogService.AddAsync(authorDto);
-            var authorsDbCount = await _authorCatalogService.CountAsync();
+            var authorsDbCount = await _repositoryWrapper.Authors.CountAsync();
 
             // Assert
             Assert.NotNull(authorDb);
@@ -108,7 +106,7 @@ namespace BLL.Tests.Services
         [InlineData("", "")]
         [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
             "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
-        public async Task AddAsync_ThrowValidationException(string firstname, string lastname)
+        public async Task AddAsync_Return_ValidationException(string firstname, string lastname)
         {
             // Arrange
             var authorDto = new CreateAuthorDto
@@ -122,22 +120,14 @@ namespace BLL.Tests.Services
         }
 
         [Theory]
-        [InlineData("new_firstname", "new_lastname")]
-        [InlineData("1234567890-=<>?", "1234567890-=<>?")]
-        [InlineData("a", "a")]
-        [InlineData("/*-+!@#$%^&*()", "/*-+!@#$%^&*()")]
-        public async Task UpdateAsync_ReturnOk(string firstnameNew, string lastnameNew)
+        [InlineData(1, "new_firstname", "new_lastname")]
+        [InlineData(1, "1234567890-=<>?", "1234567890-=<>?")]
+        [InlineData(1, "a", "a")]
+        [InlineData(1, "/*-+!@#$%^&*()", "/*-+!@#$%^&*()")]
+        public async Task UpdateAsync_Return_Ok(int authorId, string firstnameNew, string lastnameNew)
         {
             // Arrange
-            var createAuthorDto = new CreateAuthorDto
-            {
-                FirstName = "firstnameTest",
-                LastName = "lastnameTest"
-            };
-
-            var createAuthorDb = await _authorCatalogService.AddAsync(createAuthorDto);
-
-            var authorId = createAuthorDb.Id;
+            var authorSource = await _repositoryWrapper.Authors.FindAsync(authorId);
 
             var updateAuthorDto = new UpdateAuthorDto()
             {
@@ -151,29 +141,19 @@ namespace BLL.Tests.Services
 
             // Assert
             Assert.Equal(authorId, updatedAuthorDb.Id);
+            Assert.Equal(authorSource, updatedAuthorDb); // test EF Tracking
             Assert.Equal(firstnameNew, updatedAuthorDb.FirstName);
             Assert.Equal(lastnameNew, updatedAuthorDb.LastName);
-            Assert.NotEqual(createAuthorDto.FirstName, updatedAuthorDb.FirstName);
-            Assert.NotEqual(createAuthorDto.LastName, updatedAuthorDb.LastName);
         }
 
         [Theory]
-        [InlineData("", "")]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
-        public async Task UpdateAsync_ThrowValidationException(string firstnameNew, string lastnameNew)
+        [InlineData(9999999, "new_firstname", "new_lastname")]
+        [InlineData(9999999, "1234567890-=<>?", "1234567890-=<>?")]
+        [InlineData(9999999, "a", "a")]
+        [InlineData(9999999, "/*-+!@#$%^&*()", "/*-+!@#$%^&*()")]
+        public async Task UpdateAsync_Return_DbEntityNotFoundException(int authorId, string firstnameNew, string lastnameNew)
         {
             // Arrange
-            var createAuthorDto = new CreateAuthorDto
-            {
-                FirstName = "firstnameTest",
-                LastName = "lastnameTest"
-            };
-
-            var createAuthorDb = await _authorCatalogService.AddAsync(createAuthorDto);
-
-            var authorId = createAuthorDb.Id;
-
             var updateAuthorDto = new UpdateAuthorDto()
             {
                 Id = authorId,
@@ -182,60 +162,57 @@ namespace BLL.Tests.Services
             };
 
             // Act & Assert
+            await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _authorCatalogService.UpdateAsync(updateAuthorDto));
+        }
+
+        [Theory]
+        [InlineData(1, "", "")]
+        [InlineData(1,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
+        public async Task UpdateAsync_Return_ValidationException(int authorId, string firstnameNew, string lastnameNew)
+        {
+            // Arrange
+            var updateAuthorDto = new UpdateAuthorDto()
+            {
+                Id = authorId,
+                FirstName = firstnameNew,
+                LastName = lastnameNew
+            };
+            
+            // Act & Asserts
             await Assert.ThrowsAsync<ValidationException>(() => _authorCatalogService.UpdateAsync(updateAuthorDto));
         }
 
         [Theory]
-        [InlineData("new_firstname", "new_lastname")]
-        [InlineData("1234567890-=<>?", "1234567890-=<>?")]
-        [InlineData("a", "a")]
-        [InlineData("/*-+!@#$%^&*()", "/*-+!@#$%^&*()")]
-        public async Task DeleteAsync_ThrowDbException(string firstname, string lastname)
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public async Task DeleteAsync_Return_DbException(int authorId)
         {
             // Arrange
-            var createAuthorDto = new CreateAuthorDto
-            {
-                FirstName = firstname,
-                LastName = lastname
-            };
-
-            var createAuthorDb = await _authorCatalogService.AddAsync(createAuthorDto);
-            var authorId = createAuthorDb.Id;
+            var actualCount = await _repositoryWrapper.Authors.CountAsync();
+            var authorsTotal = actualCount - 1;
 
             // Act
             await _authorCatalogService.DeleteAsync(authorId);
+            var authorsDbCount = await _repositoryWrapper.Authors.CountAsync();
 
             // Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _authorCatalogService.FindAsync(authorId));
+            Assert.Equal(authorsTotal, authorsDbCount);
         }
 
-
-        [Theory]
-        [InlineData(4)]
-        [InlineData(15)]
-        [InlineData(20)]
-        [InlineData(0)]
-        public async Task CountAsync_ReturnOk(int authorsCount)
+        [Fact]
+        public async Task CountAsync_Return_Ok()
         {
             // Arrange
-            var actualCount = await _authorCatalogService.CountAsync();
-
-            for (var i = 0; i < authorsCount; i++)
-            {
-                var authorDto = new CreateAuthorDto
-                {
-                    FirstName = "firstnameTest",
-                    LastName = "lastnameTest"
-                };
-
-                await _authorCatalogService.AddAsync(authorDto);
-            }
+            var actualCount = await _repositoryWrapper.Authors.CountAsync();
 
             // Act
             var resultCountDb = await _authorCatalogService.CountAsync();
 
             // Assert
-            Assert.Equal(actualCount + authorsCount, resultCountDb);
+            Assert.Equal(actualCount, resultCountDb);
         }
     }
 }

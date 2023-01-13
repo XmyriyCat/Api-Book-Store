@@ -1,5 +1,6 @@
 ﻿using DLL.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BLL.Tests.Infrastructure
 {
@@ -14,7 +15,14 @@ namespace BLL.Tests.Infrastructure
 
         private static DbContextOptions<ShopDbContext> CreateDbContextOptionsInMemory()
         {
-            return new DbContextOptionsBuilder<ShopDbContext>().UseInMemoryDatabase("bookShopDbTests").Options;
+            var serviceProvider = new ServiceCollection()
+                .AddEntityFrameworkInMemoryDatabase()
+                .BuildServiceProvider();
+
+            var builderDb = new DbContextOptionsBuilder<ShopDbContext>().UseInMemoryDatabase("bookShopDbTests")
+                .UseInternalServiceProvider(serviceProvider);
+
+            return builderDb.Options;
         }
     }
 }

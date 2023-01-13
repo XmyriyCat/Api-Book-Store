@@ -30,6 +30,14 @@ namespace Web_Api.Tests.Startup.DbSettings
                     Publisher = new Publisher { Name = "test-publisher-2"},
                     Genres = new List<Genre> { new Genre { Name = "testGenre-2" }, new Genre{Name = "testGenre-3"} },
                     Authors = new List<Author> { new Author { FirstName = "Test-firstname-2", LastName = "Test-lastname-2" } }
+                },
+                new Book
+                {
+                    Price = 653.12m,
+                    Name = "TestBook-3",
+                    Publisher = new Publisher { Name = "test-publisher-3"},
+                    Genres = new List<Genre> { new Genre { Name = "testGenre-4" }},
+                    Authors = new List<Author> { new Author { FirstName = "Test-firstname-3", LastName = "Test-lastname-3" } }
                 }
             };
         }
