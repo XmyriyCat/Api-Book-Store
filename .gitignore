@@ -349,5 +349,5 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Ignore build files
-**/obj/Debug/net6.0/
+# Ignore Debug files
+**/obj/Debug
