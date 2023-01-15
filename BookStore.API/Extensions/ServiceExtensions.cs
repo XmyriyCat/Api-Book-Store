@@ -6,6 +6,7 @@ using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using DLL.Data;
+using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,6 +54,7 @@ namespace ApiBookStore.Extensions
             services.AddScoped<IGenreCatalogService, GenreCatalogService>();
             services.AddScoped<IPublisherCatalogService, PublisherCatalogService>();
             services.AddScoped<IUserCatalogService, UserCatalogService>();
+            services.AddScoped<IPaymentWayCatalogService, PaymentWayCatalogService>();
             // TODO: Add other services later
         }
 

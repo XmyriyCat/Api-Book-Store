@@ -17,7 +17,8 @@ public class ManagerController : ControllerBase
     private readonly IPublisherCatalogService _publisherService;
     private readonly IPaymentWayCatalogService _paymentWayService;
     private readonly IDeliveryCatalogService _deliveryService;
-    public ManagerController(IAuthorCatalogService authorService,
+    public ManagerController(
+            IAuthorCatalogService authorService,
             IGenreCatalogService genreService,
             IPublisherCatalogService publisherService,
             IPaymentWayCatalogService paymentWayService,
@@ -125,7 +126,7 @@ public class ManagerController : ControllerBase
     
         return Ok(paymentWay);
     }
-
+    
     [AllowAnonymous]
     [HttpGet("delivery/{id}")]
     public async Task<IActionResult> DeliveryGetByIdAsyncTask(int id)
