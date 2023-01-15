@@ -6,7 +6,6 @@ using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using DLL.Data;
-using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
