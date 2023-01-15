@@ -80,7 +80,7 @@ public class ManagerController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("author")]
+    [HttpPost("author")]
     public async Task<IActionResult> AddAsync(CreateAuthorDto item)
     {
         var author = await _authorService.AddAsync(item);
@@ -89,7 +89,7 @@ public class ManagerController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("author")]
+    [HttpPut("author")]
     public async Task<IActionResult> UpdateAsync(UpdateAuthorDto item)
     {
         var author = await _authorService.UpdateAsync(item);
@@ -98,7 +98,7 @@ public class ManagerController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("author")]
+    [HttpDelete("author")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         await _authorService.DeleteAsync(id);
