@@ -9,6 +9,7 @@ using DLL.Data;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -81,6 +82,16 @@ namespace ApiBookStore.Extensions
                 });
         }
 
+        public static void ConfigureOAuth2Authentication(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = config["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
+                googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+            });
+        }
+
         public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
@@ -110,6 +121,36 @@ namespace ApiBookStore.Extensions
                         new string[] { }
                     }
                 });
+            });
+        }
+
+        public static void ConfigureSwaggerOAuth2Authentication(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "My API",
+                    Version = "v1"
+                });
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        Implicit = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("https://accounts.google.com/o/oauth2/v2/auth"),
+                            TokenUrl = new Uri("https://www.googleapis.com/oauth2/v4/token"),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "readAccess", "Access read operations" },
+                                { "writeAccess", "Access write operations" }
+                            }
+                        }
+                    }
+                });
+                
             });
         }
     }
