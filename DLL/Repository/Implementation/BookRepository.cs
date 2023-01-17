@@ -23,11 +23,18 @@ namespace DLL.Repository.Implementation
 
         public async Task<Book> FindIncludeAsync(int id)
         {
-            return await dbContext.Set<Book>()
+            var item = await dbContext.Set<Book>()
                 .Include(book => book.Authors)
                 .Include(book => book.Genres)
                 .Include(book => book.Publisher)
                 .FirstOrDefaultAsync(book => book.Id == id);
+            
+            if (item is null)
+            {
+                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
+            }
+
+            return item;
         }
 
         public override async Task<Book> UpdateAsync(int id, Book item)
