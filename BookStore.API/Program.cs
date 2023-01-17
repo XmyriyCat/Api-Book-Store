@@ -1,4 +1,6 @@
 using ApiBookStore.Extensions;
+using DLL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ApiBookStore
 {
@@ -26,7 +28,7 @@ namespace ApiBookStore
             builder.Services.ConfigureOAuth2Authentication(builder.Configuration);
             //builder.Services.ConfigureSwaggerJwtAuthentication(); // For Jwt working in Swagger
             builder.Services.ConfigureSwaggerOAuth2Authentication(); // For OAuth2 working in Swagger
-
+            
             var app = builder.Build();
 
             app.AppendGlobalErrorHandler();
@@ -40,6 +42,8 @@ namespace ApiBookStore
                 {
                     c.OAuthClientId(builder.Configuration["Authentication:Google:ClientId"]);
                     c.OAuthClientSecret(builder.Configuration["Authentication:Google:ClientSecret"]);
+                    c.OAuth2RedirectUrl("https://localhost:8000/signin-google");
+                    c.OAuthScopes("email");
                 });
             }
 

@@ -1,13 +1,15 @@
 ﻿using System.Linq.Expressions;
+using DLL.Data;
 using DLL.Models;
 using DLL.Repository.Contract;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository.Implementation
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(DbContext context) : base(context)
+        public UserRepository(ShopDbContext context) : base(context)
         {
         }
 

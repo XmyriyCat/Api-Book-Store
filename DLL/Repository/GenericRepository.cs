@@ -1,14 +1,16 @@
 ﻿using System.Linq.Expressions;
+using DLL.Data;
 using DLL.Errors;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository
 {
     public abstract class GenericRepository<T> : IRepository<T> where T : class
     {
-        protected readonly DbContext dbContext;
+        protected readonly ShopDbContext dbContext;
 
-        protected GenericRepository(DbContext context)
+        protected GenericRepository(ShopDbContext context)
         {
             dbContext = context;
         }

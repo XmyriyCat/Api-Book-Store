@@ -13,7 +13,7 @@ namespace DLL.Data.ModelConfigurations
             entityBuilder.Property(x => x.Id)
                 .IsRequired();
 
-            entityBuilder.Property(x => x.Username)
+            entityBuilder.Property(x => x.UserName)
                 .HasMaxLength(150)
                 .IsRequired();
 
@@ -25,9 +25,6 @@ namespace DLL.Data.ModelConfigurations
                 .IsRequired();
 
             entityBuilder.Property(x => x.PasswordHash)
-                .IsRequired();
-
-            entityBuilder.Property(x => x.PasswordSalt)
                 .IsRequired();
 
             entityBuilder.Property(x => x.Email)

@@ -43,8 +43,7 @@ namespace BLL.Services.Implementation
 
             var hmac = new HMACSHA512();
 
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(item.Password));
-            user.PasswordSalt = hmac.Key;
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(item.Password)).ToString();
 
             await _repositoryWrapper.Users.AddAsync(user);
             await _repositoryWrapper.SaveChangesAsync();
@@ -59,24 +58,24 @@ namespace BLL.Services.Implementation
         {
             await _loginUserDtoValidator.ValidateAndThrowAsync(item);
 
-            var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Login == item.Login);
+            var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Email == item.Login);
 
             if (user is null)
             {
                 throw new UserLoginIsNotFound($"Login: '{item.Login}' is not found in database!"); // TODO generate 401 status code!!!!!!!!!!!
             }
 
-            var hmac = new HMACSHA512(user.PasswordSalt);
+            //var hmac = new HMACSHA512(user.PasswordSalt);
 
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(item.Password));
+            //var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(item.Password));
             
-            for (var i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != user.PasswordHash[i])
-                {
-                    throw new WrongUserPasswordError("Wrong password!"); // TODO generate 401 status code!!!!!!!!!!!
-                }
-            }
+            //for (var i = 0; i < computedHash.Length; i++)
+            //{
+            //    if (computedHash[i] != user.PasswordHash[i])
+            //    {
+            //        throw new WrongUserPasswordError("Wrong password!"); // TODO generate 401 status code!!!!!!!!!!!
+            //    }
+            //}
 
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
             authorizedUser.JwtToken = _tokenService.CreateToken(user);

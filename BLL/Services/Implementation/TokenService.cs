@@ -22,7 +22,7 @@ namespace BLL.Services.Implementation
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.Login),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Email),
             };
             
             foreach (var role in user.Roles)

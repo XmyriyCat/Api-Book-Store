@@ -1,13 +1,14 @@
 ﻿using DLL.Data;
 using DLL.Repository.Contract;
 using DLL.Repository.Implementation;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository.UnitOfWork
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private readonly DbContext _dbContext;
+        private readonly ShopDbContext _dbContext;
         private IAuthorRepository _author;
         private IBookRepository _book;
         private IDeliveryRepository _delivery;

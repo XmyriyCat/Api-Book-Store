@@ -1,12 +1,15 @@
 ﻿using System.Reflection;
 using DLL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace DLL.Data
 {
-    public class ShopDbContext : DbContext
+    public class ShopDbContext : IdentityDbContext<User, Role, int>
     {
-        public ShopDbContext(DbContextOptions options) : base(options)
+        public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
         {
         }
 
@@ -18,9 +21,9 @@ namespace DLL.Data
         public DbSet<OrderLine> OrderLines { get; set; }
         public DbSet<PaymentWay> PaymentWays { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
-        public DbSet<Role> Roles { get; set; }
+        //public DbSet<Role> Roles { get; set; }
         public DbSet<Shipment> Shipments { get; set; }
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseBook> WarehouseBooks { get; set; }
 

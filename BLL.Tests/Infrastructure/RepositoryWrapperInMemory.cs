@@ -1,5 +1,6 @@
 ﻿using DLL.Data;
 using DLL.Repository.UnitOfWork;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BLL.Tests.Infrastructure
 {

@@ -1,22 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace DLL.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
         [Key]
-        public int Id { get; set; }
-
-        public string Username { get; set; }
+        public override int Id { get; set; }
 
         public string Login { get; set; }
-
-        public byte[] PasswordHash { get; set; }
-
-        public byte[] PasswordSalt { get; set; }
-
-        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
-        public string Email { get; set; }
 
         public string Country { get; set; }
 

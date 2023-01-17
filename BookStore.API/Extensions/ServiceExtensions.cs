@@ -6,8 +6,12 @@ using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using DLL.Data;
+using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +24,19 @@ namespace ApiBookStore.Extensions
     {
         public static void ConfigureMsSqlServerContext(this IServiceCollection services, IConfiguration config)
         {
-            string connectionString = config.GetConnectionString("ConnectionStringBookDbSql");
+            var connectionString = config.GetConnectionString("ConnectionStringBookDbSql");
             services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.ConfigureIdentityCore();
         }
+
+        public static void ConfigureIdentityCore(this IServiceCollection services)
+        {
+            services.AddDefaultIdentity<User>()
+                .AddEntityFrameworkStores<ShopDbContext>()
+                .AddDefaultTokenProviders();
+        }
+
 
         public static void AddRepositoryWrapper(this IServiceCollection services)
         {
@@ -84,7 +98,14 @@ namespace ApiBookStore.Extensions
 
         public static void ConfigureOAuth2Authentication(this IServiceCollection services, IConfiguration config)
         {
-            services.AddAuthentication().AddGoogle(googleOptions =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+
+            })
+            .AddCookie()
+            .AddGoogle(GoogleDefaults.AuthenticationScheme,googleOptions =>
             {
                 googleOptions.ClientId = config["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
@@ -150,7 +171,7 @@ namespace ApiBookStore.Extensions
                         }
                     }
                 });
-                
+
             });
         }
     }
