@@ -18,7 +18,7 @@ public class BookController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> BookGetAllAsyncTask()
+    public async Task<IActionResult> GetAllAsyncTask()
     {
         var books = await _bookService.GetAllAsync();
         return Ok(books);
@@ -26,7 +26,7 @@ public class BookController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> BookGetByIdAsyncTask(int id)
+    public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var book = await _bookService.FindAsync(id);
 
@@ -40,7 +40,7 @@ public class BookController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPost]
-    public async Task<IActionResult> BookCreateAsyncTask([FromBody] CreateBookDto book)
+    public async Task<IActionResult> CreateAsyncTask([FromBody] CreateBookDto book)
     {
         if (book is null)
         {
@@ -54,7 +54,7 @@ public class BookController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPut]
-    public async Task<IActionResult> BookUpdateAsyncTask([FromBody] UpdateBookDto book)
+    public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdateBookDto book)
     {
         if (book is null)
         {
@@ -73,7 +73,7 @@ public class BookController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> BookDeleteAsyncTask(int id)
+    public async Task<IActionResult> DeleteAsyncTask(int id)
     {
         await _bookService.DeleteAsync(id);
         return Ok();

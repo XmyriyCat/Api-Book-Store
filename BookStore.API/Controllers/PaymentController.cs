@@ -18,7 +18,7 @@ public class PaymentController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> PaymentGetAllAsyncTask()
+    public async Task<IActionResult> GetAllAsyncTask()
     {
         var deliveries = await _paymentService.GetAllAsync();
         return Ok(deliveries);
@@ -26,7 +26,7 @@ public class PaymentController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> PaymentGetByIdAsyncTask(int id)
+    public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var payment = await _paymentService.FindAsync(id);
 
@@ -40,7 +40,7 @@ public class PaymentController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPost]
-    public async Task<IActionResult> PaymentCreateAsyncTask([FromBody] CreatePaymentWayDto payment)
+    public async Task<IActionResult> CreateAsyncTask([FromBody] CreatePaymentWayDto payment)
     {
         if (payment is null)
         {
@@ -54,7 +54,7 @@ public class PaymentController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPut]
-    public async Task<IActionResult> PaymentUpdateAsyncTask([FromBody] UpdatePaymentWayDto payment)
+    public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdatePaymentWayDto payment)
     {
         if (payment is null)
         {
@@ -73,7 +73,7 @@ public class PaymentController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> PaymentDeleteAsyncTask(int id)
+    public async Task<IActionResult> DeleteAsyncTask(int id)
     {
         await _paymentService.DeleteAsync(id);
         return Ok();

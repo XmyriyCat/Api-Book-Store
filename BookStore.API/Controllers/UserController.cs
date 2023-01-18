@@ -18,7 +18,7 @@ namespace ApiBookStore.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUserAsync(RegistrationUserDto user)
+        public async Task<IActionResult> RegisterAsync(RegistrationUserDto user)
         {
             var registeredUser = await _userService.RegisterAsync(user);
             return Ok(registeredUser);
@@ -26,7 +26,7 @@ namespace ApiBookStore.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUserAsync(LoginUserDto user)
+        public async Task<IActionResult> LoginAsync(LoginUserDto user)
         {
             var registeredUser = await _userService.LoginAsync(user);
             return Ok(registeredUser);

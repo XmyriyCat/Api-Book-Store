@@ -18,7 +18,7 @@ public class AuthorController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> AuthorGetAllAsyncTask()
+    public async Task<IActionResult> GetAllAsyncTask()
     {
         var authors = await _authorService.GetAllAsync();
         return Ok(authors);
@@ -26,7 +26,7 @@ public class AuthorController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> AuthorGetByIdAsyncTask(int id)
+    public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var author = await _authorService.FindAsync(id);
 
@@ -40,7 +40,7 @@ public class AuthorController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPost]
-    public async Task<IActionResult> AuthorCreateAsyncTask([FromBody] CreateAuthorDto author)
+    public async Task<IActionResult> CreateAsyncTask([FromBody] CreateAuthorDto author)
     {
         if (author is null)
         {
@@ -54,7 +54,7 @@ public class AuthorController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPut]
-    public async Task<IActionResult> AuthorUpdateAsyncTask([FromBody] UpdateAuthorDto author)
+    public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdateAuthorDto author)
     {
         if (author is null)
         {
@@ -73,7 +73,7 @@ public class AuthorController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> AuthorDeleteAsyncTask(int id)
+    public async Task<IActionResult> DeleteAsyncTask(int id)
     {
         await _authorService.DeleteAsync(id);
         return Ok();

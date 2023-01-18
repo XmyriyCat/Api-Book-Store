@@ -18,7 +18,7 @@ public class PublisherController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> PublisherGetAllAsyncTask()
+    public async Task<IActionResult> GetAllAsyncTask()
     {
         var deliveries = await _publisherService.GetAllAsync();
         return Ok(deliveries);
@@ -26,7 +26,7 @@ public class PublisherController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> PublisherGetByIdAsyncTask(int id)
+    public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var publisher = await _publisherService.FindAsync(id);
 
@@ -40,7 +40,7 @@ public class PublisherController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPost]
-    public async Task<IActionResult> PublisherCreateAsyncTask([FromBody] CreatePublisherDto publisher)
+    public async Task<IActionResult> CreateAsyncTask([FromBody] CreatePublisherDto publisher)
     {
         if (publisher is null)
         {
@@ -54,7 +54,7 @@ public class PublisherController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPut]
-    public async Task<IActionResult> PublisherUpdateAsyncTask([FromBody] UpdatePublisherDto publisher)
+    public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdatePublisherDto publisher)
     {
         if (publisher is null)
         {
@@ -73,7 +73,7 @@ public class PublisherController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> PublisherDeleteAsyncTask(int id)
+    public async Task<IActionResult> DeleteAsyncTask(int id)
     {
         await _publisherService.DeleteAsync(id);
         return Ok();

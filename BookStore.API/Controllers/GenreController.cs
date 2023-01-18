@@ -18,7 +18,7 @@ public class GenreController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GenreGetAllAsyncTask()
+    public async Task<IActionResult> GetAllAsyncTask()
     {
         var genres = await _genreService.GetAllAsync();
         return Ok(genres);
@@ -26,7 +26,7 @@ public class GenreController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GenreGetByIdAsyncTask(int id)
+    public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var genre = await _genreService.FindAsync(id);
 
@@ -40,7 +40,7 @@ public class GenreController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPost]
-    public async Task<IActionResult> GenreCreateAsyncTask([FromBody] CreateGenreDto genre)
+    public async Task<IActionResult> CreateAsyncTask([FromBody] CreateGenreDto genre)
     {
         if (genre is null)
         {
@@ -54,7 +54,7 @@ public class GenreController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPut]
-    public async Task<IActionResult> GenreUpdateAsyncTask([FromBody] UpdateGenreDto genre)
+    public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdateGenreDto genre)
     {
         if (genre is null)
         {
@@ -73,7 +73,7 @@ public class GenreController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> GenreDeleteAsyncTask(int id)
+    public async Task<IActionResult> DeleteAsyncTask(int id)
     {
         await _genreService.DeleteAsync(id);
         return Ok();

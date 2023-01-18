@@ -18,7 +18,7 @@ public class DeliveryController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> DeliveryGetAllAsyncTask()
+    public async Task<IActionResult> GetAllAsyncTask()
     {
         var deliveries = await _deliveryService.GetAllAsync();
         return Ok(deliveries);
@@ -26,7 +26,7 @@ public class DeliveryController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> DeliveryGetByIdAsyncTask(int id)
+    public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var delivery = await _deliveryService.FindAsync(id);
 
@@ -40,7 +40,7 @@ public class DeliveryController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPost]
-    public async Task<IActionResult> DeliveryCreateAsyncTask([FromBody] CreateDeliveryDto delivery)
+    public async Task<IActionResult> CreateAsyncTask([FromBody] CreateDeliveryDto delivery)
     {
         if (delivery is null)
         {
@@ -54,7 +54,7 @@ public class DeliveryController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpPut]
-    public async Task<IActionResult> DeliveryUpdateAsyncTask([FromBody] UpdateDeliveryDto delivery)
+    public async Task<IActionResult> UpdateAsyncTask([FromBody] UpdateDeliveryDto delivery)
     {
         if (delivery is null)
         {
@@ -73,7 +73,7 @@ public class DeliveryController : ControllerBase
 
     [Authorize(Roles = "Manager")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeliveryDeleteAsyncTask(int id)
+    public async Task<IActionResult> DeleteAsyncTask(int id)
     {
         await _deliveryService.DeleteAsync(id);
         return Ok();
