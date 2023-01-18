@@ -20,8 +20,8 @@ public class PaymentController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsyncTask()
     {
-        var deliveries = await _paymentService.GetAllAsync();
-        return Ok(deliveries);
+        var payments = await _paymentService.GetAllAsync();
+        return Ok(payments);
     }
 
     [AllowAnonymous]

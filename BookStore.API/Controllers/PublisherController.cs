@@ -20,8 +20,8 @@ public class PublisherController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsyncTask()
     {
-        var deliveries = await _publisherService.GetAllAsync();
-        return Ok(deliveries);
+        var publishers = await _publisherService.GetAllAsync();
+        return Ok(publishers);
     }
 
     [AllowAnonymous]
