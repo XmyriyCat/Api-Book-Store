@@ -13,15 +13,15 @@ public class WarehouseCatalogService : IWarehouseCatalogService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateWarehouseDto> _createPaymentWayDtoValidator;
-    private readonly IValidator<UpdateWarehouseDto> _updatePaymentWayDtoValidator;
+    private readonly IValidator<CreateWarehouseDto> _createWarehouseDtoValidator;
+    private readonly IValidator<UpdateWarehouseDto> _updateWarehouseDtoValidator;
     
     public WarehouseCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, IValidator<CreateWarehouseDto> createValidator, IValidator<UpdateWarehouseDto> updateValidator)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _createPaymentWayDtoValidator = createValidator;
-        _updatePaymentWayDtoValidator = updateValidator;
+        _createWarehouseDtoValidator = createValidator;
+        _updateWarehouseDtoValidator = updateValidator;
     }
     
     public async Task<IEnumerable<Warehouse>> GetAllAsync()
@@ -36,7 +36,7 @@ public class WarehouseCatalogService : IWarehouseCatalogService
     
     public async Task<Warehouse> AddAsync(CreateWarehouseDto item)
     {
-        await _createPaymentWayDtoValidator.ValidateAndThrowAsync(item);
+        await _createWarehouseDtoValidator.ValidateAndThrowAsync(item);
         var warehouse = _mapper.Map<Warehouse>(item);
     
         warehouse = await _repositoryWrapper.Warehouses.AddAsync(warehouse);
@@ -48,7 +48,7 @@ public class WarehouseCatalogService : IWarehouseCatalogService
     
     public async Task<Warehouse> UpdateAsync(UpdateWarehouseDto item)
     {
-        await _updatePaymentWayDtoValidator.ValidateAndThrowAsync(item);
+        await _updateWarehouseDtoValidator.ValidateAndThrowAsync(item);
     
         var warehouse = _mapper.Map<Warehouse>(item);
     

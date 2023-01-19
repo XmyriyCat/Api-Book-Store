@@ -12,16 +12,16 @@ public class OrderLineCatalogService : IOrderLineCatalogService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateOrderLineDto> _createPaymentWayDtoValidator;
-    private readonly IValidator<UpdateOrderLineDto> _updatePaymentWayDtoValidator;
+    private readonly IValidator<CreateOrderLineDto> _createOrderLineDtoValidator;
+    private readonly IValidator<UpdateOrderLineDto> _updateOrderLineDtoValidator;
 
     public OrderLineCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper,
         IValidator<CreateOrderLineDto> createValidator, IValidator<UpdateOrderLineDto> updateValidator)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _createPaymentWayDtoValidator = createValidator;
-        _updatePaymentWayDtoValidator = updateValidator;
+        _createOrderLineDtoValidator = createValidator;
+        _updateOrderLineDtoValidator = updateValidator;
     }
 
     public async Task<IEnumerable<OrderLine>> GetAllAsync()
@@ -36,7 +36,7 @@ public class OrderLineCatalogService : IOrderLineCatalogService
 
     public async Task<OrderLine> AddAsync(CreateOrderLineDto item)
     {
-        await _createPaymentWayDtoValidator.ValidateAndThrowAsync(item);
+        await _createOrderLineDtoValidator.ValidateAndThrowAsync(item);
         var orderLine = _mapper.Map<OrderLine>(item);
 
         orderLine = await _repositoryWrapper.OrderLines.AddAsync(orderLine);
@@ -48,7 +48,7 @@ public class OrderLineCatalogService : IOrderLineCatalogService
 
     public async Task<OrderLine> UpdateAsync(UpdateOrderLineDto item)
     {
-        await _updatePaymentWayDtoValidator.ValidateAndThrowAsync(item);
+        await _updateOrderLineDtoValidator.ValidateAndThrowAsync(item);
 
         var orderLine = _mapper.Map<OrderLine>(item);
 
