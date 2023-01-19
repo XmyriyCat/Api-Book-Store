@@ -20,8 +20,8 @@ public class WarehouseController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsyncTask()
     {
-        var deliveries = await _warehouseService.GetAllAsync();
-        return Ok(deliveries);
+        var warehouses = await _warehouseService.GetAllAsync();
+        return Ok(warehouses);
     }
 
     [AllowAnonymous]
