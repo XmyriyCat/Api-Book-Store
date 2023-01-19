@@ -1,8 +1,6 @@
 ﻿using DLL.Data;
 using DLL.Repository.Contract;
 using DLL.Repository.Implementation;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository.UnitOfWork
 {

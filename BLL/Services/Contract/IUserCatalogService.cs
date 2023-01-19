@@ -1,5 +1,4 @@
 ﻿using BLL.DTO.User;
-using DLL.Models;
 
 namespace BLL.Services.Contract
 {

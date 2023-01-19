@@ -139,34 +139,5 @@ namespace ApiBookStore.Extensions
                 });
             });
         }
-
-        public static void ConfigureSwaggerOAuth2Authentication(this IServiceCollection services)
-        {
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "My API",
-                    Version = "v1"
-                });
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        Implicit = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("https://accounts.google.com/o/oauth2/v2/auth"),
-                            TokenUrl = new Uri("https://www.googleapis.com/oauth2/v4/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { "email", "Email verification" },
-                                { "profile", "Main profile data" }
-                            }
-                        }
-                    }
-                });
-            });
-        }
     }
 }

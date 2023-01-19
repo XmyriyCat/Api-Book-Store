@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using DLL.Data;
 using DLL.Errors;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repository

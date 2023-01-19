@@ -120,7 +120,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
