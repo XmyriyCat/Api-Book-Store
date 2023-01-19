@@ -13,6 +13,8 @@ using BLL.DTO.User;
 using BLL.DTO.Warehouse;
 using BLL.DTO.WarehouseBook;
 using DLL.Models;
+using Google.Apis.Auth;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace BLL.Infrastructure.Mapper
 {
@@ -30,7 +32,8 @@ namespace BLL.Infrastructure.Mapper
                     opt => opt.MapFrom(src => src.IdPublisher));
 
             CreateMap<UpdateBookDto, Book>()
-                    .ForMember(dest => dest.PublisherId, opt => opt.MapFrom(src => src.IdPublisher));
+                    .ForMember(dest => dest.PublisherId,
+                        opt => opt.MapFrom(src => src.IdPublisher));
 
             // Delivery
             CreateMap<CreateDeliveryDto, Delivery>();
@@ -47,7 +50,7 @@ namespace BLL.Infrastructure.Mapper
             // Orders
             CreateMap<CreateOrderDto, Order>();
             CreateMap<UpdateOrderDto, Order>();
-                
+
             // PaymentWay
             CreateMap<CreatePaymentWayDto, PaymentWay>();
             CreateMap<UpdatePaymentWayDto, PaymentWay>();
@@ -70,6 +73,15 @@ namespace BLL.Infrastructure.Mapper
             CreateMap<RegistrationUserDto, User>();
             CreateMap<LoginUserDto, User>();
             CreateMap<User, AuthorizedUserDto>();
+            CreateMap<GoogleJsonWebSignature.Payload, User>()
+                .ForMember(dest => dest.Login,
+                    opt => opt.MapFrom(x => x.Email))
+                .ForMember(dest => dest.Email,
+                    opt => opt.MapFrom(x => x.Email))
+                .ForMember(dest => dest.EmailConfirmed,
+                    opt => opt.MapFrom(x => x.EmailVerified))
+                .ForMember(dest => dest.UserName,
+                    opt => opt.MapFrom(x => x.Name));
 
             // Warehouse
             CreateMap<CreateWarehouseDto, Warehouse>();

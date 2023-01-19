@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Web_Api.Tests.Startup.JwtHandler
 {
-    public class TokenServiceTest : TokenService
+    public class TokenServiceTest : TokenJwtService
     {
         public TokenServiceTest(IConfiguration config) : base(config)
         {
@@ -42,7 +42,7 @@ namespace Web_Api.Tests.Startup.JwtHandler
                 }
             });
         }
-        
+
         private string CreateToken(string login, IEnumerable<Role> roles)
         {
             var user = new User

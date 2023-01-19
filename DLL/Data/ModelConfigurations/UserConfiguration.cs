@@ -1,4 +1,5 @@
 ﻿using DLL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,11 +39,11 @@ namespace DLL.Data.ModelConfigurations
 
             entityBuilder.Property(x => x.Address)
                 .HasMaxLength(150);
-
+            
             // many to many
             entityBuilder.HasMany(x => x.Roles)
                 .WithMany(x => x.Users)
-                .UsingEntity("UserRoles");
+                .UsingEntity<IdentityUserRole<int>>();
         }
     }
 }

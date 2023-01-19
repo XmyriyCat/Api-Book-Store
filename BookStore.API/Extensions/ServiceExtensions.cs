@@ -9,14 +9,12 @@ using DLL.Data;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+// ReSharper disable StringLiteralTypo
 
 namespace ApiBookStore.Extensions
 {
@@ -26,15 +24,20 @@ namespace ApiBookStore.Extensions
         {
             var connectionString = config.GetConnectionString("ConnectionStringBookDbSql");
             services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(connectionString));
-
-            services.ConfigureIdentityCore();
         }
 
         public static void ConfigureIdentityCore(this IServiceCollection services)
         {
-            services.AddDefaultIdentity<User>()
-                .AddEntityFrameworkStores<ShopDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ "; // added space
+            })
+            .AddEntityFrameworkStores<ShopDbContext>()
+            .AddDefaultTokenProviders();
         }
 
 
@@ -78,7 +81,7 @@ namespace ApiBookStore.Extensions
 
         public static void ConfigureJwtTokenService(this IServiceCollection services)
         {
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, TokenJwtService>();
         }
 
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
@@ -95,22 +98,10 @@ namespace ApiBookStore.Extensions
                     };
                 });
         }
-
-        public static void ConfigureOAuth2Authentication(this IServiceCollection services, IConfiguration config)
+        
+        public static void ConfigureGoogleTokenService(this IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-
-            })
-            .AddCookie()
-            .AddGoogle(GoogleDefaults.AuthenticationScheme,googleOptions =>
-            {
-                googleOptions.ClientId = config["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
-                googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
-            });
+            services.AddScoped<IGoogleTokenService, GoogleTokenService>();
         }
 
         public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)
@@ -165,13 +156,12 @@ namespace ApiBookStore.Extensions
                             TokenUrl = new Uri("https://www.googleapis.com/oauth2/v4/token"),
                             Scopes = new Dictionary<string, string>
                             {
-                                { "readAccess", "Access read operations" },
-                                { "writeAccess", "Access write operations" }
+                                { "email", "Email verification" },
+                                { "profile", "Main profile data" }
                             }
                         }
                     }
                 });
-
             });
         }
     }

@@ -1,12 +1,12 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using BLL.DTO.User;
 using BLL.Errors;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services.Implementation
 {
@@ -17,14 +17,29 @@ namespace BLL.Services.Implementation
         private readonly IValidator<RegistrationUserDto> _registrationUserDtoValidator;
         private readonly IValidator<LoginUserDto> _loginUserDtoValidator;
         private readonly ITokenService _tokenService;
+        private readonly IGoogleTokenService _googleTokenService;
+        private readonly IValidator<GoogleJsonWebSignature.Payload> _googlePayloadValidator;
+        private readonly UserManager<User> _userManager;
 
-        public UserCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, IValidator<LoginUserDto> loginValidator, IValidator<RegistrationUserDto> registrationValidator, ITokenService tokenService)
+        public UserCatalogService(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            IValidator<LoginUserDto> loginValidator,
+            IValidator<RegistrationUserDto> registrationValidator,
+            ITokenService tokenService,
+            IGoogleTokenService googleTokenService,
+            IValidator<GoogleJsonWebSignature.Payload> googlePayloadValidator,
+            UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _loginUserDtoValidator = loginValidator;
             _registrationUserDtoValidator = registrationValidator;
             _tokenService = tokenService;
+            _googleTokenService = googleTokenService;
+            _googlePayloadValidator = googlePayloadValidator;
+            _userManager = userManager;
+
         }
 
         public async Task<AuthorizedUserDto> RegisterAsync(RegistrationUserDto item)
@@ -37,20 +52,20 @@ namespace BLL.Services.Implementation
             }
 
             var user = _mapper.Map<User>(item);
-            
+
             var userRole = await _repositoryWrapper.Roles.FirstOrDefaultAsync(x => x.Name == "Buyer");
             user.Roles.Add(userRole);
 
-            var hmac = new HMACSHA512();
+            var result = await _userManager.CreateAsync(user, item.Password);
 
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(item.Password)).ToString();
-
-            await _repositoryWrapper.Users.AddAsync(user);
-            await _repositoryWrapper.SaveChangesAsync();
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.ToString()); ////////// TODO Create exception class and handle it in Global Exception handler!      401 code
+            }
 
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
             authorizedUser.JwtToken = _tokenService.CreateToken(user);
-            
+
             return authorizedUser;
         }
 
@@ -58,27 +73,72 @@ namespace BLL.Services.Implementation
         {
             await _loginUserDtoValidator.ValidateAndThrowAsync(item);
 
-            var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Email == item.Login);
+            var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Login == item.Login);
 
             if (user is null)
             {
                 throw new UserLoginIsNotFound($"Login: '{item.Login}' is not found in database!"); // TODO generate 401 status code!!!!!!!!!!!
             }
 
-            //var hmac = new HMACSHA512(user.PasswordSalt);
+            var result = await _userManager.CheckPasswordAsync(user, item.Password);
 
-            //var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(item.Password));
+            if (!result)
+            {
+                throw new WrongUserPasswordError("Wrong password!"); // TODO generate 401 status code!!!!!!!!!!!
+            }
             
-            //for (var i = 0; i < computedHash.Length; i++)
-            //{
-            //    if (computedHash[i] != user.PasswordHash[i])
-            //    {
-            //        throw new WrongUserPasswordError("Wrong password!"); // TODO generate 401 status code!!!!!!!!!!!
-            //    }
-            //}
+            var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
+            authorizedUser.JwtToken = _tokenService.CreateToken(user);
+
+            return authorizedUser;
+        }
+        
+        public async Task<AuthorizedUserDto> RegisterGoogleAsync(string googleToken, string password)
+        {
+            var payload = await _googleTokenService.ValidateGoogleTokenAsync(googleToken);
+
+            await _googlePayloadValidator.ValidateAndThrowAsync(payload);
+
+            var user = _mapper.Map<User>(payload);
+
+            if (!await IsUniqueLoginAsync(user.Login))
+            {
+                throw new InvalidUserLoginError($"Login: '{user.Login}' is already used!");
+            }
+
+            var userRole = await _repositoryWrapper.Roles.FirstOrDefaultAsync(x => x.Name == "Buyer");
+            user.Roles.Add(userRole);
+
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.ToString()); ////////// TODO Create exception class and handle it in Global Exception handler!     401 code
+            }
 
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
             authorizedUser.JwtToken = _tokenService.CreateToken(user);
+
+            return authorizedUser;
+        }
+
+        public async Task<AuthorizedUserDto> LoginGoogleAsync(string googleToken)
+        {
+            var payload = await _googleTokenService.ValidateGoogleTokenAsync(googleToken);
+
+            await _googlePayloadValidator.ValidateAndThrowAsync(payload);
+
+            var user = _mapper.Map<User>(payload);
+            
+            var userDb = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Login == user.Login);
+
+            if (userDb is null)
+            {
+                throw new UserLoginIsNotFound($"Login: '{user.Login}' is not found in database!"); // TODO generate 401 status code!!!!!!!!!!!
+            }
+            
+            var authorizedUser = _mapper.Map<AuthorizedUserDto>(userDb);
+            authorizedUser.JwtToken = _tokenService.CreateToken(userDb);
 
             return authorizedUser;
         }

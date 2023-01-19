@@ -3,6 +3,7 @@ using System.Text.Json;
 using BLL.Errors;
 using FluentValidation;
 using DLL.Errors;
+using Google.Apis.Auth;
 
 namespace ApiBookStore.MiddlewareHandlers
 {
@@ -41,6 +42,9 @@ namespace ApiBookStore.MiddlewareHandlers
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         break;
                     case WrongUserPasswordError:
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+                    case InvalidJwtException:
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         break;
                     default:
