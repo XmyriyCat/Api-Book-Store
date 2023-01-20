@@ -10,8 +10,8 @@ namespace BLL.Services.Contract
 
         Task<bool> IsUniqueLoginAsync(string login);
 
-        Task<AuthorizedUserDto> LoginGoogleAsync(string googleToken);
+        Task<AuthorizedUserDto> LoginGoogleAsync(LoginGoogleUserDto item);
 
-        Task<AuthorizedUserDto> RegisterGoogleAsync(string googleToken, string password);
+        Task<AuthorizedUserDto> RegisterGoogleAsync(RegistrationGoogleUserDto item);
     }
 }

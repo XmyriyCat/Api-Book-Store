@@ -41,6 +41,9 @@ namespace ApiBookStore.MiddlewareHandlers
                     case UserLoginIsNotFound:
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         break;
+                    case CreateIdentityUserException:
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
                     case WrongUserPasswordError:
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         break;

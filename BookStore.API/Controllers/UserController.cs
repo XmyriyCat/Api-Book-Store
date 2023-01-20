@@ -18,7 +18,7 @@ namespace ApiBookStore.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUserAsync(RegistrationUserDto user)
+        public async Task<IActionResult> RegisterUserAsync([FromBody] RegistrationUserDto user)
         {
             var registeredUser = await _userService.RegisterAsync(user);
             return Ok(registeredUser);
@@ -26,7 +26,7 @@ namespace ApiBookStore.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUserAsync(LoginUserDto user)
+        public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserDto user)
         {
             var registeredUser = await _userService.LoginAsync(user);
             return Ok(registeredUser);
@@ -34,17 +34,17 @@ namespace ApiBookStore.Controllers
 
         [AllowAnonymous]
         [HttpPost("register-google")]
-        public async Task<IActionResult> RegisterGoogleAsync(string googleToken, string password)
+        public async Task<IActionResult> RegisterGoogleAsync([FromBody] RegistrationGoogleUserDto registrationGoogleUserDto)
         {
-            var registeredUser = await _userService.RegisterGoogleAsync(googleToken, password);
+            var registeredUser = await _userService.RegisterGoogleAsync(registrationGoogleUserDto);
             return Ok(registeredUser);
         }
 
         [AllowAnonymous]
         [HttpPost("login-google")]
-        public async Task<IActionResult> LoginGoogleAsync(string googleToken)
+        public async Task<IActionResult> LoginGoogleAsync([FromBody] LoginGoogleUserDto loginGoogleUserDto)
         {
-            var registeredUser = await _userService.LoginGoogleAsync(googleToken);
+            var registeredUser = await _userService.LoginGoogleAsync(loginGoogleUserDto);
             return Ok(registeredUser);
         }
     }

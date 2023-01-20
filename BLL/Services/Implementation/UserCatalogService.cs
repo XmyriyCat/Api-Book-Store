@@ -19,6 +19,8 @@ namespace BLL.Services.Implementation
         private readonly ITokenService _tokenService;
         private readonly IGoogleTokenService _googleTokenService;
         private readonly IValidator<GoogleJsonWebSignature.Payload> _googlePayloadValidator;
+        private readonly IValidator<RegistrationGoogleUserDto> _registrationGoogleUserDtoValidator;
+        private readonly IValidator<LoginGoogleUserDto> _loginGoogleUserDtoValidator;
         private readonly UserManager<User> _userManager;
 
         public UserCatalogService(
@@ -29,6 +31,8 @@ namespace BLL.Services.Implementation
             ITokenService tokenService,
             IGoogleTokenService googleTokenService,
             IValidator<GoogleJsonWebSignature.Payload> googlePayloadValidator,
+            IValidator<RegistrationGoogleUserDto> registrationGoogleUserDtoValidator,
+            IValidator<LoginGoogleUserDto> loginGoogleUserDtoValidator,
             UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
@@ -38,8 +42,9 @@ namespace BLL.Services.Implementation
             _tokenService = tokenService;
             _googleTokenService = googleTokenService;
             _googlePayloadValidator = googlePayloadValidator;
+            _registrationGoogleUserDtoValidator = registrationGoogleUserDtoValidator;
+            _loginGoogleUserDtoValidator = loginGoogleUserDtoValidator;
             _userManager = userManager;
-
         }
 
         public async Task<AuthorizedUserDto> RegisterAsync(RegistrationUserDto item)
@@ -48,7 +53,7 @@ namespace BLL.Services.Implementation
 
             if (!await IsUniqueLoginAsync(item.Login))
             {
-                throw new InvalidUserLoginError($"Login: '{item.Login}' is already used!"); // TODO generate 409 status code!!!!!!!!!!!
+                throw new InvalidUserLoginError($"Login: '{item.Login}' is already used!");
             }
 
             var user = _mapper.Map<User>(item);
@@ -60,7 +65,7 @@ namespace BLL.Services.Implementation
 
             if (!result.Succeeded)
             {
-                throw new Exception(result.ToString()); ////////// TODO Create exception class and handle it in Global Exception handler!      401 code
+                throw new CreateIdentityUserException(result.ToString());
             }
 
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
@@ -77,14 +82,14 @@ namespace BLL.Services.Implementation
 
             if (user is null)
             {
-                throw new UserLoginIsNotFound($"Login: '{item.Login}' is not found in database!"); // TODO generate 401 status code!!!!!!!!!!!
+                throw new UserLoginIsNotFound($"Login: '{item.Login}' is not found in database!");
             }
 
             var result = await _userManager.CheckPasswordAsync(user, item.Password);
 
             if (!result)
             {
-                throw new WrongUserPasswordError("Wrong password!"); // TODO generate 401 status code!!!!!!!!!!!
+                throw new WrongUserPasswordError($"Wrong password!");
             }
             
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
@@ -93,9 +98,11 @@ namespace BLL.Services.Implementation
             return authorizedUser;
         }
         
-        public async Task<AuthorizedUserDto> RegisterGoogleAsync(string googleToken, string password)
+        public async Task<AuthorizedUserDto> RegisterGoogleAsync(RegistrationGoogleUserDto registrationGoogleUserDto)
         {
-            var payload = await _googleTokenService.ValidateGoogleTokenAsync(googleToken);
+            await _registrationGoogleUserDtoValidator.ValidateAndThrowAsync(registrationGoogleUserDto);
+
+            var payload = await _googleTokenService.ValidateGoogleTokenAsync(registrationGoogleUserDto.GoogleToken);
 
             await _googlePayloadValidator.ValidateAndThrowAsync(payload);
 
@@ -109,11 +116,11 @@ namespace BLL.Services.Implementation
             var userRole = await _repositoryWrapper.Roles.FirstOrDefaultAsync(x => x.Name == "Buyer");
             user.Roles.Add(userRole);
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, registrationGoogleUserDto.Password);
 
             if (!result.Succeeded)
             {
-                throw new Exception(result.ToString()); ////////// TODO Create exception class and handle it in Global Exception handler!     401 code
+                throw new CreateIdentityUserException(result.ToString());
             }
 
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
@@ -122,9 +129,11 @@ namespace BLL.Services.Implementation
             return authorizedUser;
         }
 
-        public async Task<AuthorizedUserDto> LoginGoogleAsync(string googleToken)
+        public async Task<AuthorizedUserDto> LoginGoogleAsync(LoginGoogleUserDto loginGoogleUserDto)
         {
-            var payload = await _googleTokenService.ValidateGoogleTokenAsync(googleToken);
+            await _loginGoogleUserDtoValidator.ValidateAndThrowAsync(loginGoogleUserDto);
+
+            var payload = await _googleTokenService.ValidateGoogleTokenAsync(loginGoogleUserDto.GoogleToken);
 
             await _googlePayloadValidator.ValidateAndThrowAsync(payload);
 
@@ -134,7 +143,7 @@ namespace BLL.Services.Implementation
 
             if (userDb is null)
             {
-                throw new UserLoginIsNotFound($"Login: '{user.Login}' is not found in database!"); // TODO generate 401 status code!!!!!!!!!!!
+                throw new UserLoginIsNotFound($"Login: '{user.Login}' is not found in database!");
             }
             
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(userDb);
