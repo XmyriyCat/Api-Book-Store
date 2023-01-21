@@ -2,7 +2,7 @@
 {
     public class CreateIdentityUserException : Exception
     {
-        public CreateIdentityUserException() : base()
+        public CreateIdentityUserException()
         {
         }
 
