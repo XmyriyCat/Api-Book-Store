@@ -4,7 +4,6 @@ using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation;
 
@@ -26,18 +25,37 @@ public class OrderCatalogService : IOrderCatalogService
 
     public async Task<IEnumerable<Order>> GetAllAsync()
     {
-        return await _repositoryWrapper.Orders.GetAll().ToListAsync();
+        return await _repositoryWrapper.Orders.GetAllIncludeAsync();
     }
 
     public async Task<Order> FindAsync(int id)
     {
-        return await _repositoryWrapper.Orders.FindAsync(id);
+        return await _repositoryWrapper.Orders.FindIncludeAsync(id);
     }
 
     public async Task<Order> AddAsync(CreateOrderDto item)
     {
         await _createOrderDtoValidator.ValidateAndThrowAsync(item);
+
         var order = _mapper.Map<Order>(item);
+
+        var shipmentDb = await _repositoryWrapper.Shipments.FindIncludeAsync(item.ShipmentId);
+
+        if (shipmentDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent shipment id.");
+        }
+
+        order.Shipment = shipmentDb;
+
+        var customerDb = await _repositoryWrapper.Users.FindIncludeAsync(item.CustomerId);
+
+        if (customerDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent user id.");
+        }
+
+        order.User = customerDb;
 
         order = await _repositoryWrapper.Orders.AddAsync(order);
 
@@ -51,6 +69,24 @@ public class OrderCatalogService : IOrderCatalogService
         await _updateOrderDtoValidator.ValidateAndThrowAsync(item);
 
         var order = _mapper.Map<Order>(item);
+
+        var shipmentDb = await _repositoryWrapper.Shipments.FindIncludeAsync(item.ShipmentId);
+
+        if (shipmentDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent shipment id.");
+        }
+
+        order.Shipment = shipmentDb;
+
+        var customerDb = await _repositoryWrapper.Users.FindIncludeAsync(item.CustomerId);
+
+        if (customerDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent user id.");
+        }
+
+        order.User = customerDb;
 
         order = await _repositoryWrapper.Orders.UpdateAsync(order.Id, order);
 

@@ -4,7 +4,6 @@ using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation;
 
@@ -26,18 +25,37 @@ public class OrderLineCatalogService : IOrderLineCatalogService
 
     public async Task<IEnumerable<OrderLine>> GetAllAsync()
     {
-        return await _repositoryWrapper.OrderLines.GetAll().ToListAsync();
+        return await _repositoryWrapper.OrderLines.GetAllIncludeAsync();
     }
 
     public async Task<OrderLine> FindAsync(int id)
     {
-        return await _repositoryWrapper.OrderLines.FindAsync(id);
+        return await _repositoryWrapper.OrderLines.FindIncludeAsync(id);
     }
 
     public async Task<OrderLine> AddAsync(CreateOrderLineDto item)
     {
         await _createOrderLineDtoValidator.ValidateAndThrowAsync(item);
+
         var orderLine = _mapper.Map<OrderLine>(item);
+
+        var warehouseBookDb = await _repositoryWrapper.WarehouseBooks.FindIncludeAsync(item.WarehouseBookId);
+
+        if (warehouseBookDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent warehouse book id.");
+        }
+
+        orderLine.WarehouseBook = warehouseBookDb;
+
+        var orderDb = await _repositoryWrapper.Orders.FindIncludeAsync(item.OrderId);
+
+        if (orderDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent order id.");
+        }
+
+        orderLine.Order = orderDb;
 
         orderLine = await _repositoryWrapper.OrderLines.AddAsync(orderLine);
 
@@ -51,6 +69,24 @@ public class OrderLineCatalogService : IOrderLineCatalogService
         await _updateOrderLineDtoValidator.ValidateAndThrowAsync(item);
 
         var orderLine = _mapper.Map<OrderLine>(item);
+
+        var warehouseBookDb = await _repositoryWrapper.WarehouseBooks.FindIncludeAsync(item.WarehouseBookId);
+
+        if (warehouseBookDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent warehouse book id.");
+        }
+
+        orderLine.WarehouseBook = warehouseBookDb;
+
+        var orderDb = await _repositoryWrapper.Orders.FindIncludeAsync(item.OrderId);
+
+        if (orderDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent order id.");
+        }
+
+        orderLine.Order = orderDb;
 
         orderLine = await _repositoryWrapper.OrderLines.UpdateAsync(orderLine.Id, orderLine);
 

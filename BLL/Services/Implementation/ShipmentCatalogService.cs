@@ -1,11 +1,9 @@
 using AutoMapper;
-using BLL.DTO.OrderLine;
 using BLL.DTO.Shipment;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation;
 
@@ -27,18 +25,37 @@ public class ShipmentCatalogService : IShipmentCatalogService
 
     public async Task<IEnumerable<Shipment>> GetAllAsync()
     {
-        return await _repositoryWrapper.Shipments.GetAll().ToListAsync();
+        return await _repositoryWrapper.Shipments.GetAllIncludeAsync();
     }
 
     public async Task<Shipment> FindAsync(int id)
     {
-        return await _repositoryWrapper.Shipments.FindAsync(id);
+        return await _repositoryWrapper.Shipments.FindIncludeAsync(id);
     }
 
     public async Task<Shipment> AddAsync(CreateShipmentDto item)
     {
         await _createShipmentDtoValidator.ValidateAndThrowAsync(item);
+
         var shipment = _mapper.Map<Shipment>(item);
+
+        var deliveryDb = await _repositoryWrapper.Deliveries.FindAsync(item.DeliveryId);
+
+        if (deliveryDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent delivery id.");
+        }
+
+        shipment.Delivery = deliveryDb;
+
+        var paymentWayDb = await _repositoryWrapper.PaymentWays.FindAsync(item.PaymentWayId);
+
+        if (paymentWayDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent payment way id.");
+        }
+
+        shipment.PaymentWay = paymentWayDb;
 
         shipment = await _repositoryWrapper.Shipments.AddAsync(shipment);
 
@@ -52,6 +69,24 @@ public class ShipmentCatalogService : IShipmentCatalogService
         await _updateShipmentDtoValidator.ValidateAndThrowAsync(item);
 
         var shipment = _mapper.Map<Shipment>(item);
+
+        var deliveryDb = await _repositoryWrapper.Deliveries.FindAsync(item.DeliveryId);
+
+        if (deliveryDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent delivery id.");
+        }
+
+        shipment.Delivery = deliveryDb;
+
+        var paymentWayDb = await _repositoryWrapper.PaymentWays.FindAsync(item.PaymentWayId);
+
+        if (paymentWayDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent payment way id.");
+        }
+
+        shipment.PaymentWay = paymentWayDb;
 
         shipment = await _repositoryWrapper.Shipments.UpdateAsync(shipment.Id, shipment);
 
