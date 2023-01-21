@@ -1,5 +1,4 @@
 using AutoMapper;
-using BLL.DTO.PaymentWay;
 using BLL.DTO.Warehouse;
 using BLL.Services.Contract;
 using DLL.Models;
