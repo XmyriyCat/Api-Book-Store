@@ -25,18 +25,37 @@ public class WarehouseBookCatalogService : IWarehouseBookCatalogService
 
     public async Task<IEnumerable<WarehouseBook>> GetAllAsync()
     {
-        return await _repositoryWrapper.WarehouseBooks.GetAll().ToListAsync();
+        return await _repositoryWrapper.WarehouseBooks.GetAllIncludeAsync();
     }
 
     public async Task<WarehouseBook> FindAsync(int id)
     {
-        return await _repositoryWrapper.WarehouseBooks.FindAsync(id);
+        return await _repositoryWrapper.WarehouseBooks.FindIncludeAsync(id);
     }
 
     public async Task<WarehouseBook> AddAsync(CreateWarehouseBookDto item)
     {
         await _createWarehouseBookDtoValidator.ValidateAndThrowAsync(item);
+
         var warehouseBook = _mapper.Map<WarehouseBook>(item);
+        
+        var bookDb = await _repositoryWrapper.Books.FindAsync(item.BookId);
+
+        if (bookDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent book id.");
+        }
+
+        warehouseBook.Book = bookDb;
+
+        var warehouseDb = await _repositoryWrapper.Warehouses.FindAsync(item.WarehouseId);
+
+        if (warehouseDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent warehouse id.");
+        }
+
+        warehouseBook.Warehouse = warehouseDb;
 
         warehouseBook = await _repositoryWrapper.WarehouseBooks.AddAsync(warehouseBook);
 
@@ -50,6 +69,24 @@ public class WarehouseBookCatalogService : IWarehouseBookCatalogService
         await _updateWarehouseBookDtoValidator.ValidateAndThrowAsync(item);
 
         var warehouseBook = _mapper.Map<WarehouseBook>(item);
+
+        var bookDb = await _repositoryWrapper.Books.FindIncludeAsync(item.BookId);
+
+        if (bookDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent book id.");
+        }
+
+        warehouseBook.Book = bookDb;
+
+        var warehouseDb = await _repositoryWrapper.Warehouses.FindAsync(item.WarehouseId);
+
+        if (warehouseDb is null)
+        {
+            throw new ValidationException($"DTO contains a non-existent warehouse id.");
+        }
+
+        warehouseBook.Warehouse = warehouseDb;
 
         warehouseBook = await _repositoryWrapper.WarehouseBooks.UpdateAsync(warehouseBook.Id, warehouseBook);
 

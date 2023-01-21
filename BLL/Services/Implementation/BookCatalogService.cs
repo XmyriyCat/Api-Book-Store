@@ -38,8 +38,8 @@ namespace BLL.Services.Implementation
 
             var book = _mapper.Map<Book>(item);
 
-            book.Authors = new List<Author>();
-            book.Genres = new List<Genre>();
+            book.Authors = new HashSet<Author>();
+            book.Genres = new HashSet<Genre>();
 
             foreach (var idAuthor in item.AuthorsId)
             {
@@ -71,7 +71,9 @@ namespace BLL.Services.Implementation
             {
                 throw new ValidationException($"DTO contains a non-existent publisher id.");
             }
-            
+
+            book.Publisher = publisher;
+
             book = await _repositoryWrapper.Books.AddAsync(book);
 
             await _repositoryWrapper.SaveChangesAsync();

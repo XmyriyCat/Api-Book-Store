@@ -7,7 +7,7 @@ namespace BLL.Infrastructure.Validators.WarehouseBook
     {
         public CreateWarehouseBookDtoValidator()
         {
-            RuleFor(x => x.Quantity).GreaterThan(0);
+            RuleFor(x => x.Quantity).GreaterThanOrEqualTo(0);
             RuleFor(x => x.WarehouseId).GreaterThan(0);
             RuleFor(x => x.BookId).GreaterThan(0);
         }

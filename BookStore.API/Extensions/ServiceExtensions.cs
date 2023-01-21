@@ -53,13 +53,14 @@ namespace ApiBookStore.Extensions
             services.AddScoped<IGenreCatalogService, GenreCatalogService>(); 
             services.AddScoped<IPublisherCatalogService, PublisherCatalogService>();
             services.AddScoped<IUserCatalogService, UserCatalogService>();
-            services.AddScoped<IDeliveryCatalogService, DeliveryCatalogService>(); //
+            services.AddScoped<IDeliveryCatalogService, DeliveryCatalogService>();
             services.AddScoped<IPaymentWayCatalogService, PaymentWayCatalogService>();
             services.AddScoped<IShipmentCatalogService, ShipmentCatalogService>();
             services.AddScoped<IRoleCatalogService, RoleCatalogService>();
             services.AddScoped<IWarehouseCatalogService, WarehouseCatalogService>();
             services.AddScoped<IWarehouseBookCatalogService, WarehouseBookCatalogService>();
-
+            services.AddScoped<IOrderCatalogService, OrderCatalogService>();
+            services.AddScoped<IOrderLineCatalogService, OrderLineCatalogService>();
 
             // TODO: Add other services later
         }
