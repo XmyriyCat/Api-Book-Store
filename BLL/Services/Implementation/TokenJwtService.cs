@@ -9,11 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services.Implementation
 {
-    public class TokenService : ITokenService
+    public class TokenJwtService : ITokenService
     {
         private readonly SymmetricSecurityKey _key;
 
-        public TokenService(IConfiguration config)
+        public TokenJwtService(IConfiguration config)
         {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtToken:Key"] ?? throw new JwtKeyIsNotFound("JWT key is null!")));
         }
@@ -35,7 +35,7 @@ namespace BLL.Services.Implementation
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
+                Expires = DateTime.Now.AddHours(4),
                 SigningCredentials = credentials
             };
 

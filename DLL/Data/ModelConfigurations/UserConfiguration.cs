@@ -1,4 +1,5 @@
 ﻿using DLL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ namespace DLL.Data.ModelConfigurations
             entityBuilder.Property(x => x.Id)
                 .IsRequired();
 
-            entityBuilder.Property(x => x.Username)
+            entityBuilder.Property(x => x.UserName)
                 .HasMaxLength(150)
                 .IsRequired();
 
@@ -27,9 +28,6 @@ namespace DLL.Data.ModelConfigurations
             entityBuilder.Property(x => x.PasswordHash)
                 .IsRequired();
 
-            entityBuilder.Property(x => x.PasswordSalt)
-                .IsRequired();
-
             entityBuilder.Property(x => x.Email)
                 .HasMaxLength(150);
 
@@ -41,11 +39,11 @@ namespace DLL.Data.ModelConfigurations
 
             entityBuilder.Property(x => x.Address)
                 .HasMaxLength(150);
-
+            
             // many to many
             entityBuilder.HasMany(x => x.Roles)
                 .WithMany(x => x.Users)
-                .UsingEntity("UserRoles");
+                .UsingEntity<IdentityUserRole<int>>();
         }
     }
 }

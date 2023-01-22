@@ -18,10 +18,16 @@ namespace Web_Api.Tests.Controllers
     public class ManagerControllerTest : IClassFixture<WebApplicationFactoryTest<Program>>
     {
         private readonly WebApplicationFactoryTest<Program> _appFactory;
+        private readonly TokenServiceTest _tokenJwtService;
 
         public ManagerControllerTest(WebApplicationFactoryTest<Program> appFactory)
         {
             _appFactory = appFactory;
+
+            using var configScope = _appFactory.Services.CreateScope();
+            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
+            
+            _tokenJwtService = new TokenServiceTest(config);
         }
 
         [Theory]
@@ -124,11 +130,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-1");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -158,11 +160,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-1");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -190,11 +188,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-1");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -222,11 +216,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-2");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -246,11 +236,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-2");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -270,11 +256,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-2");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -294,11 +276,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-3");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -320,11 +298,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-3");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -345,11 +319,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-3");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -370,11 +340,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-4");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -396,11 +362,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-4");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -421,11 +383,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-4");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -498,11 +456,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-5");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -534,11 +488,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-5");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -568,11 +518,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-5");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -602,11 +548,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-6");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -631,11 +573,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-6");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -659,18 +597,14 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-6");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
             var updatePublisherDto = new UpdatePublisherDto()
             {
                 Id = 1,
-                Name = "Test-ublisher-name-EDIT",
+                Name = "Test-publisher-name-EDIT",
             };
 
             // Act
@@ -749,11 +683,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-7");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -778,11 +708,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-7");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -806,11 +732,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-7");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -834,11 +756,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-8");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -863,11 +781,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-8");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -891,11 +805,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-8");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -919,11 +829,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-9");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -941,11 +847,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-9");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -963,11 +865,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenManagerRole("Manager-9");
+            var tokenJwt = _tokenJwtService.CreateTokenManagerRole("Manager");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -1027,11 +925,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-10");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -1049,11 +943,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-10");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
@@ -1071,11 +961,7 @@ namespace Web_Api.Tests.Controllers
             // Arrange
             var client = _appFactory.CreateClient();
 
-            using var configScope = _appFactory.Services.CreateScope();
-            var config = configScope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var tokenJwtService = new TokenServiceTest(config);
-            var tokenJwt = tokenJwtService.CreateTokenBuyerRole("Manager-10");
+            var tokenJwt = _tokenJwtService.CreateTokenBuyerRole("Buyer");
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 

@@ -17,12 +17,14 @@ namespace ApiBookStore
 
             builder.Services.AddRepositoryWrapper();
             builder.Services.ConfigureMsSqlServerContext(builder.Configuration);
+            builder.Services.ConfigureIdentityCore();
             builder.Services.ConfigureAutoMapper();
             builder.Services.ConfigureFluentValidation();
             builder.Services.ConfigureDtoServices();
             builder.Services.ConfigureNewtonJson();
             builder.Services.ConfigureJwtTokenService();
             builder.Services.ConfigureJwtAuthentication(builder.Configuration);
+            builder.Services.ConfigureGoogleTokenService();
             builder.Services.ConfigureSwaggerJwtAuthentication(); // For Jwt working in Swagger
 
             var app = builder.Build();
@@ -33,7 +35,7 @@ namespace ApiBookStore
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(); 
             }
 
             app.UseHttpsRedirection();
@@ -43,7 +45,7 @@ namespace ApiBookStore
             app.UseAuthorization();
 
             app.MapControllers();
-
+            
             app.Run();
         }
     }

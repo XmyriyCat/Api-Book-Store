@@ -6,12 +6,15 @@ using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using DLL.Data;
+using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+// ReSharper disable StringLiteralTypo
 
 namespace ApiBookStore.Extensions
 {
@@ -19,9 +22,24 @@ namespace ApiBookStore.Extensions
     {
         public static void ConfigureMsSqlServerContext(this IServiceCollection services, IConfiguration config)
         {
-            string connectionString = config.GetConnectionString("ConnectionStringBookDbSql");
+            var connectionString = config.GetConnectionString("ConnectionStringBookDbSql");
             services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(connectionString));
         }
+
+        public static void ConfigureIdentityCore(this IServiceCollection services)
+        {
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ "; // added space
+            })
+            .AddEntityFrameworkStores<ShopDbContext>()
+            .AddDefaultTokenProviders();
+        }
+
 
         public static void AddRepositoryWrapper(this IServiceCollection services)
         {
@@ -72,12 +90,16 @@ namespace ApiBookStore.Extensions
 
         public static void ConfigureJwtTokenService(this IServiceCollection services)
         {
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, TokenJwtService>();
         }
 
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(opt =>
+                {
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -88,6 +110,11 @@ namespace ApiBookStore.Extensions
                         ValidateAudience = false
                     };
                 });
+        }
+        
+        public static void ConfigureGoogleTokenService(this IServiceCollection services)
+        {
+            services.AddScoped<IGoogleTokenService, GoogleTokenService>();
         }
 
         public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)
