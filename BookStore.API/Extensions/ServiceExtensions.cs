@@ -48,13 +48,20 @@ namespace ApiBookStore.Extensions
 
         public static void ConfigureDtoServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthorCatalogService, AuthorCatalogService>();
-            services.AddScoped<IBookCatalogService, BookCatalogService>();
-            services.AddScoped<IGenreCatalogService, GenreCatalogService>();
+            services.AddScoped<IAuthorCatalogService, AuthorCatalogService>(); 
+            services.AddScoped<IBookCatalogService, BookCatalogService>(); 
+            services.AddScoped<IGenreCatalogService, GenreCatalogService>(); 
             services.AddScoped<IPublisherCatalogService, PublisherCatalogService>();
             services.AddScoped<IUserCatalogService, UserCatalogService>();
             services.AddScoped<IDeliveryCatalogService, DeliveryCatalogService>();
             services.AddScoped<IPaymentWayCatalogService, PaymentWayCatalogService>();
+            services.AddScoped<IShipmentCatalogService, ShipmentCatalogService>();
+            services.AddScoped<IRoleCatalogService, RoleCatalogService>();
+            services.AddScoped<IWarehouseCatalogService, WarehouseCatalogService>();
+            services.AddScoped<IWarehouseBookCatalogService, WarehouseBookCatalogService>();
+            services.AddScoped<IOrderCatalogService, OrderCatalogService>();
+            services.AddScoped<IOrderLineCatalogService, OrderLineCatalogService>();
+
             // TODO: Add other services later
         }
 

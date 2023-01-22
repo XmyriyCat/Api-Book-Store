@@ -11,8 +11,6 @@ namespace BLL.Infrastructure.Validators.Order
             RuleFor(x => x.OrderDate).NotNull().NotEmpty();
             RuleFor(x => x.ShipmentId).GreaterThan(0);
             RuleFor(x => x.CustomerId).GreaterThan(0);
-            RuleFor(x => x.OrderLineId).NotNull().NotEmpty();
-            RuleForEach(x => x.OrderLineId).GreaterThan(0);
         }
     }
 }

@@ -9,6 +9,4 @@ public class CreateOrderDto
     public int ShipmentId { get; set; }
     
     public int CustomerId { get; set; }
-    
-    public virtual ICollection<int> OrderLineId { get; set; }
 }

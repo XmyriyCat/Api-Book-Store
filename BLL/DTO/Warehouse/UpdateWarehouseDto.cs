@@ -14,6 +14,6 @@ public class UpdateWarehouseDto
 
     public string Country { get; set; }
 
-    [RegularExpression(@"^\+375 \((17 | 29 | 33 | 44)\) [0-9]{3}-[0-9]{2}-[0 - 9]{ 2}$")]
+    [RegularExpression(@"^\+375\((17|29|33|44)\)[0-9]{3}-[0-9]{2}-[0-9]{2}$")]
     public string PhoneNumber { get; set; }
 }
