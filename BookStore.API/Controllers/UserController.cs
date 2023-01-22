@@ -1,4 +1,4 @@
-﻿using BLL.DTO.User;
+using BLL.DTO.User;
 using BLL.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +27,7 @@ namespace ApiBookStore.Controllers
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserDto user)
+
         {
             var registeredUser = await _userService.LoginAsync(user);
             return Ok(registeredUser);
