@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using DLL.Data;
+using DLL.Errors;
 using DLL.Models;
 using DLL.Repository.Contract;
 using Microsoft.EntityFrameworkCore;
