@@ -131,6 +131,27 @@ namespace BLL.Tests.Services
         }
 
         [Theory]
+        [InlineData("test-name", 85.52, 9999, 1, 1)]
+        [InlineData("test-name", 85.52, 1, 9999, 1)]
+        [InlineData("test-name", 85.52, 1, 1, 9999)]
+        [InlineData("test-name", 85.52, 9999, 9999, 9999)]
+        public async Task AddAsync_Return_DbEntityNotFoundException(string bookName, decimal price, int idPublisher, int idGenre, int idAuthor)
+        {
+            // Arrange
+            var createBookDto = new CreateBookDto
+            {
+                Name = bookName,
+                Price = price,
+                IdPublisher = idPublisher,
+                GenresId = new List<int> { idGenre },
+                AuthorsId = new List<int> { idAuthor }
+            };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _bookCatalogService.AddAsync(createBookDto));
+        }
+
+        [Theory]
         [InlineData(1, "Classic book", 85.52, 1, 1, 1)]
         [InlineData(1, "1234567890-=<>?", 78652.556, 2, 2, 2)]
         [InlineData(2, "a", 7896321.245, 1, 2, 3)]
