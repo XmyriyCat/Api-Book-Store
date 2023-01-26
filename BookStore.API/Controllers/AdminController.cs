@@ -8,6 +8,7 @@ namespace ApiBookStore.Controllers;
 
 [ApiController]
 [Authorize(Roles = "Admin")]
+[Route("api/[controller]")]
 public class AdminController : ControllerBase
 {
     private readonly IAdminCatalogService _adminService;
@@ -19,7 +20,7 @@ public class AdminController : ControllerBase
 
 
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllAsyncTask()
     {
         var users = await _adminService.GetAllAsync();
@@ -33,7 +34,7 @@ public class AdminController : ControllerBase
         return Ok(usersAmount);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetById/{id}")]
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var user = await _adminService.FindAsync(id);
