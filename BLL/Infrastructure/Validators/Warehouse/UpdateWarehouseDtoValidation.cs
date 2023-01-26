@@ -3,10 +3,11 @@ using FluentValidation;
 
 namespace BLL.Infrastructure.Validators.Warehouse
 {
-    public class UpdateWarehouseDtoValidation : AbstractValidator<UpdateWarehouseDto>
+    public class UpdateWarehouseDtoValidator : AbstractValidator<UpdateWarehouseDto>
     {
-        public UpdateWarehouseDtoValidation()
+        public UpdateWarehouseDtoValidator()
         {
+            RuleFor(x => x.Id).GreaterThan(0);
             RuleFor(x => x.Name).NotNull().Length(1, 150);
             RuleFor(x => x.Country).NotNull().Length(1, 150);
             RuleFor(x => x.City).NotNull().Length(1, 150);
