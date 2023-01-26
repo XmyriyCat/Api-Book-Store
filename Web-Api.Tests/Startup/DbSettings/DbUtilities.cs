@@ -8,6 +8,7 @@ namespace Web_Api.Tests.Startup.DbSettings
         public static void InitializeDbForTests(DbContext db)
         {
             db.Set<Book>().AddRange(GetTestsBooks());
+            db.Set<Order>().AddRange(GetTestsOrders());
             db.SaveChanges();
         }
 
@@ -38,6 +39,51 @@ namespace Web_Api.Tests.Startup.DbSettings
                     Publisher = new Publisher { Name = "test-publisher-3"},
                     Genres = new List<Genre> { new Genre { Name = "testGenre-4" }},
                     Authors = new List<Author> { new Author { FirstName = "Test-firstname-3", LastName = "Test-lastname-3" } }
+                }
+            };
+        }
+
+        private static IEnumerable<Order> GetTestsOrders() // Adding Orders, Shipments, Users, Deliveries, PaymentWays
+        {
+            return new List<Order>
+            {
+                new Order
+                {
+                    TotalPrice = 4532.12M,
+                    OrderDate = DateTime.Now,
+                    Shipment = new Shipment
+                    {
+                        Delivery = new Delivery { Name = "test-delivery", Price = 0 },
+                        PaymentWay = new PaymentWay { Name = "test-paymentWay" },
+                    },
+                    User = new User
+                    {
+                        UserName = "test-username",
+                        PasswordHash = "some-test-hash",
+                        Login = "test-login",
+                        Country = "test-country",
+                        City = "test-city",
+                        Address = "test-address"
+                    }
+                },
+                new Order
+                {
+                    TotalPrice = 999999999.99999M,
+                    OrderDate = DateTime.Now,
+                    Shipment = new Shipment
+                    {
+                        Delivery = new Delivery { Name = "test-delivery-2", Price = 99999.4632M },
+                        PaymentWay = new PaymentWay { Name = "test-paymentWay-2" }
+                    },
+                    User = new User
+                    {
+                        UserName = "test-username-2",
+                        PasswordHash = "some-test-hash-2",
+                        Login = "test-login-2",
+                        Country = "test-country-2",
+                        City = "test-city-2",
+                        Address = "test-address-2"
+                    }
                 }
             };
         }
