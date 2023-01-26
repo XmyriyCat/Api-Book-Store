@@ -9,6 +9,7 @@ namespace Web_Api.Tests.Startup.DbSettings
         {
             db.Set<Book>().AddRange(GetTestsBooks());
             db.Set<Order>().AddRange(GetTestsOrders());
+            db.Set<OrderLine>().AddRange(GetTestOrderLine());
             db.SaveChanges();
         }
 
@@ -83,6 +84,99 @@ namespace Web_Api.Tests.Startup.DbSettings
                         Country = "test-country-2",
                         City = "test-city-2",
                         Address = "test-address-2"
+                    }
+                }
+            };
+        }
+
+        private static IEnumerable<OrderLine> GetTestOrderLine() // Adding OrderLines, WarehouseBooks, Warehouses, Orders, Books
+        {
+            return new List<OrderLine>
+            {
+                new OrderLine
+                {
+                    Quantity = 4,
+                    Order = new Order
+                    {
+                        TotalPrice = 156156,
+                        OrderDate = DateTime.Now,
+                        Shipment = new Shipment
+                        {
+                            Delivery = new Delivery { Name = "test-delivery", Price = 0 },
+                            PaymentWay = new PaymentWay { Name = "test-paymentWay" },
+                        },
+                        User = new User
+                        {
+                            UserName = "test-username",
+                            PasswordHash = "some-test-hash",
+                            Login = "test-login",
+                            Country = "test-country",
+                            City = "test-city",
+                            Address = "test-address"
+                        }
+                    },
+                    WarehouseBook = new WarehouseBook
+                    {
+                        Quantity = 20,
+                        Warehouse = new Warehouse
+                        {
+                            Name = "test-name",
+                            Address = "test-address",
+                            City = "test-city",
+                            Country = "test-country",
+                            PhoneNumber = "+375(17)177-77-79"
+                        },
+                        Book = new Book
+                        {
+                            Price = 99.99m,
+                            Name = "TestBook",
+                            Publisher = new Publisher { Name = "test-publisher"},
+                            Genres = new List<Genre> { new Genre { Name = "testGenre" } },
+                            Authors = new List<Author> { new Author { FirstName = "Test-firstname", LastName = "Test-lastname" } }
+                        }
+                    }
+                },
+                new OrderLine
+                {
+                    Quantity = 6,
+                    Order = new Order
+                    {
+                        TotalPrice = 654123,
+                        OrderDate = DateTime.Now,
+                        Shipment = new Shipment
+                        {
+                            Delivery = new Delivery { Name = "test-delivery", Price = 999 },
+                            PaymentWay = new PaymentWay { Name = "test-paymentWay" },
+                        },
+                        User = new User
+                        {
+                            UserName = "test-username",
+                            PasswordHash = "some-test-hash",
+                            Login = "test-login",
+                            Country = "test-country",
+                            City = "test-city",
+                            Address = "test-address"
+                        }
+                    },
+                    WarehouseBook = new WarehouseBook
+                    {
+                        Quantity = 70,
+                        Warehouse = new Warehouse
+                        {
+                            Name = "test-name",
+                            Address = "test-address",
+                            City = "test-city",
+                            Country = "test-country",
+                            PhoneNumber = "+375(17)177-77-79"
+                        },
+                        Book = new Book
+                        {
+                            Price = 99.99m,
+                            Name = "TestBook",
+                            Publisher = new Publisher { Name = "test-publisher"},
+                            Genres = new List<Genre> { new Genre { Name = "testGenre" } },
+                            Authors = new List<Author> { new Author { FirstName = "Test-firstname", LastName = "Test-lastname" } }
+                        }
                     }
                 }
             };
