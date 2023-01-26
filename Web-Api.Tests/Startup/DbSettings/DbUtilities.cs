@@ -10,6 +10,7 @@ namespace Web_Api.Tests.Startup.DbSettings
             db.Set<Book>().AddRange(GetTestsBooks());
             db.Set<Order>().AddRange(GetTestsOrders());
             db.Set<OrderLine>().AddRange(GetTestOrderLine());
+            db.Set<User>().AddRange(GetTestUsers());
             db.SaveChanges();
         }
 
@@ -178,6 +179,46 @@ namespace Web_Api.Tests.Startup.DbSettings
                             Authors = new List<Author> { new Author { FirstName = "Test-firstname", LastName = "Test-lastname" } }
                         }
                     }
+                }
+            };
+        }
+
+        private static IEnumerable<User> GetTestUsers() // Adding Users, Orders, Roles
+        {
+            return new List<User>
+            {
+                new User
+                {
+                    UserName = "test-username",
+                    PasswordHash = "some-test-hash",
+                    Login = "test-login",
+                    Country = "test-country",
+                    City = "test-city",
+                    Address = "test-address",
+                    Orders = new List<Order>
+                    {
+                        new Order
+                        {
+                            TotalPrice = 4532.12M,
+                            OrderDate = DateTime.Now,
+                            Shipment = new Shipment
+                            {
+                                Delivery = new Delivery { Name = "test-delivery", Price = 0 },
+                                PaymentWay = new PaymentWay { Name = "test-paymentWay" },
+                            }
+                        }
+                    },
+                    Roles = new List<Role> { new Role { Name = "Buyer" } }
+                },
+                new User
+                {
+                    UserName = "test-username-2",
+                    PasswordHash = "some-test-hash-2",
+                    Login = "test-login-2",
+                    Country = "test-country-2",
+                    City = "test-city-2",
+                    Address = "test-address-2",
+                    Roles = new List<Role> { new Role { Name = "Manager" } }
                 }
             };
         }
