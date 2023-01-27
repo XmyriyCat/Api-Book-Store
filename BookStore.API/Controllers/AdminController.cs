@@ -1,6 +1,5 @@
 using BLL.DTO.User;
 using BLL.Services.Contract;
-using DLL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,23 +17,21 @@ public class AdminController : ControllerBase
         _adminService = adminService;
     }
 
-
-
-    [HttpGet("GetAll")]
+    [HttpGet]
     public async Task<IActionResult> GetAllAsyncTask()
     {
         var users = await _adminService.GetAllAsync();
         return Ok(users);
     }
 
-    [HttpGet]
+    [HttpGet("count")]
     public async Task<IActionResult> GetCount()
     {
         var usersAmount = await _adminService.CountAsync();
         return Ok(usersAmount);
     }
 
-    [HttpGet("GetById/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var user = await _adminService.FindAsync(id);
@@ -47,14 +44,17 @@ public class AdminController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> DeleteByIdAsyncTask(int id)
+    [HttpPost]
+    public async Task<IActionResult> CreateUserAsync(CreateUserDto createUser)
     {
-        await _adminService.DeleteAsync(id);
+        var user = await _adminService.AddAsync(createUser);
 
-        
+        if (user is null)
+        {
+            return NotFound();
+        }
 
-        return Ok();
+        return Ok(user);
     }
 
     [HttpPut]
@@ -62,7 +62,7 @@ public class AdminController : ControllerBase
     {
         var user = await _adminService.UpdateAsync(updateUser);
 
-        if (user == null)
+        if (user is null)
         {
             return NotFound();
         }
@@ -70,18 +70,10 @@ public class AdminController : ControllerBase
         return Ok(user);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateUserAsync(CreateUserDto createUser)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteByIdAsyncTask(int id)
     {
-        var user = await _adminService.AddAsync(createUser);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(user);
+        await _adminService.DeleteAsync(id);
+        return Ok();
     }
-
-    
 }
