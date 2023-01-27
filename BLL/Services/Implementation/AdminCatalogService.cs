@@ -49,12 +49,6 @@ public class AdminCatalogService : IAdminCatalogService
         foreach (var idRole in item.RolesIds)
         {
             var role = await _repositoryWrapper.Roles.FindAsync(idRole);
-
-            if (role is null)
-            {
-                throw new ValidationException($"DTO contains a non-existent role id.");
-            }
-
             user.Roles.Add(role);
         }
 
@@ -86,12 +80,6 @@ public class AdminCatalogService : IAdminCatalogService
         foreach (var idRole in item.RolesIds)
         {
             var role = await _repositoryWrapper.Roles.FindAsync(idRole);
-
-            if (role is null)
-            {
-                throw new ValidationException($"DTO contains a non-existent role id.");
-            }
-
             user.Roles.Add(role);
         }
 
