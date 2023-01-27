@@ -6,7 +6,6 @@ using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
-using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
 using FluentValidation;
@@ -98,6 +97,7 @@ namespace BLL.Tests.Services
             // Assert
             Assert.NotNull(publisherDb);
             Assert.Equal(publisherDto.Name, publisherDb.Name);
+            Assert.Equal(publishersTotal, publishersDbCount);
         }
 
         [Theory]

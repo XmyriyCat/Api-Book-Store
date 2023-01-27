@@ -104,6 +104,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createWarehouseBookDto.Quantity, warehouseBookCreated.Quantity);
             Assert.Equal(createWarehouseBookDto.WarehouseId, warehouseBookCreated.WarehouseId);
             Assert.Equal(createWarehouseBookDto.BookId, warehouseBookCreated.BookId);
+            Assert.Equal(warehouseBooksTotal, warehouseBooksDbCount);
         }
 
         [Theory]

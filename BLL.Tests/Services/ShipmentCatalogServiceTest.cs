@@ -82,7 +82,7 @@ namespace BLL.Tests.Services
         [InlineData(2, 1)]
         [InlineData(3, 2)]
         [InlineData(4, 2)]
-        public async Task AddAsync_Return_Ok(int deliveryID, int paymentWayId)
+        public async Task AddAsync_Return_Ok(int deliveryId, int paymentWayId)
         {
             // Arrange
             var actualCount = await _repositoryWrapper.Shipments.CountAsync();
@@ -90,7 +90,7 @@ namespace BLL.Tests.Services
 
             var createShipmentDto = new CreateShipmentDto
             {
-               DeliveryId = deliveryID,
+               DeliveryId = deliveryId,
                PaymentWayId = paymentWayId
             };
 
@@ -102,17 +102,18 @@ namespace BLL.Tests.Services
             Assert.NotNull(shipmentCreated);
             Assert.Equal(createShipmentDto.DeliveryId, shipmentCreated.DeliveryId);
             Assert.Equal(createShipmentDto.PaymentWayId, shipmentCreated.PaymentWayId);
+            Assert.Equal(shipmentsTotal, shipmentsDbCount);
         }
 
         [Theory]
         [InlineData(-1, -1)]
         [InlineData(-2, -2)]
-        public async Task AddAsync_Return_ValidationException(int deliveryID, int paymentWayId)
+        public async Task AddAsync_Return_ValidationException(int deliveryId, int paymentWayId)
         {
             // Arrange
             var createShipmentDto = new CreateShipmentDto
             {
-                DeliveryId = deliveryID,
+                DeliveryId = deliveryId,
                 PaymentWayId = paymentWayId
             };
 
@@ -125,7 +126,7 @@ namespace BLL.Tests.Services
         [InlineData(2, 2, 2)]
         [InlineData(3, 3, 1)]
         [InlineData(4, 4, 2)]
-        public async Task UpdateAsync_Return_Ok(int shipmentId, int deliveryID, int paymentWayId)
+        public async Task UpdateAsync_Return_Ok(int shipmentId, int deliveryId, int paymentWayId)
         {
             // Arrange
             var shipmentSource = await _repositoryWrapper.Shipments.FindAsync(shipmentId);
@@ -133,7 +134,7 @@ namespace BLL.Tests.Services
             var updateShipmentDto = new UpdateShipmentDto()
             {
                 Id = shipmentId,
-                DeliveryId = deliveryID,
+                DeliveryId = deliveryId,
                 PaymentWayId = paymentWayId
             };
 
@@ -152,13 +153,13 @@ namespace BLL.Tests.Services
         [InlineData(999999999, 2, 2)]
         [InlineData(999999999, 3, 1)]
         [InlineData(999999999, 4, 2)]
-        public async Task UpdateAsync_Return_DbEntityNotFoundException(int shipmentId, int deliveryID, int paymentWayId)
+        public async Task UpdateAsync_Return_DbEntityNotFoundException(int shipmentId, int deliveryId, int paymentWayId)
         {
             // Arrange
             var updateShipmentDto = new UpdateShipmentDto()
             {
                 Id = shipmentId,
-                DeliveryId = deliveryID,
+                DeliveryId = deliveryId,
                 PaymentWayId = paymentWayId
             };
 
@@ -171,13 +172,13 @@ namespace BLL.Tests.Services
         [InlineData(2, -2, -2)]
         [InlineData(3, -3, -1)]
         [InlineData(4, -4, -2)]
-        public async Task UpdateAsync_Return_ValidationException(int shipmentId, int deliveryID, int paymentWayId)
+        public async Task UpdateAsync_Return_ValidationException(int shipmentId, int deliveryId, int paymentWayId)
         {
             // Arrange
             var updateShipmentDto = new UpdateShipmentDto()
             {
                 Id = shipmentId,
-                DeliveryId = deliveryID,
+                DeliveryId = deliveryId,
                 PaymentWayId = paymentWayId
             };
 
