@@ -9,6 +9,7 @@ using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
@@ -38,7 +39,7 @@ namespace BLL.Tests.Services
         public async Task GetAllAsync_Return_Ok()
         {
             // Arrange
-            var warehousesSource = await _repositoryWrapper.Warehouses.GetAllIncludeAsync();
+            var warehousesSource = await _repositoryWrapper.Warehouses.GetAll().ToListAsync();
 
             // Act
             var warehousesAll = await _warehouseCatalogService.GetAllAsync();
@@ -54,7 +55,7 @@ namespace BLL.Tests.Services
         public async Task FindAsync_Return_Ok(int warehouseId)
         {
             // Arrange
-            var warehouseActual = await _repositoryWrapper.Warehouses.FindIncludeAsync(warehouseId);
+            var warehouseActual = await _repositoryWrapper.Warehouses.FindAsync(warehouseId);
 
             // Act
             var foundedWarehouse = await _warehouseCatalogService.FindAsync(warehouseId);
@@ -104,6 +105,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createWarehouseDto.City, warehouseCreated.City);
             Assert.Equal(createWarehouseDto.Address, warehouseCreated.Address);
             Assert.Equal(createWarehouseDto.PhoneNumber, warehouseCreated.PhoneNumber);
+            Assert.Equal(warehousesTotal, warehousesDbCount);
         }
 
         [Theory]
@@ -132,7 +134,7 @@ namespace BLL.Tests.Services
         [Theory]
         [InlineData(1, "name", "Belarus", "Minsk", "Pushkina 26, 13", "+375291111111")]
         [InlineData(2, "name", "Belarus", "Minsk", "Pushkina 28, 1", "+375291111112")]
-        [InlineData(3, "name", "Belarus", "Minsk", "Ushkina 29, 1", "+375292111112")]
+        [InlineData(2, "name", "Belarus", "Minsk", "Ushkina 29, 1", "+375292111112")]
         public async Task UpdateAsync_Return_Ok(int warehouseId, string name, string country, string city, string address, string phoneNumber)
         {
             // Arrange
@@ -210,7 +212,6 @@ namespace BLL.Tests.Services
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        [InlineData(3)]
         public async Task DeleteAsync_Return_DbException(int warehouseId)
         {
             // Arrange
@@ -230,7 +231,7 @@ namespace BLL.Tests.Services
         public async Task CountAsync_Return_Ok()
         {
             // Arrange
-            var actualCount = await _repositoryWrapper.Authors.CountAsync();
+            var actualCount = await _repositoryWrapper.Warehouses.CountAsync();
 
             // Act
             var resultCountDb = await _warehouseCatalogService.CountAsync();

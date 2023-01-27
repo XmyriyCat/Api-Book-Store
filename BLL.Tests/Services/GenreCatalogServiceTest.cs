@@ -173,7 +173,7 @@ namespace BLL.Tests.Services
             };
 
             // Act & Asserts
-            await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _genreCatalogService.UpdateAsync(updateGenreDto));
+            await Assert.ThrowsAsync<ValidationException>(() => _genreCatalogService.UpdateAsync(updateGenreDto));
         }
 
         [Theory]

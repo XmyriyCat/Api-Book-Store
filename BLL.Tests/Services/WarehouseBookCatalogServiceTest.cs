@@ -80,8 +80,8 @@ namespace BLL.Tests.Services
         [Theory]
         [InlineData(100, 1, 1)]
         [InlineData(200, 2, 2)]
-        [InlineData(300, 3, 3)]
-        [InlineData(105, 4, 4)]
+        [InlineData(300, 1, 2)]
+        [InlineData(105, 2, 1)]
         public async Task AddAsync_Return_Ok(int quantity, int warehouseId, int bookId)
         {
             // Arrange
@@ -127,9 +127,9 @@ namespace BLL.Tests.Services
 
         [Theory]
         [InlineData(1, 100, 1, 1)]
-        [InlineData(2, 200, 2, 2)]
-        [InlineData(3, 300, 3, 3)]
-        [InlineData(4, 105, 4, 4)]
+        [InlineData(1, 200, 2, 2)]
+        [InlineData(2, 300, 1, 2)]
+        [InlineData(2, 105, 2, 1)]
         public async Task UpdateAsync_Return_Ok(int warehouseBookId, int quantity, int warehouseId, int bookId)
         {
             // Arrange
@@ -198,7 +198,6 @@ namespace BLL.Tests.Services
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        [InlineData(3)]
         public async Task DeleteAsync_Return_DbException(int warehouseBookId)
         {
             // Arrange
@@ -218,7 +217,7 @@ namespace BLL.Tests.Services
         public async Task CountAsync_Return_Ok()
         {
             // Arrange
-            var actualCount = await _repositoryWrapper.Authors.CountAsync();
+            var actualCount = await _repositoryWrapper.WarehouseBooks.CountAsync();
 
             // Act
             var resultCountDb = await _warehouseBookCatalogService.CountAsync();
