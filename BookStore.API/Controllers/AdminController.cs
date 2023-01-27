@@ -45,8 +45,13 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUserAsync(CreateUserDto createUser)
+    public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUser)
     {
+        if (createUser is null)
+        {
+            return BadRequest();
+        }
+
         var user = await _adminService.AddAsync(createUser);
 
         if (user is null)
@@ -54,12 +59,17 @@ public class AdminController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user);
+        return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateUserAsync(UpdateUserDto updateUser)
+    public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserDto updateUser)
     {
+        if (updateUser is null)
+        {
+            return BadRequest();
+        }
+
         var user = await _adminService.UpdateAsync(updateUser);
 
         if (user is null)
