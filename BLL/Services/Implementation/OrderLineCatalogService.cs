@@ -40,21 +40,11 @@ public class OrderLineCatalogService : IOrderLineCatalogService
         var orderLine = _mapper.Map<OrderLine>(item);
 
         var warehouseBookDb = await _repositoryWrapper.WarehouseBooks.FindIncludeAsync(item.WarehouseBookId);
-
-        if (warehouseBookDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent warehouse book id.");
-        }
-
+        
         orderLine.WarehouseBook = warehouseBookDb;
 
         var orderDb = await _repositoryWrapper.Orders.FindIncludeAsync(item.OrderId);
-
-        if (orderDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent order id.");
-        }
-
+        
         orderLine.Order = orderDb;
 
         orderLine = await _repositoryWrapper.OrderLines.AddAsync(orderLine);
@@ -71,21 +61,11 @@ public class OrderLineCatalogService : IOrderLineCatalogService
         var orderLine = _mapper.Map<OrderLine>(item);
 
         var warehouseBookDb = await _repositoryWrapper.WarehouseBooks.FindIncludeAsync(item.WarehouseBookId);
-
-        if (warehouseBookDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent warehouse book id.");
-        }
-
+        
         orderLine.WarehouseBook = warehouseBookDb;
 
         var orderDb = await _repositoryWrapper.Orders.FindIncludeAsync(item.OrderId);
-
-        if (orderDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent order id.");
-        }
-
+        
         orderLine.Order = orderDb;
 
         orderLine = await _repositoryWrapper.OrderLines.UpdateAsync(orderLine.Id, orderLine);

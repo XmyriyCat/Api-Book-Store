@@ -39,21 +39,11 @@ public class WarehouseBookCatalogService : IWarehouseBookCatalogService
         var warehouseBook = _mapper.Map<WarehouseBook>(item);
         
         var bookDb = await _repositoryWrapper.Books.FindAsync(item.BookId);
-
-        if (bookDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent book id.");
-        }
-
+        
         warehouseBook.Book = bookDb;
 
         var warehouseDb = await _repositoryWrapper.Warehouses.FindAsync(item.WarehouseId);
-
-        if (warehouseDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent warehouse id.");
-        }
-
+        
         warehouseBook.Warehouse = warehouseDb;
 
         warehouseBook = await _repositoryWrapper.WarehouseBooks.AddAsync(warehouseBook);
@@ -70,21 +60,11 @@ public class WarehouseBookCatalogService : IWarehouseBookCatalogService
         var warehouseBook = _mapper.Map<WarehouseBook>(item);
 
         var bookDb = await _repositoryWrapper.Books.FindIncludeAsync(item.BookId);
-
-        if (bookDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent book id.");
-        }
-
+        
         warehouseBook.Book = bookDb;
 
         var warehouseDb = await _repositoryWrapper.Warehouses.FindAsync(item.WarehouseId);
-
-        if (warehouseDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent warehouse id.");
-        }
-
+        
         warehouseBook.Warehouse = warehouseDb;
 
         warehouseBook = await _repositoryWrapper.WarehouseBooks.UpdateAsync(warehouseBook.Id, warehouseBook);

@@ -40,20 +40,10 @@ public class OrderCatalogService : IOrderCatalogService
         var order = _mapper.Map<Order>(item);
 
         var shipmentDb = await _repositoryWrapper.Shipments.FindIncludeAsync(item.ShipmentId);
-
-        if (shipmentDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent shipment id.");
-        }
-
+        
         order.Shipment = shipmentDb;
 
         var customerDb = await _repositoryWrapper.Users.FindIncludeAsync(item.CustomerId);
-
-        if (customerDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent user id.");
-        }
 
         order.User = customerDb;
 
@@ -71,21 +61,11 @@ public class OrderCatalogService : IOrderCatalogService
         var order = _mapper.Map<Order>(item);
 
         var shipmentDb = await _repositoryWrapper.Shipments.FindIncludeAsync(item.ShipmentId);
-
-        if (shipmentDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent shipment id.");
-        }
-
+        
         order.Shipment = shipmentDb;
 
         var customerDb = await _repositoryWrapper.Users.FindIncludeAsync(item.CustomerId);
-
-        if (customerDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent user id.");
-        }
-
+        
         order.User = customerDb;
 
         order = await _repositoryWrapper.Orders.UpdateAsync(order.Id, order);

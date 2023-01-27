@@ -40,21 +40,11 @@ public class ShipmentCatalogService : IShipmentCatalogService
         var shipment = _mapper.Map<Shipment>(item);
 
         var deliveryDb = await _repositoryWrapper.Deliveries.FindAsync(item.DeliveryId);
-
-        if (deliveryDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent delivery id.");
-        }
-
+        
         shipment.Delivery = deliveryDb;
 
         var paymentWayDb = await _repositoryWrapper.PaymentWays.FindAsync(item.PaymentWayId);
-
-        if (paymentWayDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent payment way id.");
-        }
-
+        
         shipment.PaymentWay = paymentWayDb;
 
         shipment = await _repositoryWrapper.Shipments.AddAsync(shipment);
@@ -71,21 +61,11 @@ public class ShipmentCatalogService : IShipmentCatalogService
         var shipment = _mapper.Map<Shipment>(item);
 
         var deliveryDb = await _repositoryWrapper.Deliveries.FindAsync(item.DeliveryId);
-
-        if (deliveryDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent delivery id.");
-        }
-
+        
         shipment.Delivery = deliveryDb;
 
         var paymentWayDb = await _repositoryWrapper.PaymentWays.FindAsync(item.PaymentWayId);
-
-        if (paymentWayDb is null)
-        {
-            throw new ValidationException($"DTO contains a non-existent payment way id.");
-        }
-
+        
         shipment.PaymentWay = paymentWayDb;
 
         shipment = await _repositoryWrapper.Shipments.UpdateAsync(shipment.Id, shipment);
