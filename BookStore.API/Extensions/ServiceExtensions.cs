@@ -66,6 +66,7 @@ namespace ApiBookStore.Extensions
 
         public static void ConfigureDtoServices(this IServiceCollection services)
         {
+            services.AddScoped<IAdminCatalogService, AdminCatalogService>();
             services.AddScoped<IAuthorCatalogService, AuthorCatalogService>(); 
             services.AddScoped<IBookCatalogService, BookCatalogService>(); 
             services.AddScoped<IGenreCatalogService, GenreCatalogService>(); 
