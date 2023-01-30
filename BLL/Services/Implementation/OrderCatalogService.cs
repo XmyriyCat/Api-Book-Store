@@ -3,7 +3,6 @@ using BLL.DTO.Order;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 
 namespace BLL.Services.Implementation;
 
@@ -11,16 +10,11 @@ public class OrderCatalogService : IOrderCatalogService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateOrderDto> _createOrderDtoValidator;
-    private readonly IValidator<UpdateOrderDto> _updateOrderDtoValidator;
 
-    public OrderCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper,
-        IValidator<CreateOrderDto> createValidator, IValidator<UpdateOrderDto> updateValidator)
+    public OrderCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _createOrderDtoValidator = createValidator;
-        _updateOrderDtoValidator = updateValidator;
     }
 
     public async Task<IEnumerable<Order>> GetAllAsync()
@@ -35,12 +29,10 @@ public class OrderCatalogService : IOrderCatalogService
 
     public async Task<Order> AddAsync(CreateOrderDto item)
     {
-        await _createOrderDtoValidator.ValidateAndThrowAsync(item);
-
         var order = _mapper.Map<Order>(item);
 
         var shipmentDb = await _repositoryWrapper.Shipments.FindIncludeAsync(item.ShipmentId);
-        
+
         order.Shipment = shipmentDb;
 
         var customerDb = await _repositoryWrapper.Users.FindIncludeAsync(item.CustomerId);
@@ -56,16 +48,14 @@ public class OrderCatalogService : IOrderCatalogService
 
     public async Task<Order> UpdateAsync(UpdateOrderDto item)
     {
-        await _updateOrderDtoValidator.ValidateAndThrowAsync(item);
-
         var order = _mapper.Map<Order>(item);
 
         var shipmentDb = await _repositoryWrapper.Shipments.FindIncludeAsync(item.ShipmentId);
-        
+
         order.Shipment = shipmentDb;
 
         var customerDb = await _repositoryWrapper.Users.FindIncludeAsync(item.CustomerId);
-        
+
         order.User = customerDb;
 
         order = await _repositoryWrapper.Orders.UpdateAsync(order.Id, order);

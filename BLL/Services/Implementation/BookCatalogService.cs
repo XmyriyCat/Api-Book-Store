@@ -1,9 +1,8 @@
-﻿    using AutoMapper;
+﻿using AutoMapper;
 using BLL.DTO.Book;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 
 namespace BLL.Services.Implementation
 {
@@ -11,15 +10,11 @@ namespace BLL.Services.Implementation
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
-        private readonly IValidator<CreateBookDto> _createBookDtoValidator;
-        private readonly IValidator<UpdateBookDto> _updateBookDtoValidator;
 
-        public BookCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, IValidator<CreateBookDto> createValidator, IValidator<UpdateBookDto> updateValidator)
+        public BookCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
-            _createBookDtoValidator = createValidator;
-            _updateBookDtoValidator = updateValidator;
         }
 
         public async Task<IEnumerable<Book>> GetAllAsync()
@@ -34,8 +29,6 @@ namespace BLL.Services.Implementation
 
         public async Task<Book> AddAsync(CreateBookDto item)
         {
-            await _createBookDtoValidator.ValidateAndThrowAsync(item);
-
             var book = _mapper.Map<Book>(item);
 
             book.Authors = new HashSet<Author>();
@@ -68,8 +61,6 @@ namespace BLL.Services.Implementation
 
         public async Task<Book> UpdateAsync(UpdateBookDto item)
         {
-            await _updateBookDtoValidator.ValidateAndThrowAsync(item);
-            
             var book = _mapper.Map<Book>(item);
 
             book.Authors = new List<Author>();

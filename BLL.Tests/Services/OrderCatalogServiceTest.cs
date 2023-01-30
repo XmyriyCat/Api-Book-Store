@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.Order;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Order;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -27,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createOrderDtoValidator = new CreateOrderDtoValidator();
-            var updateOrderDtoValidator = new UpdateOrderDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _orderCatalogService = new OrderCatalogService(_repositoryWrapper, mapper, createOrderDtoValidator, updateOrderDtoValidator);
+            _orderCatalogService = new OrderCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

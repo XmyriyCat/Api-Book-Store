@@ -4,8 +4,6 @@ using BLL.Errors;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
-using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services.Implementation
@@ -14,43 +12,21 @@ namespace BLL.Services.Implementation
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
-        private readonly IValidator<RegistrationUserDto> _registrationUserDtoValidator;
-        private readonly IValidator<LoginUserDto> _loginUserDtoValidator;
         private readonly ITokenService _tokenService;
         private readonly IGoogleTokenService _googleTokenService;
-        private readonly IValidator<GoogleJsonWebSignature.Payload> _googlePayloadValidator;
-        private readonly IValidator<RegistrationGoogleUserDto> _registrationGoogleUserDtoValidator;
-        private readonly IValidator<LoginGoogleUserDto> _loginGoogleUserDtoValidator;
         private readonly UserManager<User> _userManager;
 
-        public UserCatalogService(
-            IRepositoryWrapper repositoryWrapper,
-            IMapper mapper,
-            IValidator<LoginUserDto> loginValidator,
-            IValidator<RegistrationUserDto> registrationValidator,
-            ITokenService tokenService,
-            IGoogleTokenService googleTokenService,
-            IValidator<GoogleJsonWebSignature.Payload> googlePayloadValidator,
-            IValidator<RegistrationGoogleUserDto> registrationGoogleUserDtoValidator,
-            IValidator<LoginGoogleUserDto> loginGoogleUserDtoValidator,
-            UserManager<User> userManager)
+        public UserCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, IGoogleTokenService googleTokenService, UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
-            _loginUserDtoValidator = loginValidator;
-            _registrationUserDtoValidator = registrationValidator;
             _tokenService = tokenService;
             _googleTokenService = googleTokenService;
-            _googlePayloadValidator = googlePayloadValidator;
-            _registrationGoogleUserDtoValidator = registrationGoogleUserDtoValidator;
-            _loginGoogleUserDtoValidator = loginGoogleUserDtoValidator;
             _userManager = userManager;
         }
 
         public async Task<AuthorizedUserDto> RegisterAsync(RegistrationUserDto item)
         {
-            await _registrationUserDtoValidator.ValidateAndThrowAsync(item);
-
             if (!await IsUniqueLoginAsync(item.Login))
             {
                 throw new InvalidUserLoginError($"Login: '{item.Login}' is already used!");
@@ -76,8 +52,6 @@ namespace BLL.Services.Implementation
 
         public async Task<AuthorizedUserDto> LoginAsync(LoginUserDto item)
         {
-            await _loginUserDtoValidator.ValidateAndThrowAsync(item);
-
             var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Login == item.Login);
 
             if (user is null)
@@ -91,21 +65,17 @@ namespace BLL.Services.Implementation
             {
                 throw new WrongUserPasswordError($"Wrong password!");
             }
-            
+
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(user);
             authorizedUser.JwtToken = _tokenService.CreateToken(user);
 
             return authorizedUser;
         }
-        
+
         public async Task<AuthorizedUserDto> RegisterGoogleAsync(RegistrationGoogleUserDto registrationGoogleUserDto)
         {
-            await _registrationGoogleUserDtoValidator.ValidateAndThrowAsync(registrationGoogleUserDto);
-
             var payload = await _googleTokenService.ValidateGoogleTokenAsync(registrationGoogleUserDto.GoogleToken);
-
-            await _googlePayloadValidator.ValidateAndThrowAsync(payload);
-
+            
             var user = _mapper.Map<User>(payload);
 
             if (!await IsUniqueLoginAsync(user.Login))
@@ -131,21 +101,17 @@ namespace BLL.Services.Implementation
 
         public async Task<AuthorizedUserDto> LoginGoogleAsync(LoginGoogleUserDto loginGoogleUserDto)
         {
-            await _loginGoogleUserDtoValidator.ValidateAndThrowAsync(loginGoogleUserDto);
-
             var payload = await _googleTokenService.ValidateGoogleTokenAsync(loginGoogleUserDto.GoogleToken);
-
-            await _googlePayloadValidator.ValidateAndThrowAsync(payload);
-
-            var user = _mapper.Map<User>(payload);
             
+            var user = _mapper.Map<User>(payload);
+
             var userDb = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Login == user.Login);
 
             if (userDb is null)
             {
                 throw new UserLoginIsNotFound($"Login: '{user.Login}' is not found in database!");
             }
-            
+
             var authorizedUser = _mapper.Map<AuthorizedUserDto>(userDb);
             authorizedUser.JwtToken = _tokenService.CreateToken(userDb);
 

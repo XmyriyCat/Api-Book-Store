@@ -3,7 +3,6 @@ using BLL.DTO.Author;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
@@ -12,15 +11,11 @@ namespace BLL.Services.Implementation
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
-        private readonly IValidator<CreateAuthorDto> _createAuthorDtoValidator;
-        private readonly IValidator<UpdateAuthorDto> _updateAuthorDtoValidator;
 
-        public AuthorCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, IValidator<CreateAuthorDto> createValidator, IValidator<UpdateAuthorDto> updateValidator)
+        public AuthorCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
-            _createAuthorDtoValidator = createValidator;
-            _updateAuthorDtoValidator = updateValidator;
         }
 
         public async Task<IEnumerable<Author>> GetAllAsync()
@@ -35,8 +30,6 @@ namespace BLL.Services.Implementation
 
         public async Task<Author> AddAsync(CreateAuthorDto item)
         {
-            await _createAuthorDtoValidator.ValidateAndThrowAsync(item);
-            
             var author = _mapper.Map<Author>(item);
 
             author = await _repositoryWrapper.Authors.AddAsync(author);
@@ -48,8 +41,6 @@ namespace BLL.Services.Implementation
 
         public async Task<Author> UpdateAsync(UpdateAuthorDto item)
         {
-            await _updateAuthorDtoValidator.ValidateAndThrowAsync(item);
-
             var author = _mapper.Map<Author>(item);
 
             author = await _repositoryWrapper.Authors.UpdateAsync(author.Id, author);

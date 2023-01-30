@@ -3,7 +3,6 @@ using BLL.DTO.Shipment;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 
 namespace BLL.Services.Implementation;
 
@@ -11,16 +10,11 @@ public class ShipmentCatalogService : IShipmentCatalogService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateShipmentDto> _createShipmentDtoValidator;
-    private readonly IValidator<UpdateShipmentDto> _updateShipmentDtoValidator;
 
-    public ShipmentCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper,
-        IValidator<CreateShipmentDto> createValidator, IValidator<UpdateShipmentDto> updateValidator)
+    public ShipmentCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _createShipmentDtoValidator = createValidator;
-        _updateShipmentDtoValidator = updateValidator;
     }
 
     public async Task<IEnumerable<Shipment>> GetAllAsync()
@@ -35,8 +29,6 @@ public class ShipmentCatalogService : IShipmentCatalogService
 
     public async Task<Shipment> AddAsync(CreateShipmentDto item)
     {
-        await _createShipmentDtoValidator.ValidateAndThrowAsync(item);
-
         var shipment = _mapper.Map<Shipment>(item);
 
         var deliveryDb = await _repositoryWrapper.Deliveries.FindAsync(item.DeliveryId);
@@ -56,8 +48,6 @@ public class ShipmentCatalogService : IShipmentCatalogService
 
     public async Task<Shipment> UpdateAsync(UpdateShipmentDto item)
     {
-        await _updateShipmentDtoValidator.ValidateAndThrowAsync(item);
-
         var shipment = _mapper.Map<Shipment>(item);
 
         var deliveryDb = await _repositoryWrapper.Deliveries.FindAsync(item.DeliveryId);

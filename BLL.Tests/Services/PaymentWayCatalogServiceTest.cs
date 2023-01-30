@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.PaymentWay;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.PaymentWay;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -28,11 +27,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createPaymentWayDtoValidator = new CreatePaymentWayDtoValidator();
-            var updatePaymentWayDtoValidator = new UpdatePaymentWayDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _paymentWayCatalogService = new PaymentWayCatalogService(_repositoryWrapper, mapper, createPaymentWayDtoValidator, updatePaymentWayDtoValidator);
+            _paymentWayCatalogService = new PaymentWayCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

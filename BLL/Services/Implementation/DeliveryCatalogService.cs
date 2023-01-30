@@ -3,7 +3,6 @@ using BLL.DTO.Delivery;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
@@ -12,15 +11,11 @@ namespace BLL.Services.Implementation
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
-        private readonly IValidator<CreateDeliveryDto> _createDeliveryDtoValidator;
-        private readonly IValidator<UpdateDeliveryDto> _updateDeliveryDtoValidator;
 
-        public DeliveryCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, IValidator<CreateDeliveryDto> createDeliveryDtoValidator, IValidator<UpdateDeliveryDto> updateDeliveryDtoValidator)
+        public DeliveryCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
-            _createDeliveryDtoValidator = createDeliveryDtoValidator;
-            _updateDeliveryDtoValidator = updateDeliveryDtoValidator;
         }
         public async Task<Delivery> FindAsync(int id)
         {
@@ -34,8 +29,6 @@ namespace BLL.Services.Implementation
 
         public async Task<Delivery> AddAsync(CreateDeliveryDto item)
         {
-            await _createDeliveryDtoValidator.ValidateAndThrowAsync(item);
-
             var delivery = _mapper.Map<Delivery>(item);
 
             delivery = await _repositoryWrapper.Deliveries.AddAsync(delivery);
@@ -47,8 +40,6 @@ namespace BLL.Services.Implementation
 
         public async Task<Delivery> UpdateAsync(UpdateDeliveryDto item)
         {
-            await _updateDeliveryDtoValidator.ValidateAndThrowAsync(item);
-
             var delivery = _mapper.Map<Delivery>(item);
 
             delivery = await _repositoryWrapper.Deliveries.UpdateAsync(delivery.Id, delivery);

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.Role;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Role;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -28,11 +27,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createRoleDtoValidator = new CreateRoleDtoValidator();
-            var updateRoleDtoValidator = new UpdateRoleDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _roleCatalogService = new RoleCatalogService(_repositoryWrapper, mapper, createRoleDtoValidator, updateRoleDtoValidator);
+            _roleCatalogService = new RoleCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

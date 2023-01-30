@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.Warehouse;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Warehouse;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -28,11 +27,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createWarehouseDtoValidator = new CreateWarehouseDtoValidator();
-            var updateWarehouseDtoValidator = new UpdateWarehouseDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _warehouseCatalogService = new WarehouseCatalogService(_repositoryWrapper, mapper, createWarehouseDtoValidator, updateWarehouseDtoValidator);
+            _warehouseCatalogService = new WarehouseCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

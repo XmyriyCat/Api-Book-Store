@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.Genre;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Genre;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -28,11 +27,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createGenreDtoValidator = new CreateGenreDtoValidator();
-            var updateGenreDtoValidator = new UpdateGenreDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _genreCatalogService = new GenreCatalogService(_repositoryWrapper, mapper, createGenreDtoValidator, updateGenreDtoValidator);
+            _genreCatalogService = new GenreCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

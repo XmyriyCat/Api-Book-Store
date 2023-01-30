@@ -3,7 +3,6 @@ using BLL.DTO.PaymentWay;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation;
@@ -12,15 +11,11 @@ public class PaymentWayCatalogService : IPaymentWayCatalogService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreatePaymentWayDto> _createPaymentWayDtoValidator;
-    private readonly IValidator<UpdatePaymentWayDto> _updatePaymentWayDtoValidator;
-    
-    public PaymentWayCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, IValidator<CreatePaymentWayDto> createValidator, IValidator<UpdatePaymentWayDto> updateValidator)
+
+    public PaymentWayCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _createPaymentWayDtoValidator = createValidator;
-        _updatePaymentWayDtoValidator = updateValidator;
     }
     
     public async Task<IEnumerable<PaymentWay>> GetAllAsync()
@@ -35,7 +30,6 @@ public class PaymentWayCatalogService : IPaymentWayCatalogService
     
     public async Task<PaymentWay> AddAsync(CreatePaymentWayDto item)
     {
-        await _createPaymentWayDtoValidator.ValidateAndThrowAsync(item);
         var paymentWay = _mapper.Map<PaymentWay>(item);
     
         paymentWay = await _repositoryWrapper.PaymentWays.AddAsync(paymentWay);
@@ -47,8 +41,6 @@ public class PaymentWayCatalogService : IPaymentWayCatalogService
     
     public async Task<PaymentWay> UpdateAsync(UpdatePaymentWayDto item)
     {
-        await _updatePaymentWayDtoValidator.ValidateAndThrowAsync(item);
-    
         var paymentWay = _mapper.Map<PaymentWay>(item);
     
         paymentWay = await _repositoryWrapper.PaymentWays.UpdateAsync(paymentWay.Id, paymentWay);

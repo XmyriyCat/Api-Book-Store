@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.Shipment;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Shipment;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -27,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createShipmentDtoValidator = new CreateShipmentDtoValidator();
-            var updateShipmentDtoValidator = new UpdateShipmentDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _shipmentCatalogService = new ShipmentCatalogService(_repositoryWrapper, mapper, createShipmentDtoValidator, updateShipmentDtoValidator);
+            _shipmentCatalogService = new ShipmentCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

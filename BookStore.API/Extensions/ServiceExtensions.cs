@@ -9,6 +9,7 @@ using DLL.Data;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,7 @@ namespace ApiBookStore.Extensions
 
         public static void ConfigureFluentValidation(this IServiceCollection services)
         {
+            services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<CreateAuthorDtoValidator>();
         }
 
@@ -97,20 +99,20 @@ namespace ApiBookStore.Extensions
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
         {
             services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
-                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtToken:Key"] ?? throw new JwtKeyIsNotFound("JWT key is null!"))),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtToken:Key"] ?? throw new JwtKeyIsNotFound("JWT key is null!"))),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
         }
         
         public static void ConfigureGoogleTokenService(this IServiceCollection services)

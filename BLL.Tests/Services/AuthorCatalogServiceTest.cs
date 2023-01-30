@@ -1,7 +1,6 @@
 using AutoMapper;
 using BLL.DTO.Author;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -28,11 +27,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createAuthorDtoValidator = new CreateAuthorDtoValidator();
-            var updateAuthorDtoValidator = new UpdateAuthorDtoValidator();
-
+            
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _authorCatalogService = new AuthorCatalogService(_repositoryWrapper, mapper, createAuthorDtoValidator, updateAuthorDtoValidator);
+            _authorCatalogService = new AuthorCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.Book;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Book;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
@@ -27,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createBookDtoValidator = new CreateBookDtoValidator();
-            var updateBookDtoValidator = new UpdateBookDtoValidator();
-
+            
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _bookCatalogService = new BookCatalogService(_repositoryWrapper, mapper, createBookDtoValidator, updateBookDtoValidator);
+            _bookCatalogService = new BookCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]
