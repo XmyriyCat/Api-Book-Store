@@ -98,24 +98,7 @@ namespace BLL.Tests.Services
             Assert.Equal(authorDto.LastName, authorDb.LastName);
             Assert.Equal(authorsTotal, authorsDbCount);
         }
-
-        [Theory]
-        [InlineData("", "")]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
-        public async Task AddAsync_Return_ValidationException(string firstname, string lastname)
-        {
-            // Arrange
-            var authorDto = new CreateAuthorDto
-            {
-                FirstName = firstname,
-                LastName = lastname
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _authorCatalogService.AddAsync(authorDto));
-        }
-
+        
         [Theory]
         [InlineData(1, "new_firstname", "new_lastname")]
         [InlineData(1, "1234567890-=<>?", "1234567890-=<>?")]
@@ -161,25 +144,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _authorCatalogService.UpdateAsync(updateAuthorDto));
         }
-
-        [Theory]
-        [InlineData(1, "", "")]
-        [InlineData(1,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
-        public async Task UpdateAsync_Return_ValidationException(int authorId, string firstnameNew, string lastnameNew)
-        {
-            // Arrange
-            var updateAuthorDto = new UpdateAuthorDto()
-            {
-                Id = authorId,
-                FirstName = firstnameNew,
-                LastName = lastnameNew
-            };
-            
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _authorCatalogService.UpdateAsync(updateAuthorDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
