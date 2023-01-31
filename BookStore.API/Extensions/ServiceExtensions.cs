@@ -82,6 +82,7 @@ namespace ApiBookStore.Extensions
             services.AddScoped<IWarehouseBookCatalogService, WarehouseBookCatalogService>();
             services.AddScoped<IOrderCatalogService, OrderCatalogService>();
             services.AddScoped<IOrderLineCatalogService, OrderLineCatalogService>();
+            services.AddScoped<IUserGoogleCatalogService, UserGoogleCatalogService>();
 
             // TODO: Add other services later
         }

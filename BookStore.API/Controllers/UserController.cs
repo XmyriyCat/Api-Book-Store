@@ -10,10 +10,12 @@ namespace ApiBookStore.Controllers
     public class UserController : Controller
     {
         private readonly IUserCatalogService _userService;
+        private readonly IUserGoogleCatalogService _userGoogleService;
 
-        public UserController(IUserCatalogService userService)
+        public UserController(IUserCatalogService userService, IUserGoogleCatalogService userGoogleService)
         {
             _userService = userService;
+            _userGoogleService = userGoogleService;
         }
 
         [AllowAnonymous]
@@ -37,7 +39,7 @@ namespace ApiBookStore.Controllers
         [HttpPost("register-google")]
         public async Task<IActionResult> RegisterGoogleAsync([FromBody] RegistrationGoogleUserDto registrationGoogleUserDto)
         {
-            var registeredUser = await _userService.RegisterGoogleAsync(registrationGoogleUserDto);
+            var registeredUser = await _userGoogleService.RegisterGoogleAsync(registrationGoogleUserDto);
             return Ok(registeredUser);
         }
 
@@ -45,7 +47,7 @@ namespace ApiBookStore.Controllers
         [HttpPost("login-google")]
         public async Task<IActionResult> LoginGoogleAsync([FromBody] LoginGoogleUserDto loginGoogleUserDto)
         {
-            var registeredUser = await _userService.LoginGoogleAsync(loginGoogleUserDto);
+            var registeredUser = await _userGoogleService.LoginGoogleAsync(loginGoogleUserDto);
             return Ok(registeredUser);
         }
     }
