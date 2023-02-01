@@ -17,7 +17,7 @@ namespace BLL.Tests.Validators.Author
         {
             _createAuthorDtoValidator = new CreateAuthorDtoValidator();
         }
-        
+
         [Fact]
         public async Task Should_have_error_when_FirstName_and_LastName_are_null()
         {
@@ -53,7 +53,7 @@ namespace BLL.Tests.Validators.Author
             result.ShouldNotHaveValidationErrorFor(author => author.FirstName);
             result.ShouldNotHaveValidationErrorFor(author => author.LastName);
         }
-        
+
         [Fact]
         public async Task Should_have_error_when_LastName_and_FirstName_are_longer_150()
         {

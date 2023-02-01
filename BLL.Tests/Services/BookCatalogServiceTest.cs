@@ -7,7 +7,6 @@ using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
@@ -106,27 +105,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createBookDto.IdPublisher, bookCreated.Publisher.Id);
             Assert.Equal(booksTotal, booksDbCount);
         }
-
-        [Theory]
-        [InlineData("", 85.52, 1, 1, 1)]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-            " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qua", 8685.52552, 2, 2, 2)] // size of book name > 200 chars.
-        public async Task AddAsync_Return_ValidationException(string bookName, decimal price, int idPublisher, int idGenre, int idAuthor)
-        {
-            // Arrange
-            var createBookDto = new CreateBookDto
-            {
-                Name = bookName,
-                Price = price,
-                IdPublisher = idPublisher,
-                GenresId = new List<int> { idGenre },
-                AuthorsId = new List<int> { idAuthor }
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _bookCatalogService.AddAsync(createBookDto));
-        }
-
+        
         [Theory]
         [InlineData("test-name", 85.52, 9999, 1, 1)]
         [InlineData("test-name", 85.52, 1, 9999, 1)]
@@ -200,28 +179,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _bookCatalogService.UpdateAsync(updateBookDto));
         }
-
-        [Theory]
-        [InlineData(1, "", 85.52, 1, 1, 1)]
-        [InlineData(2, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-                    " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qua", 8685.52552, 2, 2, 2)] // size of book name > 200 chars.
-        public async Task UpdateAsync_Return_ValidationException(int bookId, string bookName, decimal price, int idPublisher, int idGenre, int idAuthor)
-        {
-            // Arrange
-            var updateBookDto = new UpdateBookDto()
-            {
-                Id = bookId,
-                Name = bookName,
-                Price = price,
-                IdPublisher = idPublisher,
-                GenresId = new List<int> { idGenre },
-                AuthorsId = new List<int> { idAuthor }
-            };
-            
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _bookCatalogService.UpdateAsync(updateBookDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
