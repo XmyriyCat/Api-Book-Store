@@ -5,6 +5,8 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+#pragma warning disable CS8603
+
 namespace BLL.Tests.Validators.Publisher;
 
 public class CreatePublisherDtoValidatorTest

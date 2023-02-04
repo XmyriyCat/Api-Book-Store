@@ -1,10 +1,11 @@
-﻿using BLL.DTO.Delivery;
-using BLL.DTO.OrderLine;
+﻿using BLL.DTO.OrderLine;
 using BLL.Infrastructure.Validators.OrderLine;
 using Bogus;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
+
+#pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.OrderLine;
 
