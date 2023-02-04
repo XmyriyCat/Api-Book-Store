@@ -19,7 +19,7 @@ public class UpdateShipmentDtoValidatorTest
     }
 
     [Fact]
-    public async Task Should_have_error_when_values_less_0()
+    public async Task Should_have_error_when_values_are_less_0()
     {
         //Arrange 
         var faker = new Faker<UpdateShipmentDto>()
