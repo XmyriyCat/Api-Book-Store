@@ -57,8 +57,9 @@ public class AdminCatalogService : IAdminCatalogService
 
     public async Task<User> UpdateAsync(UpdateUserDto item)
     {
-        var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Id == item.Id);
-
+        var user = await _repositoryWrapper.Users.FindIncludeAsync(item.Id);
+        
+        // Setting updated data
         user.UserName = item.Username;
         user.Login = item.Login;
         user.Email = item.Email;
@@ -77,12 +78,6 @@ public class AdminCatalogService : IAdminCatalogService
         foreach (var idOrder in item.OrderIds)
         {
             var order = await _repositoryWrapper.Orders.FindAsync(idOrder);
-
-            if (order is null)
-            {
-                throw new ValidationException($"DTO contains a non-existent order id.");
-            }
-
             user.Orders.Add(order);
         }
 
@@ -90,7 +85,7 @@ public class AdminCatalogService : IAdminCatalogService
 
         if (!result.Succeeded)
         {
-            throw new CreateIdentityUserException(result.ToString());
+            throw new UpdateIdentityUserException(result.ToString());
         }
 
         return user;
