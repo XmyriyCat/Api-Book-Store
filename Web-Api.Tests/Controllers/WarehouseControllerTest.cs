@@ -133,7 +133,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             });
 
             // Assert
@@ -158,7 +158,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = string.Empty,
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             });
 
             // Assert
@@ -179,7 +179,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             });
 
             // Assert
@@ -187,7 +187,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/Warehouse")]
+        [InlineData("api/warehouse")]
         public async Task WarehouseUpdateAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -213,7 +213,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
 
@@ -226,7 +226,7 @@ namespace Web_Api.Tests.Controllers
             var warehouseUpdated = JsonConvert.DeserializeObject<Warehouse>(warehouseString);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, responseCreate.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, responseCreate.StatusCode);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(updateWarehouseDto.Id, warehouseUpdated!.Id);
             Assert.Equal(updateWarehouseDto.Name, warehouseUpdated.Name);
@@ -255,7 +255,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
             // Act
@@ -279,7 +279,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
             // Act
@@ -307,7 +307,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
             // Act
