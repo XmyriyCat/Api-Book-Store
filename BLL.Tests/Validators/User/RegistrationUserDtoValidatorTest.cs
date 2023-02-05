@@ -29,10 +29,10 @@ public class RegistrationUserDtoValidatorTest
             .RuleFor(x => x.Password, f => null);
 
         var registrationUserDto = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationUserDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(userDto => userDto.Login);
         result.ShouldHaveValidationErrorFor(userDto => userDto.Username);
@@ -49,10 +49,10 @@ public class RegistrationUserDtoValidatorTest
             .RuleFor(x => x.Password, f => f.Random.String2(1, 150));
 
         var registrationUserDto = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationUserDto);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(userDto => userDto.Login);
         result.ShouldNotHaveValidationErrorFor(userDto => userDto.Username);
@@ -69,10 +69,10 @@ public class RegistrationUserDtoValidatorTest
             .RuleFor(x => x.Password, f => f.Random.String2(151, 200));
 
         var registrationUserDto = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationUserDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(userDto => userDto.Login);
         result.ShouldHaveValidationErrorFor(userDto => userDto.Username);
@@ -89,10 +89,10 @@ public class RegistrationUserDtoValidatorTest
             .RuleFor(x => x.Password, f => string.Empty);
 
         var registrationUserDto = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationUserDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(userDto => userDto.Login);
         result.ShouldNotHaveValidationErrorFor(userDto => userDto.Username);

@@ -73,10 +73,10 @@ public class CreateOrderDtoValidatorTest
             .RuleFor(x => x.CustomerId, f => 0);
 
         var createOrderDto = faker.Generate();
-        
+
         //Act
         var result = await _createOrderDtoValidator.TestValidateAsync(createOrderDto);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(order => order.TotalPrice);
         result.ShouldNotHaveValidationErrorFor(order => order.OrderDate);

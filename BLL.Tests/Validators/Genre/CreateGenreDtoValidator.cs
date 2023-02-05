@@ -27,10 +27,10 @@ public class CreateGenreDtoValidatorTest
             .RuleFor(x => x.Name, f => null);
 
         var createGenreDto = faker.Generate();
-        
+
         //Act
         var result = await _createGenreDtoValidator.TestValidateAsync(createGenreDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(genre => genre.Name);
     }
@@ -40,13 +40,13 @@ public class CreateGenreDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateGenreDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150));
 
         var createGenreDto = faker.Generate();
-        
+
         //Act
         var result = await _createGenreDtoValidator.TestValidateAsync(createGenreDto);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(genre => genre.Name);
     }
@@ -59,10 +59,10 @@ public class CreateGenreDtoValidatorTest
             .RuleFor(x => x.Name, f => f.Random.String2(151, 200));
 
         var createGenreDto = faker.Generate();
-        
+
         //Act
         var result = await _createGenreDtoValidator.TestValidateAsync(createGenreDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(genre => genre.Name);
     }
@@ -72,13 +72,13 @@ public class CreateGenreDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateGenreDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var createGenreDto = faker.Generate();
-        
+
         //Act
         var result = await _createGenreDtoValidator.TestValidateAsync(createGenreDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(genre => genre.Name);
     }

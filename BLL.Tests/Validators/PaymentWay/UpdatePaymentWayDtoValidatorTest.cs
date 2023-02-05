@@ -18,7 +18,7 @@ public class UpdatePaymentWayDtoValidatorTest
     {
         _updatePaymentWayDtoValidator = new UpdatePaymentWayDtoValidator();
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_Name_is_null_and_Id_is_0()
     {
@@ -28,10 +28,10 @@ public class UpdatePaymentWayDtoValidatorTest
             .RuleFor(x => x.Name, f => null);
 
         var updayePaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _updatePaymentWayDtoValidator.TestValidateAsync(updayePaymentWay);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Id);
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Name);
@@ -43,13 +43,13 @@ public class UpdatePaymentWayDtoValidatorTest
         //Arrange
         var faker = new Faker<UpdatePaymentWayDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150));
 
         var updatePaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _updatePaymentWayDtoValidator.TestValidateAsync(updatePaymentWay);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(paymentWay => paymentWay.Id);
         result.ShouldNotHaveValidationErrorFor(paymentWay => paymentWay.Name);
@@ -61,13 +61,13 @@ public class UpdatePaymentWayDtoValidatorTest
         //Arrange
         var faker = new Faker<UpdatePaymentWayDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(151,200));
+            .RuleFor(x => x.Name, f => f.Random.String2(151, 200));
 
         var updatePaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _updatePaymentWayDtoValidator.TestValidateAsync(updatePaymentWay);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(paymentWay => paymentWay.Id);
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Name);
@@ -79,13 +79,13 @@ public class UpdatePaymentWayDtoValidatorTest
         //Arrange
         var faker = new Faker<UpdatePaymentWayDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var updatePaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _updatePaymentWayDtoValidator.TestValidateAsync(updatePaymentWay);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(paymentWay => paymentWay.Id);
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Name);

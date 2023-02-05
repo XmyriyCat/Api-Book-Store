@@ -28,10 +28,10 @@ public class UpdatePublisherDtoValidatorTest
             .RuleFor(x => x.Name, f => null);
 
         var updatePublisher = faker.Generate();
-        
+
         //Act
         var result = await _updatePublisherDtoValidator.TestValidateAsync(updatePublisher);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(publisher => publisher.Id);
         result.ShouldHaveValidationErrorFor(publisher => publisher.Name);
@@ -46,10 +46,10 @@ public class UpdatePublisherDtoValidatorTest
             .RuleFor(x => x.Name, f => f.Random.String2(1, 150));
 
         var updatePublisher = faker.Generate();
-        
+
         //Act
         var result = await _updatePublisherDtoValidator.TestValidateAsync(updatePublisher);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(publisher => publisher.Id);
         result.ShouldNotHaveValidationErrorFor(publisher => publisher.Name);
@@ -64,10 +64,10 @@ public class UpdatePublisherDtoValidatorTest
             .RuleFor(x => x.Name, f => f.Random.String2(151, 200));
 
         var updatePublisher = faker.Generate();
-        
+
         //Act
         var result = await _updatePublisherDtoValidator.TestValidateAsync(updatePublisher);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(publisher => publisher.Id);
         result.ShouldHaveValidationErrorFor(publisher => publisher.Name);
@@ -79,13 +79,13 @@ public class UpdatePublisherDtoValidatorTest
         //Arrange
         var faker = new Faker<UpdatePublisherDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var updatePublisher = faker.Generate();
-        
+
         //Act
         var result = await _updatePublisherDtoValidator.TestValidateAsync(updatePublisher);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(publisher => publisher.Id);
         result.ShouldHaveValidationErrorFor(publisher => publisher.Name);

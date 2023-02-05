@@ -28,10 +28,10 @@ public class CreateDeliveryDtoValidatorTest
             .RuleFor(x => x.Price, f => f.Random.Decimal(-100, -1));
 
         var createDeliveryDro = faker.Generate();
-        
+
         //Act
         var result = await _createDeliveryDtoValidator.TestValidateAsync(createDeliveryDro);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(delivery => delivery.Name);
         result.ShouldHaveValidationErrorFor(delivery => delivery.Price);
@@ -42,14 +42,14 @@ public class CreateDeliveryDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateDeliveryDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150))
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150))
             .RuleFor(x => x.Price, f => f.Random.Decimal());
 
         var createDeliveryDro = faker.Generate();
-        
+
         //Act
         var result = await _createDeliveryDtoValidator.TestValidateAsync(createDeliveryDro);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(delivery => delivery.Name);
         result.ShouldNotHaveValidationErrorFor(delivery => delivery.Price);
@@ -60,14 +60,14 @@ public class CreateDeliveryDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateDeliveryDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(151,200))
+            .RuleFor(x => x.Name, f => f.Random.String2(151, 200))
             .RuleFor(x => x.Price, f => f.Random.Decimal());
 
         var createDeliveryDro = faker.Generate();
-        
+
         //Act
         var result = await _createDeliveryDtoValidator.TestValidateAsync(createDeliveryDro);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(delivery => delivery.Name);
         result.ShouldNotHaveValidationErrorFor(delivery => delivery.Price);
@@ -82,10 +82,10 @@ public class CreateDeliveryDtoValidatorTest
             .RuleFor(x => x.Price, f => f.Random.Decimal());
 
         var createDeliveryDro = faker.Generate();
-        
+
         //Act
         var result = await _createDeliveryDtoValidator.TestValidateAsync(createDeliveryDro);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(delivery => delivery.Name);
         result.ShouldNotHaveValidationErrorFor(delivery => delivery.Price);

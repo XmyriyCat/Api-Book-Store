@@ -27,10 +27,10 @@ public class CreateShipmentDtoValidatorTest
             .RuleFor(x => x.PaymentWayId, f => f.Random.Int(-10, -1));
 
         var createShipment = faker.Generate();
-        
+
         //Act
         var result = await _createShipmentDtoValidator.TestValidateAsync(createShipment);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(shipment => shipment.DeliveryId);
         result.ShouldHaveValidationErrorFor(shipment => shipment.PaymentWayId);
@@ -45,10 +45,10 @@ public class CreateShipmentDtoValidatorTest
             .RuleFor(x => x.PaymentWayId, f => f.Random.Int(1));
 
         var createShipment = faker.Generate();
-        
+
         //Act
         var result = await _createShipmentDtoValidator.TestValidateAsync(createShipment);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(shipment => shipment.DeliveryId);
         result.ShouldNotHaveValidationErrorFor(shipment => shipment.PaymentWayId);
@@ -63,10 +63,10 @@ public class CreateShipmentDtoValidatorTest
             .RuleFor(x => x.PaymentWayId, f => 0);
 
         var createShipment = faker.Generate();
-        
+
         //Act
         var result = await _createShipmentDtoValidator.TestValidateAsync(createShipment);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(shipment => shipment.DeliveryId);
         result.ShouldHaveValidationErrorFor(shipment => shipment.PaymentWayId);

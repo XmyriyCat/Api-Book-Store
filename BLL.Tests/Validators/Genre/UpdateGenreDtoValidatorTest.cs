@@ -79,7 +79,7 @@ public class UpdateGenreDtoValidatorTest
         //Arrange
         var faker = new Faker<UpdateGenreDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var createGenreDto = faker.Generate();
 

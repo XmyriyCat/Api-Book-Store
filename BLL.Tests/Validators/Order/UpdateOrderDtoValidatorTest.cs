@@ -71,17 +71,17 @@ public class UpdateOrderDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<UpdateOrderDto>()
-            .RuleFor(x => x.Id, f=> f.Random.Int(1))
+            .RuleFor(x => x.Id, f => f.Random.Int(1))
             .RuleFor(x => x.TotalPrice, f => 0)
             .RuleFor(x => x.OrderDate, f => DateTime.Now)
             .RuleFor(x => x.ShipmentId, f => 0)
             .RuleFor(x => x.CustomerId, f => 0);
 
         var updateOrderDto = faker.Generate();
-        
+
         //Act
         var result = await _createOrderDtoValidator.TestValidateAsync(updateOrderDto);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(order => order.Id);
         result.ShouldNotHaveValidationErrorFor(order => order.TotalPrice);

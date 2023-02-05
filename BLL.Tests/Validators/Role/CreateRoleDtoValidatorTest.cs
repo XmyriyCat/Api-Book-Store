@@ -27,10 +27,10 @@ public class CreateRoleDtoValidatorTest
             .RuleFor(x => x.Name, f => null);
 
         var createRole = faker.Generate();
-        
+
         //Act
         var result = await _createRoleValidatorDto.TestValidateAsync(createRole);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(role => role.Name);
     }
@@ -40,13 +40,13 @@ public class CreateRoleDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateRoleDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150));
 
         var createRole = faker.Generate();
-        
+
         //Act
         var result = await _createRoleValidatorDto.TestValidateAsync(createRole);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(role => role.Name);
     }
@@ -56,13 +56,13 @@ public class CreateRoleDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateRoleDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var createRole = faker.Generate();
-        
+
         //Act
         var result = await _createRoleValidatorDto.TestValidateAsync(createRole);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(role => role.Name);
     }
@@ -72,13 +72,13 @@ public class CreateRoleDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateRoleDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var createRole = faker.Generate();
-        
+
         //Act
         var result = await _createRoleValidatorDto.TestValidateAsync(createRole);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(role => role.Name);
     }

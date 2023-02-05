@@ -27,10 +27,10 @@ public class CreatePaymentWayDtoValidatorTest
             .RuleFor(x => x.Name, f => null);
 
         var createPaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _createPaymentWayDtoValidator.TestValidateAsync(createPaymentWay);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Name);
     }
@@ -40,13 +40,13 @@ public class CreatePaymentWayDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreatePaymentWayDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150));
 
         var createPaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _createPaymentWayDtoValidator.TestValidateAsync(createPaymentWay);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(paymentWay => paymentWay.Name);
     }
@@ -56,13 +56,13 @@ public class CreatePaymentWayDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreatePaymentWayDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(151,200));
+            .RuleFor(x => x.Name, f => f.Random.String2(151, 200));
 
         var createPaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _createPaymentWayDtoValidator.TestValidateAsync(createPaymentWay);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Name);
     }
@@ -72,13 +72,13 @@ public class CreatePaymentWayDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreatePaymentWayDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var createPaymentWay = faker.Generate();
-        
+
         //Act
         var result = await _createPaymentWayDtoValidator.TestValidateAsync(createPaymentWay);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(paymentWay => paymentWay.Name);
     }

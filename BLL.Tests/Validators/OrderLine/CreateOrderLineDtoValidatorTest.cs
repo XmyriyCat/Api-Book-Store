@@ -17,7 +17,7 @@ public class CreateOrderLineDtoValidatorTest
     {
         _createOrderLineDtoValidator = new CreateOrderLineDtoValidator();
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_values_are_negative()
     {

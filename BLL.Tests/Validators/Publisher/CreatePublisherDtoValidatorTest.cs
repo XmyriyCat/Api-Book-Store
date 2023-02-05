@@ -27,10 +27,10 @@ public class CreatePublisherDtoValidatorTest
             .RuleFor(x => x.Name, f => null);
 
         var createPublisher = faker.Generate();
-        
+
         //Act
         var result = await _createPublisherDtoValidator.TestValidateAsync(createPublisher);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(publisher => publisher.Name);
     }
@@ -40,13 +40,13 @@ public class CreatePublisherDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreatePublisherDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150));
 
         var createPublisher = faker.Generate();
-        
+
         //Act
         var result = await _createPublisherDtoValidator.TestValidateAsync(createPublisher);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(publisher => publisher.Name);
     }
@@ -59,10 +59,10 @@ public class CreatePublisherDtoValidatorTest
             .RuleFor(x => x.Name, f => f.Random.String2(151, 200));
 
         var createPublisher = faker.Generate();
-        
+
         //Act
         var result = await _createPublisherDtoValidator.TestValidateAsync(createPublisher);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(publisher => publisher.Name);
     }
@@ -72,13 +72,13 @@ public class CreatePublisherDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreatePublisherDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty);
 
         var createPublisher = faker.Generate();
-        
+
         //Act
         var result = await _createPublisherDtoValidator.TestValidateAsync(createPublisher);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(publisher => publisher.Name);
     }
