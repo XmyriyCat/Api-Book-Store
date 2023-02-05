@@ -58,7 +58,7 @@ public class WarehouseController : ControllerBase
     {
         if (warehouse is null)
         {
-            return BadRequest();
+            return NotFound("WareHouse is null");
         }
 
         var updatedWarehouse = await _warehouseService.UpdateAsync(warehouse);

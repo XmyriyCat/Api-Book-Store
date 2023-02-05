@@ -187,7 +187,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/warehouse")]
+        [InlineData("api/Warehouse")]
         public async Task WarehouseUpdateAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -207,13 +207,26 @@ namespace Web_Api.Tests.Controllers
                 PhoneNumber = "+375(29)111-11-11"
             };
 
+            var createWarehouseDto = new CreateWarehouseDto()
+            {
+                Name = "warehouse-test-name-EDIT",
+                Address = "Test Addres 22, 11",
+                City = "Minsk",
+                Country = "Belarus",
+                PhoneNumber = "+375291111111"
+            };
+
+
             // Act
+
+            var responseCreate = await client.PostAsJsonAsync(url, createWarehouseDto);
             var response = await client.PutAsJsonAsync(url, updateWarehouseDto);
 
             var warehouseString = await response.Content.ReadAsStringAsync();
             var warehouseUpdated = JsonConvert.DeserializeObject<Warehouse>(warehouseString);
 
             // Assert
+            Assert.Equal(HttpStatusCode.OK, responseCreate.StatusCode);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(updateWarehouseDto.Id, warehouseUpdated!.Id);
             Assert.Equal(updateWarehouseDto.Name, warehouseUpdated.Name);

@@ -201,6 +201,7 @@ namespace Web_Api.Tests.Controllers
             };
 
             // Act
+            await client.PostAsJsonAsync(url, updateOrderDto);
             var response = await client.PutAsJsonAsync(url, updateOrderDto);
 
             var orderString = await response.Content.ReadAsStringAsync();
