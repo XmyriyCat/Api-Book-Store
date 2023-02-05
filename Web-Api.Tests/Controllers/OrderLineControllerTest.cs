@@ -44,8 +44,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/orderLine/1")]
-        [InlineData("/api/orderLine/2")]
+        [InlineData("/api/orderLine/6")]
         public async Task OrderLineGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -72,9 +71,9 @@ namespace Web_Api.Tests.Controllers
 
             var createOrderLineDto = new CreateOrderLineDto
             {
-                Quantity= 1,
-                OrderId = 1,
-                WarehouseBookId = 1
+                Quantity = 1,
+                OrderId = 6,
+                WarehouseBookId = 8
             };
 
             // Act
@@ -187,12 +186,12 @@ namespace Web_Api.Tests.Controllers
 
             client.AddJwtToken(tokenJwt); // Add HTML header-request Authorization
 
-            var updateOrderLineDto = new UpdateOrderLineDto()
+            var updateOrderLineDto = new UpdateOrderLineDto
             {
-                Id = 3,
-                Quantity = 1,
-                OrderId = 1,
-                WarehouseBookId = 1
+                Id = 4,
+                Quantity = 16,
+                OrderId = 4,
+                WarehouseBookId = 4
             };
 
             // Act

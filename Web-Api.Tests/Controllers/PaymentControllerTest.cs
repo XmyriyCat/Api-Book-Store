@@ -29,7 +29,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/paymentWay")]
+        [InlineData("/api/payment")]
         public async Task PaymentWayGetAllAsyncTask_Return_Ok(string url)
         {
             // Arranges
@@ -44,8 +44,8 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/paymentWay/1")]
-        [InlineData("/api/paymentWay/2")]
+        [InlineData("/api/payment/1")]
+        [InlineData("/api/payment/2")]
         public async Task PaymentWayGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -60,7 +60,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayCreateAsyncTask_Return_Created_201(string url)
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayCreateAsyncTask_Return_BadRequest_400(string url)
         {
             // Arrange
@@ -108,7 +108,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayCreateAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange
@@ -129,7 +129,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayCreateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -150,7 +150,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayCreateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -167,7 +167,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayUpdateAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -197,7 +197,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayUpdateAsyncTask_Forbidden_403(string url)
         {
             // Arrange
@@ -221,7 +221,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayUpdateAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -241,7 +241,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayUpdateAsyncTask_Return_ValidationError_400(string url)
         {
             // Arrange
@@ -265,7 +265,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay")]
+        [InlineData("api/payment")]
         public async Task PaymentWayUpdateAsyncTask_Return_NotFound_404(string url)
         {
             // Arrange
@@ -289,7 +289,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay/1")]
+        [InlineData("api/payment/1")]
         public async Task PaymentWayDeleteAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -307,7 +307,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay/1")]
+        [InlineData("api/payment/1")]
         public async Task PaymentWayDeleteAsyncTask_Return_Unauthorized_401(string url)
         {
             // Arrange
@@ -321,7 +321,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("api/paymentWay/1")]
+        [InlineData("api/payment/1")]
         public async Task PaymentWayDeleteAsyncTask_Return_Forbidden_403(string url)
         {
             // Arrange

@@ -10,7 +10,6 @@ using Web_Api.Tests.Extensions;
 using Web_Api.Tests.Startup;
 using Web_Api.Tests.Startup.JwtHandler;
 using Xunit;
-using System.ComponentModel.DataAnnotations;
 
 namespace Web_Api.Tests.Controllers
 {
@@ -77,7 +76,7 @@ namespace Web_Api.Tests.Controllers
                 Address = "Test Addres 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
             // Act
@@ -202,10 +201,10 @@ namespace Web_Api.Tests.Controllers
             {
                 Id = 1,
                 Name = "warehouse-test-name-EDIT",
-                Address = "Test Addres 22, 11",
+                Address = "Test Address 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
             // Act
@@ -320,10 +319,10 @@ namespace Web_Api.Tests.Controllers
             {
                 Id = 999999999,
                 Name = "warehouse-test-name-EDIT",
-                Address = "Test Addres 22, 11",
+                Address = "Test Address 22, 11",
                 City = "Minsk",
                 Country = "Belarus",
-                PhoneNumber = "+375291111111"
+                PhoneNumber = "+375(29)111-11-11"
             };
 
             // Act

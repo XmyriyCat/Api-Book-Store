@@ -44,8 +44,8 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/order/1")]
-        [InlineData("/api/order/2")]
+        [InlineData("/api/order/4")]
+        [InlineData("/api/order/6")]
         public async Task OrderGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -74,8 +74,8 @@ namespace Web_Api.Tests.Controllers
             {
                 TotalPrice = 100,
                 OrderDate = new DateTime(2023, 12, 31, 5, 10, 20),
-                ShipmentId = 1,
-                CustomerId = 1
+                ShipmentId = 5,
+                CustomerId = 8
             };
 
             // Act
@@ -193,11 +193,11 @@ namespace Web_Api.Tests.Controllers
 
             var updateOrderDto = new UpdateOrderDto()
             {
-                Id = 3,
+                Id = 6,
                 TotalPrice = 100,
                 OrderDate = new DateTime(2023, 12, 31, 5, 10, 20),
-                ShipmentId = 1,
-                CustomerId = 1
+                ShipmentId = 5,
+                CustomerId = 9
             };
 
             // Act

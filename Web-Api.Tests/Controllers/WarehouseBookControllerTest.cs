@@ -44,8 +44,7 @@ namespace Web_Api.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("/api/warehouseBook/1")]
-        [InlineData("/api/warehouseBook/2")]
+        [InlineData("/api/warehouseBook/9")]
         public async Task WarehouseBookGetByIdAsyncTask_Return_Ok(string url)
         {
             // Arrange
@@ -73,8 +72,8 @@ namespace Web_Api.Tests.Controllers
             var createWarehouseBookDto = new CreateWarehouseBookDto
             {
                 Quantity = 1,
-                WarehouseId = 1,
-                BookId = 1,
+                WarehouseId = 3,
+                BookId = 4,
             };
 
             // Act
