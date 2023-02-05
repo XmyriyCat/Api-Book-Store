@@ -5,7 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
-#pragma warning disable CS8603
+// ReSharper disable UnusedParameter.Local
 
 namespace BLL.Tests.Validators.Shipment;
 
@@ -19,7 +19,7 @@ public class CreateShipmentDtoValidatorTest
     }
 
     [Fact]
-    public async Task Should_have_error_when_values_are_less_0()
+    public async Task Should_have_error_when_values_are_negative()
     {
         //Arrange
         var faker = new Faker<CreateShipmentDto>()
@@ -41,8 +41,8 @@ public class CreateShipmentDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateShipmentDto>()
-            .RuleFor(x => x.DeliveryId, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.PaymentWayId, f => f.Random.Int(1, 100));
+            .RuleFor(x => x.DeliveryId, f => f.Random.Int(1))
+            .RuleFor(x => x.PaymentWayId, f => f.Random.Int(1));
 
         var createShipment = faker.Generate();
         

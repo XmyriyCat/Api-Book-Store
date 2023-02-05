@@ -5,7 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
-#pragma warning disable CS8603
+// ReSharper disable UnusedParameter.Local
 
 namespace BLL.Tests.Validators.OrderLine;
 
@@ -43,9 +43,9 @@ public class CreateOrderLineDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateOrderLineDto>()
-            .RuleFor(x => x.Quantity, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.OrderId, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.WarehouseBookId, f => f.Random.Int(1, 100));
+            .RuleFor(x => x.Quantity, f => f.Random.Int(1))
+            .RuleFor(x => x.OrderId, f => f.Random.Int(1))
+            .RuleFor(x => x.WarehouseBookId, f => f.Random.Int(1));
 
         var createOrderLineDto = faker.Generate();
 

@@ -4,6 +4,7 @@ using Bogus;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
+
 // ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
@@ -25,7 +26,7 @@ public class UpdateBookDtoValidatorTest
         var faker = new Faker<UpdateBookDto>()
             .RuleFor(x => x.Id, f => 0)
             .RuleFor(x => x.Name, f => null)
-            .RuleFor(x => x.IdPublisher, f => 0)
+            .RuleFor(x => x.IdPublisher, f => f.Random.Int(-10, 0))
             .RuleFor(x => x.Price, f => f.Random.Int(-500, -1))
             .RuleFor(x => x.AuthorsId, f => new List<int>
             {
@@ -62,7 +63,7 @@ public class UpdateBookDtoValidatorTest
             .RuleFor(x => x.Id, f => f.Random.Int(1))
             .RuleFor(x => x.Name, f => f.Random.String2(1, 200))
             .RuleFor(x => x.IdPublisher, f => f.Random.Int(1))
-            .RuleFor(x => x.Price, f => f.Random.Int(1))
+            .RuleFor(x => x.Price, f => f.Random.Decimal(1))
             .RuleFor(x => x.AuthorsId, f => new List<int>
             {
                 f.Random.Int(1, 100),
@@ -97,8 +98,8 @@ public class UpdateBookDtoValidatorTest
         var faker = new Faker<UpdateBookDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
             .RuleFor(x => x.Name, f => f.Random.String2(201, 250))
-            .RuleFor(x => x.IdPublisher, f => f.Random.Int(-10, -1))
-            .RuleFor(x => x.Price, f => f.Random.Int(-10, -1))
+            .RuleFor(x => x.IdPublisher, f => f.Random.Int(-10, 0))
+            .RuleFor(x => x.Price, f => f.Random.Decimal(-10, -1))
             .RuleFor(x => x.AuthorsId, f => new List<int>
             {
                 f.Random.Int(-10, 0),
@@ -132,7 +133,7 @@ public class UpdateBookDtoValidatorTest
         //Arrange
         var faker = new Faker<UpdateBookDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(0))
+            .RuleFor(x => x.Name, f => string.Empty)
             .RuleFor(x => x.IdPublisher, f => f.Random.Int(1))
             .RuleFor(x => x.Price, f => f.Random.Int(1))
             .RuleFor(x => x.AuthorsId, f => new List<int>

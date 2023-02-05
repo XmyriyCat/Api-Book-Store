@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.User;
@@ -19,7 +20,7 @@ public class RegistrationUserDtoValidatorTest
     }
 
     [Fact]
-    public async Task Should_have_erro_when_values_are_null()
+    public async Task Should_have_error_when_values_are_null()
     {
         //Arrange
         var faker = new Faker<RegistrationUserDto>()
@@ -43,8 +44,8 @@ public class RegistrationUserDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<RegistrationUserDto>()
-            .RuleFor(x => x.Login, f => f.Random.String2(0, 150))
-            .RuleFor(x => x.Username, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.Username, f => f.Random.String2(0, 150))
+            .RuleFor(x => x.Login, f => f.Random.String2(1, 150))
             .RuleFor(x => x.Password, f => f.Random.String2(1, 150));
 
         var registrationUserDto = faker.Generate();
@@ -83,9 +84,9 @@ public class RegistrationUserDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<RegistrationUserDto>()
-            .RuleFor(x => x.Login, f => f.Random.String(0))
-            .RuleFor(x => x.Username, f => f.Random.String(0))
-            .RuleFor(x => x.Password, f => f.Random.String(0));
+            .RuleFor(x => x.Login, f => string.Empty)
+            .RuleFor(x => x.Username, f => string.Empty)
+            .RuleFor(x => x.Password, f => string.Empty);
 
         var registrationUserDto = faker.Generate();
         

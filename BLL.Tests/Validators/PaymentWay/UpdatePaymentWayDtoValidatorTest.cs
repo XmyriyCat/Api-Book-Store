@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.PaymentWay;
@@ -19,7 +20,7 @@ public class UpdatePaymentWayDtoValidatorTest
     }
     
     [Fact]
-    public async Task Should_have_error_when_Name_is_null()
+    public async Task Should_have_error_when_Name_is_null_and_Id_is_0()
     {
         //Arrange
         var faker = new Faker<UpdatePaymentWayDto>()

@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.User;
@@ -27,10 +28,10 @@ public class RegistrationGoogleUserDtoValidatorTest
             .RuleFor(x => x.Password, f => null);
 
         var registrationGoogleUser = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationGoogleUser);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(google => google.GoogleToken);
         result.ShouldHaveValidationErrorFor(google => google.Password);
@@ -41,14 +42,14 @@ public class RegistrationGoogleUserDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<RegistrationGoogleUserDto>()
-            .RuleFor(x => x.GoogleToken, f => f.Random.String(15))
-            .RuleFor(x => x.Password, f => f.Random.String(15));
+            .RuleFor(x => x.GoogleToken, f => f.Random.String(1, 150))
+            .RuleFor(x => x.Password, f => f.Random.String(1, 150));
 
         var registrationGoogleUser = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationGoogleUser);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(google => google.GoogleToken);
         result.ShouldNotHaveValidationErrorFor(google => google.Password);
@@ -59,14 +60,14 @@ public class RegistrationGoogleUserDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<RegistrationGoogleUserDto>()
-            .RuleFor(x => x.GoogleToken, f => f.Random.String(0))
-            .RuleFor(x => x.Password, f => f.Random.String(0));
+            .RuleFor(x => x.GoogleToken, f => string.Empty)
+            .RuleFor(x => x.Password, f => string.Empty);
 
         var registrationGoogleUser = faker.Generate();
-        
+
         //Act
         var result = await _registrationUserDtoValidator.TestValidateAsync(registrationGoogleUser);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(google => google.GoogleToken);
         result.ShouldHaveValidationErrorFor(google => google.Password);

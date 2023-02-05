@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.Warehouse;
@@ -17,9 +18,9 @@ public class UpdateWarehouseDtoValidatorTest
     {
         _updateWarehouseDtoValidator = new UpdateWarehouseDtoValidator();
     }
-    
+
     [Fact]
-    public async Task Should_have_error_when_values_are_null()
+    public async Task Should_have_error_when_values_are_null_or_default()
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseDto>()
@@ -43,18 +44,18 @@ public class UpdateWarehouseDtoValidatorTest
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.Address);
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.PhoneNumber);
     }
-    
+
     [Fact]
     public async Task Should_not_have_error()
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150))
-            .RuleFor(x => x.Country, f => f.Random.String2(1,150))
-            .RuleFor(x => x.City, f => f.Random.String2(1,150))
-            .RuleFor(x => x.Address, f => f.Random.String2(1,150))
-            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.Country, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.City, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.Address, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(1, 150));
 
         var updateWarehouseDto = faker.Generate();
 
@@ -69,18 +70,18 @@ public class UpdateWarehouseDtoValidatorTest
         result.ShouldNotHaveValidationErrorFor(warehouse => warehouse.Address);
         result.ShouldNotHaveValidationErrorFor(warehouse => warehouse.PhoneNumber);
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_values_are_greater_150()
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(151,200))
-            .RuleFor(x => x.Country, f => f.Random.String2(151,200))
-            .RuleFor(x => x.City, f => f.Random.String2(151,200))
-            .RuleFor(x => x.Address, f => f.Random.String2(151,200))
-            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(151,200));
+            .RuleFor(x => x.Name, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.Country, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.City, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.Address, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(151, 200));
 
         var updateWarehouseDto = faker.Generate();
 
@@ -95,18 +96,18 @@ public class UpdateWarehouseDtoValidatorTest
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.Address);
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.PhoneNumber);
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_values_are_empty()
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseDto>()
             .RuleFor(x => x.Id, f => f.Random.Int(1))
-            .RuleFor(x => x.Name, f => f.Random.String2(0))
-            .RuleFor(x => x.Country, f => f.Random.String2(0))
-            .RuleFor(x => x.City, f => f.Random.String2(0))
-            .RuleFor(x => x.Address, f => f.Random.String2(0))
-            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty)
+            .RuleFor(x => x.Country, f => string.Empty)
+            .RuleFor(x => x.City, f => string.Empty)
+            .RuleFor(x => x.Address, f => string.Empty)
+            .RuleFor(x => x.PhoneNumber, f => string.Empty);
 
         var updateWarehouseDto = faker.Generate();
 

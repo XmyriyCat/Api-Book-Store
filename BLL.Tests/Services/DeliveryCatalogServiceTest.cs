@@ -7,7 +7,6 @@ using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
@@ -98,24 +97,7 @@ namespace BLL.Tests.Services
             Assert.Equal(deliveryDto.Name, deliveryDb.Name);
             Assert.Equal(deliveriesTotal, deliveriesDbCount);
         }
-
-        [Theory]
-        [InlineData(-100, "")]
-        [InlineData(10, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of name > 150 chars.
-        public async Task AddAsync_Return_ValidationException(decimal price, string name)
-        {
-            // Arrange
-            var deliveryDto = new CreateDeliveryDto
-            {
-                Price = price,
-                Name = name
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _deliveryCatalogService.AddAsync(deliveryDto));
-        }
-
+        
         [Theory]
         [InlineData(1, 0, "name")]
         [InlineData(1, 1234567, "1234567890-=<>?")]
@@ -161,25 +143,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _deliveryCatalogService.UpdateAsync(updateDeliveryDto));
         }
-
-        [Theory]
-        [InlineData(1, -100, "")]
-        [InlineData(1, 0, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of name > 150 chars.
-        public async Task UpdateAsync_Return_ValidationException(int deliveryId, decimal price, string name)
-        {
-            // Arrange
-            var updateDeliveryDto = new UpdateDeliveryDto()
-            {
-                Id = deliveryId,
-                Price = price,
-                Name = name
-            };
-
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _deliveryCatalogService.UpdateAsync(updateDeliveryDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.Publisher;
@@ -19,7 +20,7 @@ public class UpdatePublisherDtoValidatorTest
     }
 
     [Fact]
-    public async Task Should_have_error_when_Name_is_null_and_Id_equals_0()
+    public async Task Should_have_error_when_Name_is_null_and_Id_is_0()
     {
         //Arrange
         var faker = new Faker<UpdatePublisherDto>()
@@ -86,7 +87,7 @@ public class UpdatePublisherDtoValidatorTest
         var result = await _updatePublisherDtoValidator.TestValidateAsync(updatePublisher);
         
         //Assert
-        result.ShouldHaveValidationErrorFor(publisher => publisher.Id);
-        result.ShouldNotHaveValidationErrorFor(publisher => publisher.Name);
+        result.ShouldNotHaveValidationErrorFor(publisher => publisher.Id);
+        result.ShouldHaveValidationErrorFor(publisher => publisher.Name);
     }
 }

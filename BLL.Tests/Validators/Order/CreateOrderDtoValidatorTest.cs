@@ -5,7 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
-#pragma warning disable CS8603
+// ReSharper disable UnusedParameter.Local
 
 namespace BLL.Tests.Validators.Order;
 
@@ -19,20 +19,20 @@ public class CreateOrderDtoValidatorTest
     }
 
     [Fact]
-    public async Task Should_have_error_when_values_are_negative_or_null()
+    public async Task Should_have_error_when_values_are_negative_or_empty()
     {
         //Arrange
         var faker = new Faker<CreateOrderDto>()
-            .RuleFor(x => x.TotalPrice, f => f.Random.Int(-500, -1))
-            .RuleFor(x => x.OrderDate, f=> new DateTime())
+            .RuleFor(x => x.TotalPrice, f => f.Random.Decimal(-500, -1))
+            .RuleFor(x => x.OrderDate, f => new DateTime())
             .RuleFor(x => x.ShipmentId, f => f.Random.Int(-500, -1))
             .RuleFor(x => x.CustomerId, f => f.Random.Int(-500, -1));
 
         var createOrderDto = faker.Generate();
-        
+
         //Act
         var result = await _createOrderDtoValidator.TestValidateAsync(createOrderDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(order => order.TotalPrice);
         result.ShouldHaveValidationErrorFor(order => order.OrderDate);
@@ -45,23 +45,23 @@ public class CreateOrderDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateOrderDto>()
-            .RuleFor(x => x.TotalPrice, f => f.Random.Int(1, 100))
+            .RuleFor(x => x.TotalPrice, f => f.Random.Decimal())
             .RuleFor(x => x.OrderDate, f => DateTime.Now)
-            .RuleFor(x => x.ShipmentId, f => f.Random.Int(1, 100))
-            .RuleFor(x => x.CustomerId, f => f.Random.Int(1, 100));
+            .RuleFor(x => x.ShipmentId, f => f.Random.Int(1))
+            .RuleFor(x => x.CustomerId, f => f.Random.Int(1));
 
         var createOrderDto = faker.Generate();
-        
+
         //Act
         var result = await _createOrderDtoValidator.TestValidateAsync(createOrderDto);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(order => order.TotalPrice);
         result.ShouldNotHaveValidationErrorFor(order => order.OrderDate);
         result.ShouldNotHaveValidationErrorFor(order => order.ShipmentId);
         result.ShouldNotHaveValidationErrorFor(order => order.CustomerId);
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_ShipmentId_and_CustomerId_are_0()
     {

@@ -7,6 +7,7 @@ using Xunit;
 
 namespace BLL.Tests.Validators.Role;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 public class UpdateRoleDtoValidatorTest

@@ -5,7 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
-#pragma warning disable CS8603
+// ReSharper disable UnusedParameter.Local
 
 namespace BLL.Tests.Validators.WarehouseBook;
 
@@ -19,7 +19,7 @@ public class UpdateWarehouseBookDtoValidatorTest
     }
 
     [Fact]
-    public async Task Should_error_when_values_are_less_0()
+    public async Task Should_error_when_values_are_negative()
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseBookDto>()
@@ -29,10 +29,10 @@ public class UpdateWarehouseBookDtoValidatorTest
             .RuleFor(x => x.BookId, f => f.Random.Int(-10, -1));
 
         var updateWarehouseBook = faker.Generate();
-        
+
         //Act
         var result = await _updateWarehouseBookDtoValidator.TestValidateAsync(updateWarehouseBook);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(warehouseBook => warehouseBook.Id);
         result.ShouldHaveValidationErrorFor(warehouseBook => warehouseBook.Quantity);
@@ -45,16 +45,16 @@ public class UpdateWarehouseBookDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseBookDto>()
-            .RuleFor(x => x.Id, f => f.Random.Int(1, 10))
-            .RuleFor(x => x.Quantity, f => f.Random.Int(1, 10))
-            .RuleFor(x => x.WarehouseId, f => f.Random.Int(1, 10))
-            .RuleFor(x => x.BookId, f => f.Random.Int(1, 10));
+            .RuleFor(x => x.Id, f => f.Random.Int(1))
+            .RuleFor(x => x.Quantity, f => f.Random.Int(1))
+            .RuleFor(x => x.WarehouseId, f => f.Random.Int(1))
+            .RuleFor(x => x.BookId, f => f.Random.Int(1));
 
         var updateWarehouseBook = faker.Generate();
-        
+
         //Act
         var result = await _updateWarehouseBookDtoValidator.TestValidateAsync(updateWarehouseBook);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(warehouseBook => warehouseBook.Id);
         result.ShouldNotHaveValidationErrorFor(warehouseBook => warehouseBook.Quantity);
@@ -67,18 +67,18 @@ public class UpdateWarehouseBookDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<UpdateWarehouseBookDto>()
-            .RuleFor(x => x.Id, f => f.Random.Int(1, 10))
+            .RuleFor(x => x.Id, f => 0)
             .RuleFor(x => x.Quantity, f => 0)
             .RuleFor(x => x.WarehouseId, f => 0)
             .RuleFor(x => x.BookId, f => 0);
 
         var updateWarehouseBook = faker.Generate();
-        
+
         //Act
         var result = await _updateWarehouseBookDtoValidator.TestValidateAsync(updateWarehouseBook);
-        
+
         //Assert
-        result.ShouldNotHaveValidationErrorFor(warehouseBook => warehouseBook.Id);
+        result.ShouldHaveValidationErrorFor(warehouseBook => warehouseBook.Id);
         result.ShouldHaveValidationErrorFor(warehouseBook => warehouseBook.Quantity);
         result.ShouldHaveValidationErrorFor(warehouseBook => warehouseBook.WarehouseId);
         result.ShouldHaveValidationErrorFor(warehouseBook => warehouseBook.BookId);

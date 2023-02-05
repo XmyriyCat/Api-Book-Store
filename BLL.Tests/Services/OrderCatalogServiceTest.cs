@@ -7,7 +7,6 @@ using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
@@ -103,27 +102,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createOrderDto.CustomerId, createdOrder.CustomerId);
             Assert.Equal(expectedCount, ordersDbCount);
         }
-
-        [Theory]
-        [InlineData(-88465.4512, 1, 1)]
-        [InlineData(123456.789, 0, 1)]
-        [InlineData(123456.789, 1, 0)]
-        [InlineData(123456.789, 0, 0)]
-        public async Task AddAsync_Return_ValidationException(decimal totalPrice, int shipmentId, int customerId)
-        {
-            // Arrange
-            var createOrderDto = new CreateOrderDto
-            {
-                TotalPrice = totalPrice,
-                OrderDate = DateTime.Now,
-                ShipmentId = shipmentId,
-                CustomerId = customerId
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _orderCatalogService.AddAsync(createOrderDto));
-        }
-
+        
         [Theory]
         [InlineData(1, 54215.4512, 1, 1)]
         [InlineData(1, 456.123789, 1, 2)]
@@ -175,29 +154,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _orderCatalogService.UpdateAsync(updateOrderDto));
         }
-
-        [Theory]
-        [InlineData(0, 123456.789, 1, 1)]
-        [InlineData(1, -88465.4512, 1, 1)]
-        [InlineData(1, 123456.789, 0, 1)]
-        [InlineData(1, 123456.789, 1, 0)]
-        [InlineData(1, 123456.789, 0, 0)]
-        public async Task UpdateAsync_Return_ValidationException(int id, decimal totalPrice, int shipmentId, int customerId)
-        {
-            // Arrange
-            var updateOrderDto = new UpdateOrderDto()
-            {
-                Id = id,
-                TotalPrice = totalPrice,
-                OrderDate = DateTime.Now,
-                ShipmentId = shipmentId,
-                CustomerId = customerId
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _orderCatalogService.UpdateAsync(updateOrderDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

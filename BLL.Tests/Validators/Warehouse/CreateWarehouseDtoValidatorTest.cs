@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.Warehouse;
@@ -41,17 +42,17 @@ public class CreateWarehouseDtoValidatorTest
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.Address);
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.PhoneNumber);
     }
-    
+
     [Fact]
     public async Task Should_not_have_error()
     {
         //Arrange
         var faker = new Faker<CreateWarehouseDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(1,150))
-            .RuleFor(x => x.Country, f => f.Random.String2(1,150))
-            .RuleFor(x => x.City, f => f.Random.String2(1,150))
-            .RuleFor(x => x.Address, f => f.Random.String2(1,150))
-            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(1,150));
+            .RuleFor(x => x.Name, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.Country, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.City, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.Address, f => f.Random.String2(1, 150))
+            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(1, 150));
 
         var createWarehouse = faker.Generate();
 
@@ -65,17 +66,17 @@ public class CreateWarehouseDtoValidatorTest
         result.ShouldNotHaveValidationErrorFor(warehouse => warehouse.Address);
         result.ShouldNotHaveValidationErrorFor(warehouse => warehouse.PhoneNumber);
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_values_are_greater_150()
     {
         //Arrange
         var faker = new Faker<CreateWarehouseDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(151,200))
-            .RuleFor(x => x.Country, f => f.Random.String2(151,200))
-            .RuleFor(x => x.City, f => f.Random.String2(151,200))
-            .RuleFor(x => x.Address, f => f.Random.String2(151,200))
-            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(151,200));
+            .RuleFor(x => x.Name, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.Country, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.City, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.Address, f => f.Random.String2(151, 200))
+            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(151, 200));
 
         var createWarehouse = faker.Generate();
 
@@ -89,17 +90,17 @@ public class CreateWarehouseDtoValidatorTest
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.Address);
         result.ShouldHaveValidationErrorFor(warehouse => warehouse.PhoneNumber);
     }
-    
+
     [Fact]
     public async Task Should_have_error_when_values_are_empty()
     {
         //Arrange
         var faker = new Faker<CreateWarehouseDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0))
-            .RuleFor(x => x.Country, f => f.Random.String2(0))
-            .RuleFor(x => x.City, f => f.Random.String2(0))
-            .RuleFor(x => x.Address, f => f.Random.String2(0))
-            .RuleFor(x => x.PhoneNumber, f => f.Random.String2(0));
+            .RuleFor(x => x.Name, f => string.Empty)
+            .RuleFor(x => x.Country, f => string.Empty)
+            .RuleFor(x => x.City, f => string.Empty)
+            .RuleFor(x => x.Address, f => string.Empty)
+            .RuleFor(x => x.PhoneNumber, f => string.Empty);
 
         var createWarehouse = faker.Generate();
 

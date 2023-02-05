@@ -4,6 +4,7 @@ using Bogus;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
+
 // ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
@@ -84,8 +85,8 @@ namespace BLL.Tests.Validators.Author
             // Arrange
             var faker = new Faker<UpdateAuthorDto>()
                 .RuleFor(x => x.Id, f => f.Random.Int(1))
-                .RuleFor(x => x.FirstName, f => f.Random.String2(0))
-                .RuleFor(x => x.LastName, f => f.Random.String2(0));
+                .RuleFor(x => x.FirstName, f => string.Empty)
+                .RuleFor(x => x.LastName, f => string.Empty);
 
             var createAuthorDto = faker.Generate();
 

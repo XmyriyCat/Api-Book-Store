@@ -7,7 +7,6 @@ using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
@@ -101,23 +100,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createShipmentDto.PaymentWayId, shipmentCreated.PaymentWayId);
             Assert.Equal(shipmentsTotal, shipmentsDbCount);
         }
-
-        [Theory]
-        [InlineData(-1, -1)]
-        [InlineData(-2, -2)]
-        public async Task AddAsync_Return_ValidationException(int deliveryId, int paymentWayId)
-        {
-            // Arrange
-            var createShipmentDto = new CreateShipmentDto
-            {
-                DeliveryId = deliveryId,
-                PaymentWayId = paymentWayId
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _shipmentCatalogService.AddAsync(createShipmentDto));
-        }
-
+        
         [Theory]
         [InlineData(1, 1, 1)]
         [InlineData(2, 2, 2)]
@@ -163,26 +146,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _shipmentCatalogService.UpdateAsync(updateShipmentDto));
         }
-
-        [Theory]
-        [InlineData(1, -1, -1)]
-        [InlineData(2, -2, -2)]
-        [InlineData(3, -3, -1)]
-        [InlineData(4, -4, -2)]
-        public async Task UpdateAsync_Return_ValidationException(int shipmentId, int deliveryId, int paymentWayId)
-        {
-            // Arrange
-            var updateShipmentDto = new UpdateShipmentDto()
-            {
-                Id = shipmentId,
-                DeliveryId = deliveryId,
-                PaymentWayId = paymentWayId
-            };
-
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _shipmentCatalogService.UpdateAsync(updateShipmentDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

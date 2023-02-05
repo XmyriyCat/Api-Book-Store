@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.User;
@@ -30,13 +31,13 @@ public class LoginUserDtoValidatorTest
 
         //Act
         var result = await _loginUserDtoValidator.TestValidateAsync(loginUserDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(login => login.Login);
         result.ShouldHaveValidationErrorFor(login => login.Password);
     }
-    
-    
+
+
     [Fact]
     public async Task Should_not_have_error()
     {
@@ -49,7 +50,7 @@ public class LoginUserDtoValidatorTest
 
         //Act
         var result = await _loginUserDtoValidator.TestValidateAsync(loginUserDto);
-        
+
         //Assert
         result.ShouldNotHaveValidationErrorFor(login => login.Login);
         result.ShouldNotHaveValidationErrorFor(login => login.Password);
@@ -67,7 +68,7 @@ public class LoginUserDtoValidatorTest
 
         //Act
         var result = await _loginUserDtoValidator.TestValidateAsync(loginUserDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(login => login.Login);
         result.ShouldHaveValidationErrorFor(login => login.Password);
@@ -78,14 +79,14 @@ public class LoginUserDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<LoginUserDto>()
-            .RuleFor(x => x.Login, f => f.Random.String2(0))
-            .RuleFor(x => x.Password, f => f.Random.String2(0));
+            .RuleFor(x => x.Login, f => string.Empty)
+            .RuleFor(x => x.Password, f => string.Empty);
 
         var loginUserDto = faker.Generate();
 
         //Act
         var result = await _loginUserDtoValidator.TestValidateAsync(loginUserDto);
-        
+
         //Assert
         result.ShouldHaveValidationErrorFor(login => login.Login);
         result.ShouldHaveValidationErrorFor(login => login.Password);

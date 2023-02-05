@@ -7,7 +7,6 @@ using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
@@ -104,30 +103,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createWarehouseDto.PhoneNumber, warehouseCreated.PhoneNumber);
             Assert.Equal(warehousesTotal, warehousesDbCount);
         }
-
-        [Theory]
-        [InlineData("name", "Belarus", "Minsk", "Pushkina 26, 13", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] 
-        [InlineData("name", "Belarus", "Minsk", "Pushkina 28, 1", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] 
-        [InlineData("name", "Belarus", "Minsk", "Ushkina 29, 1", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")]
-        public async Task AddAsync_Return_ValidationException(string name, string country, string city, string address, string phoneNumber)
-        {
-            // Arrange
-            var createWarehouseDto = new CreateWarehouseDto
-            {
-                Name = name,
-                Country = country,
-                City = city,
-                Address = address,
-                PhoneNumber = phoneNumber
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _warehouseCatalogService.AddAsync(createWarehouseDto));
-        }
-
+        
         [Theory]
         [InlineData(1, "name", "Belarus", "Minsk", "Pushkina 26, 13", "+375291111111")]
         [InlineData(2, "name", "Belarus", "Minsk", "Pushkina 28, 1", "+375291111112")]
@@ -181,31 +157,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _warehouseCatalogService.UpdateAsync(updateWarehouseDto));
         }
-
-        [Theory]
-        [InlineData(1,"name", "Belarus", "Minsk", "Pushkina 26, 13", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")]
-        [InlineData(2, "name", "Belarus", "Minsk", "Pushkina 28, 1", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")]
-        [InlineData(3, "name", "Belarus", "Minsk", "Ushkina 29, 1", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")]
-        public async Task UpdateAsync_Return_ValidationException(int warehouseId, string name, string country, string city, string address, string phoneNumber)
-        {
-            // Arrange
-            var updateWarehouseDto = new UpdateWarehouseDto
-            {
-                Id = warehouseId,
-                Name = name,
-                Country = country,
-                City = city,
-                Address = address,
-                PhoneNumber = phoneNumber
-            };
-
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _warehouseCatalogService.UpdateAsync(updateWarehouseDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

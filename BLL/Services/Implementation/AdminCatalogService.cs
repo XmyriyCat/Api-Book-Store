@@ -4,7 +4,6 @@ using BLL.Errors;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services.Implementation;

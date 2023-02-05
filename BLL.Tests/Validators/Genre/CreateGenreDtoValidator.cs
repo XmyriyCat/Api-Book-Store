@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS8603
 
 namespace BLL.Tests.Validators.Genre;
@@ -19,7 +20,7 @@ public class CreateGenreDtoValidatorTest
     }
 
     [Fact]
-    public async Task Shold_have_error_when_Name_is_null()
+    public async Task Should_have_error_when_Name_is_null()
     {
         //Arrange
         var faker = new Faker<CreateGenreDto>()

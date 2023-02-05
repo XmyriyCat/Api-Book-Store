@@ -5,6 +5,9 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
+#pragma warning disable CS8603
+
 namespace BLL.Tests.Validators.Delivery;
 
 public class CreateDeliveryDtoValidatorTest
@@ -22,7 +25,7 @@ public class CreateDeliveryDtoValidatorTest
         //Arrange
         var faker = new Faker<CreateDeliveryDto>()
             .RuleFor(x => x.Name, f => null)
-            .RuleFor(x => x.Price, f => f.Random.Int(-100, -1));
+            .RuleFor(x => x.Price, f => f.Random.Decimal(-100, -1));
 
         var createDeliveryDro = faker.Generate();
         
@@ -40,7 +43,7 @@ public class CreateDeliveryDtoValidatorTest
         //Arrange
         var faker = new Faker<CreateDeliveryDto>()
             .RuleFor(x => x.Name, f => f.Random.String2(1,150))
-            .RuleFor(x => x.Price, f => f.Random.Int(0, 100));
+            .RuleFor(x => x.Price, f => f.Random.Decimal());
 
         var createDeliveryDro = faker.Generate();
         
@@ -58,7 +61,7 @@ public class CreateDeliveryDtoValidatorTest
         //Arrange
         var faker = new Faker<CreateDeliveryDto>()
             .RuleFor(x => x.Name, f => f.Random.String2(151,200))
-            .RuleFor(x => x.Price, f => f.Random.Int(1, 100));
+            .RuleFor(x => x.Price, f => f.Random.Decimal());
 
         var createDeliveryDro = faker.Generate();
         
@@ -75,8 +78,8 @@ public class CreateDeliveryDtoValidatorTest
     {
         //Arrange
         var faker = new Faker<CreateDeliveryDto>()
-            .RuleFor(x => x.Name, f => f.Random.String2(0))
-            .RuleFor(x => x.Price, f => f.Random.Int(0, 100));
+            .RuleFor(x => x.Name, f => string.Empty)
+            .RuleFor(x => x.Price, f => f.Random.Decimal());
 
         var createDeliveryDro = faker.Generate();
         
