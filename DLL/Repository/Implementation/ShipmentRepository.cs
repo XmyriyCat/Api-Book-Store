@@ -39,12 +39,7 @@ namespace DLL.Repository.Implementation
         public override async Task<Shipment> UpdateAsync(int id, Shipment item)
         {
             var sourceItem = await FindIncludeAsync(id);
-
-            if (sourceItem is null)
-            {
-                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
-            }
-
+            
             dbContext.Entry(sourceItem).CurrentValues.SetValues(item);
 
             return sourceItem;

@@ -62,12 +62,7 @@ public class ShipmentController : ControllerBase
         }
 
         var updatedShipment = await _shipmentService.UpdateAsync(shipment);
-
-        if (updatedShipment is null)
-        {
-            return NotFound();
-        }
-
+        
         return Ok(updatedShipment);
     }
 
