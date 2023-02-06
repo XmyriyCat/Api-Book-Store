@@ -25,7 +25,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("count")]
-    public async Task<IActionResult> GetCount()
+    public async Task<IActionResult> GetCountAsync()
     {
         var usersAmount = await _adminService.CountAsync();
         return Ok(usersAmount);
@@ -35,12 +35,6 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var user = await _adminService.FindAsync(id);
-
-        if (user is null)
-        {
-            return NotFound();
-        }
-
         return Ok(user);
     }
 
@@ -53,12 +47,7 @@ public class AdminController : ControllerBase
         }
 
         var user = await _adminService.AddAsync(createUser);
-
-        if (user is null)
-        {
-            return NotFound();
-        }
-
+        
         return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
     }
 
@@ -71,12 +60,7 @@ public class AdminController : ControllerBase
         }
 
         var user = await _adminService.UpdateAsync(updateUser);
-
-        if (user is null)
-        {
-            return NotFound();
-        }
-
+        
         return Ok(user);
     }
 

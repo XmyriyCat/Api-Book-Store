@@ -29,12 +29,6 @@ public class ShipmentController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var shipment = await _shipmentService.FindAsync(id);
-
-        if (shipment is null)
-        {
-            return NotFound();
-        }
-
         return Ok(shipment);
     }
 

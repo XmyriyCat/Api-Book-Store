@@ -29,12 +29,6 @@ public class WarehouseController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var warehouse = await _warehouseService.FindAsync(id);
-
-        if (warehouse is null)
-        {
-            return NotFound();
-        }
-
         return Ok(warehouse);
     }
 
@@ -62,12 +56,6 @@ public class WarehouseController : ControllerBase
         }
 
         var updatedWarehouse = await _warehouseService.UpdateAsync(warehouse);
-
-        if (updatedWarehouse is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedWarehouse);
     }
 

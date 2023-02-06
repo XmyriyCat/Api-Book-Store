@@ -29,12 +29,6 @@ public class GenreController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var genre = await _genreService.FindAsync(id);
-
-        if (genre is null)
-        {
-            return NotFound();
-        }
-
         return Ok(genre);
     }
 
@@ -62,12 +56,6 @@ public class GenreController : ControllerBase
         }
 
         var updatedGenre = await _genreService.UpdateAsync(genre);
-
-        if (updatedGenre is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedGenre);
     }
 

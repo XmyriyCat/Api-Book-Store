@@ -71,6 +71,7 @@ public class AdminCatalogService : IAdminCatalogService
         user.UserName = item.Username;
         user.Login = item.Login;
         user.Email = item.Email;
+        user.Country = item.Country;
         user.City = item.City;
         user.Address = item.Address;
 

@@ -29,12 +29,6 @@ public class BookController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var book = await _bookService.FindAsync(id);
-
-        if (book is null)
-        {
-            return NotFound();
-        }
-
         return Ok(book);
     }
 
@@ -62,12 +56,7 @@ public class BookController : ControllerBase
         }
 
         var updatedBook = await _bookService.UpdateAsync(book);
-
-        if (updatedBook is null)
-        {
-            return NotFound();
-        }
-
+        
         return Ok(updatedBook);
     }
 

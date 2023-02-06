@@ -29,12 +29,6 @@ public class RoleController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var role = await _roleService.FindAsync(id);
-
-        if (role is null)
-        {
-            return NotFound();
-        }
-
         return Ok(role);
     }
 
@@ -62,12 +56,6 @@ public class RoleController : ControllerBase
         }
 
         var updatedRole = await _roleService.UpdateAsync(role);
-
-        if (updatedRole is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedRole);
     }
 

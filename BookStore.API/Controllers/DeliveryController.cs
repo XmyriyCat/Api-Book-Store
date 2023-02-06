@@ -29,12 +29,6 @@ public class DeliveryController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var delivery = await _deliveryService.FindAsync(id);
-
-        if (delivery is null)
-        {
-            return NotFound();
-        }
-
         return Ok(delivery);
     }
 
@@ -62,12 +56,6 @@ public class DeliveryController : ControllerBase
         }
 
         var updatedDelivery = await _deliveryService.UpdateAsync(delivery);
-
-        if (updatedDelivery is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedDelivery);
     }
 
