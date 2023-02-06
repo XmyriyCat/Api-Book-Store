@@ -105,7 +105,7 @@ namespace Web_Api.Tests.Controllers
 
             // Act
             CreateBookDto bookDtoNull = null;
-            // ReSharper disable once ExpressionIsAlwaysNull
+            // ReSharper disable once ExpressionIsAlwaysNull    
             var response = await client.PostAsJsonAsync(url, bookDtoNull);
 
             // Assert

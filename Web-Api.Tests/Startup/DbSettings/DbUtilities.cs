@@ -8,16 +8,22 @@ namespace Web_Api.Tests.Startup.DbSettings
     {
         public static void InitializeDbForTests(DbContext db)
         {
-            db.Set<Book>().AddRange(GetTestsBooks(10));
-            db.Set<Order>().AddRange(GetTestsOrders(10));
-            db.Set<OrderLine>().AddRange(GetTestOrderLines(10));
-            db.Set<User>().AddRange(GetTestUsers(10));
-            db.Set<WarehouseBook>().AddRange(GetTestWarehouseBooks(10));
-            db.Set<Shipment>().AddRange(GetTestShipments(10));
+            // Random data for DB
+            db.Set<Book>().AddRange(GetRandomTestsBooks(10));
+            db.Set<Order>().AddRange(GetRandomTestsOrders(10));
+            db.Set<OrderLine>().AddRange(GetRandomTestOrderLines(10));
+            db.Set<User>().AddRange(GetRandomTestUsers(10));
+            db.Set<WarehouseBook>().AddRange(GetRandomTestWarehouseBooks(10));
+            db.Set<Shipment>().AddRange(GetRandomTestShipments(10));
+
+            // Certain data for DB
+            db.Set<Role>().AddRange(GetCertainTestRoles());
+            db.Set<User>().AddRange(GetCertainTestUsers());
+
             db.SaveChanges();
         }
 
-        private static IEnumerable<Book> GetTestsBooks(int count) // Adding Books, Publishers, Genres and Authors
+        private static IEnumerable<Book> GetRandomTestsBooks(int count) // Adding Books, Publishers, Genres and Authors
         {
             if (count <= 0)
             {
@@ -52,7 +58,7 @@ namespace Web_Api.Tests.Startup.DbSettings
             return books;
         }
 
-        private static IEnumerable<Order> GetTestsOrders(int count) // Adding Orders, Shipments, Users, Deliveries, PaymentWays
+        private static IEnumerable<Order> GetRandomTestsOrders(int count) // Adding Orders, Shipments, Users, Deliveries, PaymentWays
         {
             if (count <= 0)
             {
@@ -76,12 +82,13 @@ namespace Web_Api.Tests.Startup.DbSettings
                 })
                 .RuleFor(x => x.User, f => new User()
                 {
-                    UserName = f.Random.String2(10, 50),
+                    UserName = f.Name.FullName(),
                     PasswordHash = f.Random.String2(10, 50),
                     Login = f.Random.String2(10, 50),
-                    Country = f.Random.String2(10, 50),
-                    City = f.Random.String2(10, 50),
-                    Address = f.Random.String2(10, 50)
+                    Country = f.Address.Country(),
+                    City = f.Address.City(),
+                    Address = f.Address.FullAddress(),
+                    SecurityStamp = f.Random.Hash(32, true)
                 });
 
             var orders = faker.Generate(count);
@@ -89,7 +96,7 @@ namespace Web_Api.Tests.Startup.DbSettings
             return orders;
         }
 
-        private static IEnumerable<OrderLine> GetTestOrderLines(int count) // Adding OrderLines, WarehouseBooks, Warehouses, Orders, Books
+        private static IEnumerable<OrderLine> GetRandomTestOrderLines(int count) // Adding OrderLines, WarehouseBooks, Warehouses, Orders, Books
         {
             if (count <= 0)
             {
@@ -166,7 +173,7 @@ namespace Web_Api.Tests.Startup.DbSettings
             return orderLines;
         }
 
-        private static IEnumerable<User> GetTestUsers(int count) // Adding Users, Orders, Roles
+        private static IEnumerable<User> GetRandomTestUsers(int count) // Adding Users, Orders, Roles
         {
             if (count <= 0)
             {
@@ -180,6 +187,7 @@ namespace Web_Api.Tests.Startup.DbSettings
                 .RuleFor(x => x.Country, f => f.Address.Country())
                 .RuleFor(x => x.City, f => f.Address.City())
                 .RuleFor(x => x.Address, f => f.Address.StreetAddress(true))
+                .RuleFor(x => x.SecurityStamp, x => x.Random.Hash(32, true))
                 .RuleFor(x => x.Orders, f => new List<Order>
                 {
                     new Order
@@ -210,7 +218,7 @@ namespace Web_Api.Tests.Startup.DbSettings
             return users;
         }
 
-        private static IEnumerable<WarehouseBook> GetTestWarehouseBooks(int count) // Adding WarehouseBook, Warehouse, Book
+        private static IEnumerable<WarehouseBook> GetRandomTestWarehouseBooks(int count) // Adding WarehouseBook, Warehouse, Book
         {
             if (count <= 0)
             {
@@ -258,7 +266,7 @@ namespace Web_Api.Tests.Startup.DbSettings
             return warehouseBooks;
         }
 
-        private static IEnumerable<Shipment> GetTestShipments(int count)
+        private static IEnumerable<Shipment> GetRandomTestShipments(int count)
         {
             if (count <= 0)
             {
@@ -279,6 +287,44 @@ namespace Web_Api.Tests.Startup.DbSettings
             var shipments = faker.Generate(count);
 
             return shipments;
+        }
+
+        private static IEnumerable<Role> GetCertainTestRoles()
+        {
+            return new List<Role>
+            {
+                new Role
+                {
+                    Name = "Buyer"
+                },
+                new Role
+                {
+                    Name = "Manager"
+                },
+                new Role
+                {
+                    Name = "Admin"
+                }
+            };
+        }
+
+        private static IEnumerable<User> GetCertainTestUsers()
+        {
+            return new List<User>
+            {
+                new User
+                {
+                    UserName = "test-username",
+                    // Certain generated hash for password "123asd456"
+                    PasswordHash = "AQAAAAEAACcQAAAAEOsgBVthtFIn7q5v1iGS+kipd4/vQRaKahHI9IZQ/TfXkxUQe18Wn/NfOnO+oe07WA==",
+                    Login = "test-login",
+                    Country = "test-country",
+                    City = "test-city",
+                    Address = "test-address",
+                    Orders = new List<Order>(),
+                    Roles = new List<Role>()
+                }
+            };
         }
     }
 }
