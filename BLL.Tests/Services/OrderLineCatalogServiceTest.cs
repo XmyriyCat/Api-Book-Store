@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using BLL.DTO.OrderLine;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.OrderLine;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
@@ -27,11 +25,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createOrderLineDtoValidator = new CreateOrderLineDtoValidator();
-            var updateOrderLineDtoValidator = new UpdateOrderLineDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _orderLineCatalogService = new OrderLineCatalogService(_repositoryWrapper, mapper, createOrderLineDtoValidator, updateOrderLineDtoValidator);
+            _orderLineCatalogService = new OrderLineCatalogService(_repositoryWrapper, mapper);
         }
         
         [Fact]
@@ -104,26 +100,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createOrderLineDto.WarehouseBookId, createdOrderLine.WarehouseBookId);
             Assert.Equal(orderLinesTotal, orderLinesDbCount);
         }
-
-        [Theory]
-        [InlineData(0, 1, 1)]
-        [InlineData(25, 0, 2)]
-        [InlineData(6, 2, 0)]
-        [InlineData(0, 0, 0)]
-        public async Task AddAsync_Return_ValidationException(int quantity, int orderId, int warehouseBookId)
-        {
-            // Arrange
-            var createOrderLineDto = new CreateOrderLineDto
-            {
-                Quantity = quantity,
-                OrderId = orderId,
-                WarehouseBookId = warehouseBookId
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _orderLineCatalogService.AddAsync(createOrderLineDto));
-        }
-
+        
         [Theory]
         [InlineData(2, 9999, 1)]
         [InlineData(25, 1, 9999)]
@@ -171,28 +148,7 @@ namespace BLL.Tests.Services
             Assert.Equal(updateOrderLineDto.OrderId, updatedOrderLine.OrderId);
             Assert.Equal(updateOrderLineDto.WarehouseBookId, updatedOrderLine.WarehouseBookId);
         }
-
-        [Theory]
-        [InlineData(0, 70, 1, 1)]
-        [InlineData(1, 0, 1, 2)]
-        [InlineData(2, 11, 0, 1)]
-        [InlineData(2, 163, 2, 0)]
-        [InlineData(0, 0, 0, 0)]
-        public async Task UpdateAsync_Return_ValidationException(int id, int quantity, int orderId, int warehouseBookId)
-        {
-            // Arrange
-            var updateOrderLineDto = new UpdateOrderLineDto
-            {
-                Id = id,
-                Quantity = quantity,
-                OrderId = orderId,
-                WarehouseBookId = warehouseBookId
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _orderLineCatalogService.UpdateAsync(updateOrderLineDto));
-        }
-
+        
         [Theory]
         [InlineData(9999, 70, 1, 1)]
         [InlineData(2, 11, 9999, 1)]

@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using BLL.DTO.WarehouseBook;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.WarehouseBook;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
 
@@ -27,11 +25,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createWarehouseBookDtoValidator = new CreateWarehouseBookDtoValidator();
-            var updateWarehouseBookDtoValidator = new UpdateWarehouseBookDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _warehouseBookCatalogService = new WarehouseBookCatalogService(_repositoryWrapper, mapper, createWarehouseBookDtoValidator, updateWarehouseBookDtoValidator);
+            _warehouseBookCatalogService = new WarehouseBookCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]
@@ -106,26 +102,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createWarehouseBookDto.BookId, warehouseBookCreated.BookId);
             Assert.Equal(warehouseBooksTotal, warehouseBooksDbCount);
         }
-
-        [Theory]
-        [InlineData(-100, 1, 1)]
-        [InlineData(-200, 2, 2)]
-        [InlineData(-300, 3, 3)]
-        [InlineData(-105, 4, 4)]
-        public async Task AddAsync_Return_ValidationException(int quantity, int warehouseId, int bookId)
-        {
-            // Arrange
-            var createWarehouseBookDto = new CreateWarehouseBookDto
-            {
-                Quantity = quantity,
-                WarehouseId = warehouseId,
-                BookId = bookId
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _warehouseBookCatalogService.AddAsync(createWarehouseBookDto));
-        }
-
+        
         [Theory]
         [InlineData(1, 100, 1, 1)]
         [InlineData(1, 200, 2, 2)]
@@ -175,27 +152,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _warehouseBookCatalogService.UpdateAsync(updateWarehouseBookDto));
         }
-
-        [Theory]
-        [InlineData(999999999, -100, 1, 1)]
-        [InlineData(999999999, -200, 2, 2)]
-        [InlineData(999999999, -300, 3, 3)]
-        [InlineData(999999999, -105, 4, 4)]
-        public async Task UpdateAsync_Return_ValidationException(int warehouseBookId, int quantity, int warehouseId, int bookId)
-        {
-            // Arrange
-            var updateWarehouseBookDto = new UpdateWarehouseBookDto()
-            {
-                Id = warehouseBookId,
-                Quantity = quantity,
-                WarehouseId = warehouseId,
-                BookId = bookId
-            };
-
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _warehouseBookCatalogService.UpdateAsync(updateWarehouseBookDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

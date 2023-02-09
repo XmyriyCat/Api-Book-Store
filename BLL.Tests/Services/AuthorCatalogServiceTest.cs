@@ -1,14 +1,12 @@
 using AutoMapper;
 using BLL.DTO.Author;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Author;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
@@ -28,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createAuthorDtoValidator = new CreateAuthorDtoValidator();
-            var updateAuthorDtoValidator = new UpdateAuthorDtoValidator();
-
+            
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _authorCatalogService = new AuthorCatalogService(_repositoryWrapper, mapper, createAuthorDtoValidator, updateAuthorDtoValidator);
+            _authorCatalogService = new AuthorCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]
@@ -101,24 +97,7 @@ namespace BLL.Tests.Services
             Assert.Equal(authorDto.LastName, authorDb.LastName);
             Assert.Equal(authorsTotal, authorsDbCount);
         }
-
-        [Theory]
-        [InlineData("", "")]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
-        public async Task AddAsync_Return_ValidationException(string firstname, string lastname)
-        {
-            // Arrange
-            var authorDto = new CreateAuthorDto
-            {
-                FirstName = firstname,
-                LastName = lastname
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _authorCatalogService.AddAsync(authorDto));
-        }
-
+        
         [Theory]
         [InlineData(1, "new_firstname", "new_lastname")]
         [InlineData(1, "1234567890-=<>?", "1234567890-=<>?")]
@@ -164,25 +143,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _authorCatalogService.UpdateAsync(updateAuthorDto));
         }
-
-        [Theory]
-        [InlineData(1, "", "")]
-        [InlineData(1,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg",
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of firstname & lastname > 150 chars.
-        public async Task UpdateAsync_Return_ValidationException(int authorId, string firstnameNew, string lastnameNew)
-        {
-            // Arrange
-            var updateAuthorDto = new UpdateAuthorDto()
-            {
-                Id = authorId,
-                FirstName = firstnameNew,
-                LastName = lastnameNew
-            };
-            
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _authorCatalogService.UpdateAsync(updateAuthorDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

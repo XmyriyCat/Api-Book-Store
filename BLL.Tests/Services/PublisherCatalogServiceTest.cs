@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using BLL.DTO.Publisher;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Publisher;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
@@ -28,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createPublisherDtoValidator = new CreatePublisherDtoValidator();
-            var updatePublisherDtoValidator = new UpdatePublisherDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _publisherCatalogService = new PublisherCatalogService(_repositoryWrapper, mapper, createPublisherDtoValidator, updatePublisherDtoValidator);
+            _publisherCatalogService = new PublisherCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]
@@ -99,23 +95,7 @@ namespace BLL.Tests.Services
             Assert.Equal(publisherDto.Name, publisherDb.Name);
             Assert.Equal(publishersTotal, publishersDbCount);
         }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of name > 150 chars.
-        public async Task AddAsync_Return_ValidationException(string name)
-        {
-            // Arrange
-            var publisherDto = new CreatePublisherDto
-            {
-                Name = name
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _publisherCatalogService.AddAsync(publisherDto));
-        }
-
+        
         [Theory]
         [InlineData(1, "name")]
         [InlineData(1, "1234567890-=<>?")]
@@ -158,24 +138,7 @@ namespace BLL.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<DbEntityNotFoundException>(() => _publisherCatalogService.UpdateAsync(updatePublisherDto));
         }
-
-        [Theory]
-        [InlineData(1, "")]
-        [InlineData(1, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg" +
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pg")] // size of name > 150 chars.
-        public async Task UpdateAsync_Return_ValidationException(int publisherId, string name)
-        {
-            // Arrange
-            var updatePublisherDto = new UpdatePublisherDto()
-            {
-                Id = publisherId,
-                Name = name
-            };
-
-            // Act & Asserts
-            await Assert.ThrowsAsync<ValidationException>(() => _publisherCatalogService.UpdateAsync(updatePublisherDto));
-        }
-
+        
         [Theory]
         [InlineData(1)]
         [InlineData(2)]

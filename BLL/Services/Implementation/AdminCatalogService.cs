@@ -4,7 +4,6 @@ using BLL.Errors;
 using BLL.Services.Contract;
 using DLL.Models;
 using DLL.Repository.UnitOfWork;
-using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services.Implementation;
@@ -13,17 +12,12 @@ public class AdminCatalogService : IAdminCatalogService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateUserDto> _createUserDtoValidator;
-    private readonly IValidator<UpdateUserDto> _updateUserDtoValidator;
     private readonly UserManager<User> _userManager;
 
-    public AdminCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper,
-                                IValidator<CreateUserDto> createUserDtoValidator, IValidator<UpdateUserDto> updateUserDtoValidator, UserManager<User> userManager)
+    public AdminCatalogService(IRepositoryWrapper repositoryWrapper, IMapper mapper, UserManager<User> userManager)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _createUserDtoValidator = createUserDtoValidator;
-        _updateUserDtoValidator = updateUserDtoValidator;
         _userManager = userManager;
     }
 
@@ -39,8 +33,6 @@ public class AdminCatalogService : IAdminCatalogService
 
     public async Task<User> AddAsync(CreateUserDto item)
     {
-        await _createUserDtoValidator.ValidateAndThrowAsync(item);
-
         var user = _mapper.Map<User>(item);
 
         user.Roles = new HashSet<Role>();
@@ -64,10 +56,9 @@ public class AdminCatalogService : IAdminCatalogService
 
     public async Task<User> UpdateAsync(UpdateUserDto item)
     {
-        await _updateUserDtoValidator.ValidateAndThrowAsync(item);
-
-        var user = await _repositoryWrapper.Users.FirstOrDefaultAsync(x => x.Id == item.Id);
-
+        var user = await _repositoryWrapper.Users.FindIncludeAsync(item.Id);
+        
+        // Setting updated data
         user.UserName = item.Username;
         user.Login = item.Login;
         user.Email = item.Email;
@@ -87,12 +78,6 @@ public class AdminCatalogService : IAdminCatalogService
         foreach (var idOrder in item.OrderIds)
         {
             var order = await _repositoryWrapper.Orders.FindAsync(idOrder);
-
-            if (order is null)
-            {
-                throw new ValidationException($"DTO contains a non-existent order id.");
-            }
-
             user.Orders.Add(order);
         }
 
@@ -100,7 +85,7 @@ public class AdminCatalogService : IAdminCatalogService
 
         if (!result.Succeeded)
         {
-            throw new CreateIdentityUserException(result.ToString());
+            throw new UpdateIdentityUserException(result.ToString());
         }
 
         return user;
