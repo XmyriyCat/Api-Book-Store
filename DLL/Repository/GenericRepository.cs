@@ -40,13 +40,8 @@ namespace DLL.Repository
         
         public virtual async Task<T> UpdateAsync(int id, T item)
         {
-            var sourceItem = await dbContext.Set<T>().FindAsync(id);
-
-            if (sourceItem is null)
-            {
-                throw new DbEntityNotFoundException($"{nameof(item)} with id:{id} is not found in database.");
-            }
-
+            var sourceItem = await FindAsync(id);
+            
             dbContext.Entry(sourceItem).CurrentValues.SetValues(item);
 
             return sourceItem;
@@ -54,13 +49,8 @@ namespace DLL.Repository
 
         public async Task DeleteAsync(int id)
         {
-            var sourceItem = await dbContext.Set<T>().FindAsync(id);
-
-            if (sourceItem is null)
-            {
-                return;
-            }
-
+            var sourceItem = await FindAsync(id);
+            
             dbContext.Remove(sourceItem);
         }
 

@@ -29,12 +29,6 @@ public class AuthorController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var author = await _authorService.FindAsync(id);
-
-        if (author is null)
-        {
-            return NotFound();
-        }
-
         return Ok(author);
     }
 
@@ -62,12 +56,7 @@ public class AuthorController : ControllerBase
         }
 
         var updatedAuthor = await _authorService.UpdateAsync(author);
-
-        if (updatedAuthor is null)
-        {
-            return NotFound();
-        }
-
+        
         return Ok(updatedAuthor);
     }
 

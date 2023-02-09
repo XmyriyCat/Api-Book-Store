@@ -29,12 +29,6 @@ public class PublisherController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var publisher = await _publisherService.FindAsync(id);
-
-        if (publisher is null)
-        {
-            return NotFound();
-        }
-
         return Ok(publisher);
     }
 
@@ -62,12 +56,6 @@ public class PublisherController : ControllerBase
         }
 
         var updatedPublisher = await _publisherService.UpdateAsync(publisher);
-
-        if (updatedPublisher is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedPublisher);
     }
 

@@ -29,12 +29,6 @@ public class OrderLineController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var orderLine = await _orderLineService.FindAsync(id);
-
-        if (orderLine is null)
-        {
-            return NotFound();
-        }
-
         return Ok(orderLine);
     }
 
@@ -62,12 +56,6 @@ public class OrderLineController : ControllerBase
         }
 
         var updatedOrderLine = await _orderLineService.UpdateAsync(orderLine);
-
-        if (updatedOrderLine is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedOrderLine);
     }
 

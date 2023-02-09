@@ -170,7 +170,7 @@ namespace BLL.Tests.Services
         public async Task CountAsync_Return_Ok()
         {
             // Arrange
-            var actualCount = await _repositoryWrapper.Authors.CountAsync();
+            var actualCount = await _repositoryWrapper.Shipments.CountAsync();
 
             // Act
             var resultCountDb = await _shipmentCatalogService.CountAsync();

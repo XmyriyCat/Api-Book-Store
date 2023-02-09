@@ -29,12 +29,6 @@ public class PaymentController : ControllerBase
     public async Task<IActionResult> GetByIdAsyncTask(int id)
     {
         var payment = await _paymentService.FindAsync(id);
-
-        if (payment is null)
-        {
-            return NotFound();
-        }
-
         return Ok(payment);
     }
 
@@ -62,12 +56,6 @@ public class PaymentController : ControllerBase
         }
 
         var updatedPayment = await _paymentService.UpdateAsync(payment);
-
-        if (updatedPayment is null)
-        {
-            return NotFound();
-        }
-
         return Ok(updatedPayment);
     }
 
