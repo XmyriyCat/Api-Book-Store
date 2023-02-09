@@ -7,11 +7,5 @@ namespace BLL.Services.Contract
         Task<AuthorizedUserDto> RegisterAsync(RegistrationUserDto item);
 
         Task<AuthorizedUserDto> LoginAsync(LoginUserDto item);
-
-        Task<bool> IsUniqueLoginAsync(string login);
-
-        Task<AuthorizedUserDto> LoginGoogleAsync(LoginGoogleUserDto item);
-
-        Task<AuthorizedUserDto> RegisterGoogleAsync(RegistrationGoogleUserDto item);
     }
 }

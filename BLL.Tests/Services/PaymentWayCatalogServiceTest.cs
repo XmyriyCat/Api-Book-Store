@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using BLL.DTO.PaymentWay;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.PaymentWay;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
@@ -28,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createPaymentWayDtoValidator = new CreatePaymentWayDtoValidator();
-            var updatePaymentWayDtoValidator = new UpdatePaymentWayDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _paymentWayCatalogService = new PaymentWayCatalogService(_repositoryWrapper, mapper, createPaymentWayDtoValidator, updatePaymentWayDtoValidator);
+            _paymentWayCatalogService = new PaymentWayCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]
@@ -97,23 +93,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createPaymentWayDto.Name, createdPaymentWay.Name);
             Assert.Equal(paymentWaysTotal, paymentWaysDbCount);
         }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula " +
-                    "eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pa")] // // size of payment way name > 150 chars.
-        public async Task AddAsync_Return_ValidationException(string name)
-        {
-            // Arrange
-            var createPaymentWayDto = new CreatePaymentWayDto
-            {
-                Name = name
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _paymentWayCatalogService.AddAsync(createPaymentWayDto));
-        }
-
+        
         [Theory]
         [InlineData(1, "new-test-name")]
         [InlineData(2, "simple-name")]
@@ -137,24 +117,7 @@ namespace BLL.Tests.Services
             Assert.Equal(updatePaymentWayDto.Id, updatedPaymentWay.Id);
             Assert.Equal(updatePaymentWayDto.Name, updatedPaymentWay.Name);
         }
-
-        [Theory]
-        [InlineData(1, "")]
-        [InlineData(2, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula " +
-                    "eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pa")] // size of payment way name > 150 chars.
-        public async Task UpdateAsync_Return_ValidationException(int id, string name)
-        {
-            // Arrange
-            var updatePaymentWayDto = new UpdatePaymentWayDto
-            {
-                Id = id,
-                Name = name
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _paymentWayCatalogService.UpdateAsync(updatePaymentWayDto));
-        }
-
+        
         [Theory]
         [InlineData(9999, "new-test-name")]
         public async Task UpdateAsync_Return_DbEntityNotFoundException(int id, string name)

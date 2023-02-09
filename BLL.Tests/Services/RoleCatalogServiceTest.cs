@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using BLL.DTO.Role;
 using BLL.Infrastructure.Mapper;
-using BLL.Infrastructure.Validators.Role;
 using BLL.Services.Contract;
 using BLL.Services.Implementation;
 using BLL.Tests.Infrastructure;
 using DLL.Errors;
 using DLL.Repository.UnitOfWork;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web_Api.Tests.Startup.DbSettings;
 using Xunit;
@@ -28,11 +26,9 @@ namespace BLL.Tests.Services
             DbUtilities.InitializeDbForTests(dbContextInMemory);
 
             var mapper = mapperConfiguration.CreateMapper();
-            var createRoleDtoValidator = new CreateRoleDtoValidator();
-            var updateRoleDtoValidator = new UpdateRoleDtoValidator();
 
             _repositoryWrapper = new RepositoryWrapper(dbContextInMemory);
-            _roleCatalogService = new RoleCatalogService(_repositoryWrapper, mapper, createRoleDtoValidator, updateRoleDtoValidator);
+            _roleCatalogService = new RoleCatalogService(_repositoryWrapper, mapper);
         }
 
         [Fact]
@@ -97,23 +93,7 @@ namespace BLL.Tests.Services
             Assert.Equal(createRoleDto.Name, createdRole.Name);
             Assert.Equal(rolesTotal, rolesDbCount);
         }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula " +
-                    "eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pa")] // // size of role name > 150 chars.
-        public async Task AddAsync_Return_ValidationException(string name)
-        {
-            // Arrange
-            var createRoleDto = new CreateRoleDto
-            {
-                Name = name
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _roleCatalogService.AddAsync(createRoleDto));
-        }
-
+        
         [Theory]
         [InlineData(1, "new-role-name")]
         [InlineData(2, "n")]
@@ -138,23 +118,6 @@ namespace BLL.Tests.Services
             Assert.Equal(updateRoleDto.Name, updatedRole.Name);
         }
         
-        [Theory]
-        [InlineData(1, "")]
-        [InlineData(2, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula " +
-                    "eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis pa")] // // size of role name > 150 chars.
-        public async Task UpdateAsync_Return_ValidationException(int id, string roleName)
-        {
-            // Arrange
-            var updateRoleDto = new UpdateRoleDto
-            {
-                Id = id,
-                Name = roleName
-            };
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _roleCatalogService.UpdateAsync(updateRoleDto));
-        }
-
         [Theory]
         [InlineData(9999, "new-role-name")]
         public async Task UpdateAsync_Return_DbEntityNotFoundException(int id, string roleName)
